@@ -9,5 +9,27 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.fdanesse.jamedia.MainActivity">
 
+    <Button
+        android:id="@+id/radio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Radio"
+    />
+
+    <Button
+        android:id="@+id/television"
+        android:layout_below="@+id/radio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Televisión"
+        />
+
+    <Button
+        android:id="@+id/archivos"
+        android:layout_below="@+id/television"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Archivos"
+        />
 
 </RelativeLayout>
