@@ -5,7 +5,7 @@ package com.fdanesse.jamedia;
  */
 public class ListItem {
 
-    private String imagen;
+    private int imagen;
     private String nombre;
     private String url;
 
@@ -15,7 +15,7 @@ public class ListItem {
         this.url = url;
     }
 
-    public String getImagen() {
+    public int getImagen() {
         return imagen;
     }
 
