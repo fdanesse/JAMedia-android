@@ -15,4 +15,15 @@ public class ListItem {
         this.url = url;
     }
 
+    public String getImagen() {
+        return imagen;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public String getUrl() {
+        return url;
+    }
 }

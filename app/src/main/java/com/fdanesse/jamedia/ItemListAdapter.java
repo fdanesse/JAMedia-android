@@ -15,7 +15,11 @@ import java.util.ArrayList;
  */
 public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemListViewHolder>{
 
-    private ArrayList<ListItem> lista = new ArrayList<ListItem>();
+    private ArrayList<ListItem> lista;
+
+    public ItemListAdapter(ArrayList<ListItem> lista){
+        this.lista = lista;
+    }
 
     @Override
     public ItemListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -25,7 +29,10 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemLi
 
     @Override
     public void onBindViewHolder(ItemListViewHolder holder, int position) {
-
+        ListItem listItem = lista.get(position);
+        //holder.imagen_view.setImageResource(listItem.getImagen());
+        holder.text_view_nombre.setText(listItem.getNombre());
+        holder.text_view_url.setText(listItem.getUrl());
     }
 
     @Override
