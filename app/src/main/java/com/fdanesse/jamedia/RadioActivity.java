@@ -26,8 +26,10 @@ public class RadioActivity extends AppCompatActivity {
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
 
-        lista.add(new ListItem(R.drawable.jamedia, "AAA", "xxx"));
-        lista.add(new ListItem(R.drawable.jamedia, "BBB", "xxx"));
+        lista.add(new ListItem(R.drawable.jamedia, "89.3 KPCC - Southern California Public Radio (EEUU)",
+                "http://kpcclive1.publicradio.org:80/"));
+        lista.add(new ListItem(R.drawable.jamedia, "Bulo FM - Montevideo (Uruguay)",
+                "http://bulofm.com:19000/"));
 
         ItemListAdapter listAdapter = new ItemListAdapter(lista);
         recyclerView.setAdapter(listAdapter);
