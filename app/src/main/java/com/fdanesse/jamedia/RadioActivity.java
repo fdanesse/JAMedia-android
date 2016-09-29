@@ -6,13 +6,12 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
-
 import java.util.ArrayList;
 
 public class RadioActivity extends AppCompatActivity {
 
     private ArrayList<ListItem> lista;
-    private RecyclerView recyclerView;
+    public RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +28,30 @@ public class RadioActivity extends AppCompatActivity {
         lista.add(new ListItem(R.drawable.jamedia, "89.3 KPCC - Southern California Public Radio (EEUU)",
                 "http://kpcclive1.publicradio.org:80/"));
         lista.add(new ListItem(R.drawable.jamedia, "Bulo FM - Montevideo (Uruguay)",
+                "http://bulofm.com:19000/"));
+        lista.add(new ListItem(R.drawable.jamedia, "89.3 KPCC - Southern California Public Radio (EEUU)",
+                "http://kpcclive1.publicradio.org:80/"));
+        lista.add(new ListItem(R.drawable.jamedia, "Bulo FM - Montevideo (Uruguay)",
+                "http://bulofm.com:19000/"));
+        lista.add(new ListItem(R.drawable.jamedia, "89.3 KPCC - Southern California Public Radio (EEUU)",
+                "http://kpcclive1.publicradio.org:80/"));
+        lista.add(new ListItem(R.drawable.jamedia, "Bulo FM - Montevideo (Uruguay)",
+                "http://bulofm.com:19000/"));
+        lista.add(new ListItem(R.drawable.jamedia, "89.3 KPCC - Southern California Public Radio (EEUU)",
+                "http://kpcclive1.publicradio.org:80/"));
+        lista.add(new ListItem(R.drawable.jamedia, "Bulo FM - Montevideo (Uruguay)",
+                "http://bulofm.com:19000/"));
+        lista.add(new ListItem(R.drawable.jamedia, "89.3 KPCC - Southern California Public Radio (EEUU)",
+                "http://kpcclive1.publicradio.org:80/"));
+        lista.add(new ListItem(R.drawable.jamedia, "Bulo FM - Montevideo (Uruguay)",
+                "http://bulofm.com:19000/"));
+        lista.add(new ListItem(R.drawable.jamedia, "89.3 KPCC - Southern California Public Radio (EEUU)",
+                "http://kpcclive1.publicradio.org:80/"));
+        lista.add(new ListItem(R.drawable.jamedia, "Bulo FM - Montevideo (Uruguay)",
+                "http://bulofm.com:19000/"));
+        lista.add(new ListItem(R.drawable.jamedia, "89.3 KPCC - Southern California Public Radio (EEUU)",
+                "http://kpcclive1.publicradio.org:80/"));
+        lista.add(new ListItem(R.drawable.jamedia, "z)",
                 "http://bulofm.com:19000/"));
 
         ItemListAdapter listAdapter = new ItemListAdapter(lista);

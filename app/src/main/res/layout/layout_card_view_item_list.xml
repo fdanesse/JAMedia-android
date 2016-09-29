@@ -2,16 +2,19 @@
 <android.support.v7.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cardview"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:measureAllChildren="false"
-    android:foregroundGravity="center_vertical">
+    android:foregroundGravity="center_vertical"
+    card_view:cardCornerRadius="10dp"
+    >
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:background="#FF5722">
+        android:background="#00BCD4">
 
         <ImageView
             android:id="@+id/imagen"
@@ -19,8 +22,8 @@
             android:layout_height="wrap_content"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:src="@drawable/jamedia"
-            android:scaleType="center" />
+            android:scaleType="center"
+            />
 
         <TextView
             android:id="@+id/nombre"
