@@ -1,12 +1,17 @@
 package com.fdanesse.jamedia;
 
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -15,6 +20,7 @@ import java.util.ArrayList;
 public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemListViewHolder>{
 
     private ArrayList<ListItem> lista;
+    private final MediaPlayer mediaPlayer = new MediaPlayer();
 
     public ItemListAdapter(ArrayList<ListItem> lista){
         this.lista = lista;
@@ -29,11 +35,46 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemLi
             public void onClick(View view) {
                 TextView textview = (TextView) view.findViewById(R.id.url);
                 Snackbar.make(view, textview.getText(), Snackbar.LENGTH_SHORT).show();
+                play(textview.getText().toString());
             }
         });
         return new ItemListViewHolder(v);
     }
 
+    private void play(String url){
+        if (mediaPlayer.isPlaying()){
+            mediaPlayer.stop();
+            mediaPlayer.reset();
+        }
+
+        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        try {
+            mediaPlayer.setDataSource(url);
+        } catch (IllegalArgumentException e1) {
+            e1.printStackTrace();
+        } catch (SecurityException e1) {
+            e1.printStackTrace();
+        } catch (IllegalStateException e1) {
+            e1.printStackTrace();
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        }
+
+        mediaPlayer.setOnBufferingUpdateListener(new MediaPlayer.OnBufferingUpdateListener() {
+            public void onBufferingUpdate(MediaPlayer mp, int percent) {
+                Log.i("Buffering", "" + percent);
+            }
+        });
+
+        mediaPlayer.prepareAsync();
+
+        mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+
+            public void onPrepared(MediaPlayer mp) {
+                mediaPlayer.start();
+            }
+        });
+    }
     @Override
     public void onBindViewHolder(ItemListViewHolder holder, int position) {
         ListItem listItem = lista.get(position);
