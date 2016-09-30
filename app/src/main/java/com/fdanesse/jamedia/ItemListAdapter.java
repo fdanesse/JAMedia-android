@@ -22,12 +22,12 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemLi
 
     @Override
     public ItemListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_card_view_item_list, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(
+                R.layout.layout_card_view_item_list, parent, false);
         v.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                TextView textview = (TextView) view.findViewById(R.id.nombre);
-                //Toast.makeText(view.getContext(), textview.getText(), Toast.LENGTH_LONG).show();
+                TextView textview = (TextView) view.findViewById(R.id.url);
                 Snackbar.make(view, textview.getText(), Snackbar.LENGTH_SHORT).show();
             }
         });

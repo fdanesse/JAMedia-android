@@ -14,7 +14,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:background="#00BCD4">
+        android:background="@color/jamediatoolbar15"
+        >
 
         <ImageView
             android:id="@+id/imagen"
@@ -46,7 +47,9 @@
             android:text="Url"
             android:textAlignment="gravity"
             android:gravity="center_vertical"
-            android:textColor="#000000" />
+            android:textColor="#000000"
+            android:visibility="invisible"
+            />
 
     </LinearLayout>
 
