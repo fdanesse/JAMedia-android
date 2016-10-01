@@ -1,6 +1,9 @@
 package com.fdanesse.jamedia;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -30,12 +33,24 @@ public class MainActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+        boolean i = network_check();
+        findViewById(R.id.radio).setEnabled(i);
+        findViewById(R.id.television).setEnabled(i);
+    }
+
+    private boolean network_check(){
+        // https://developer.android.com/training/monitoring-device-state/connectivity-monitoring.html?hl=es
+        ConnectivityManager cm = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        if (activeNetwork != null){
+            return (activeNetwork.getType() == ConnectivityManager.TYPE_WIFI && activeNetwork.isConnectedOrConnecting());
+        }
+        return false;
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-    }
+    protected void onStart() {super.onStart();}
 
     @Override
     protected void onResume() {

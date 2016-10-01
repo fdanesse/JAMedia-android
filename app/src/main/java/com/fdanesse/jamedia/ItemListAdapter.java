@@ -28,8 +28,10 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemLi
 
     @Override
     public ItemListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
         View v = LayoutInflater.from(parent.getContext()).inflate(
                 R.layout.layout_card_view_item_list, parent, false);
+
         v.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -38,16 +40,19 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemLi
                 play(textview.getText().toString());
             }
         });
+
         return new ItemListViewHolder(v);
     }
 
     private void play(String url){
+
         if (mediaPlayer.isPlaying()){
             mediaPlayer.stop();
             mediaPlayer.reset();
         }
 
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+
         try {
             mediaPlayer.setDataSource(url);
         } catch (IllegalArgumentException e1) {
