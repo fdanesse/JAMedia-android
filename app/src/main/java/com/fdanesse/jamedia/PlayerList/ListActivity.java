@@ -1,14 +1,18 @@
-package com.fdanesse.jamedia;
+package com.fdanesse.jamedia.PlayerList;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
+
+import com.fdanesse.jamedia.MainActivity;
+import com.fdanesse.jamedia.R;
+
 import java.util.ArrayList;
 
-public class RadioActivity extends AppCompatActivity {
+public class ListActivity extends AppCompatActivity {
 
     private ArrayList<ListItem> lista;
     public RecyclerView recyclerView;
@@ -16,7 +20,7 @@ public class RadioActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_radio);
+        setContentView(R.layout.activity_list);
 
         lista = new ArrayList<ListItem>();
         recyclerView = (RecyclerView) findViewById(R.id.reciclerview);
@@ -27,13 +31,13 @@ public class RadioActivity extends AppCompatActivity {
 
         llenar_lista();
 
-        ItemListAdapter listAdapter = new ItemListAdapter(lista);
+        ItemListAdapter listAdapter = new ItemListAdapter(lista, this);
         recyclerView.setAdapter(listAdapter);
     }
 
     public boolean onKeyDown(int keycode, KeyEvent event){
         if (keycode == KeyEvent.KEYCODE_BACK){
-            Intent intent = new Intent(RadioActivity.this, MainActivity.class);
+            Intent intent = new Intent(ListActivity.this, MainActivity.class);
             startActivity(intent);
             finish();
         }

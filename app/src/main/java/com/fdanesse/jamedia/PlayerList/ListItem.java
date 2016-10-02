@@ -1,4 +1,4 @@
-package com.fdanesse.jamedia;
+package com.fdanesse.jamedia.PlayerList;
 
 /**
  * Created by flavio on 27/09/16.

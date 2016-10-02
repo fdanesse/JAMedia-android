@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import com.fdanesse.jamedia.PlayerList.ListActivity;
+
 public class MainActivity extends AppCompatActivity {
 
     private Button radio;
@@ -27,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
         radio.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, RadioActivity.class);
+                Intent intent = new Intent(MainActivity.this, ListActivity.class);
                 //intent.putExtra("Planeta", planetas[i]);
                 startActivity(intent);
                 finish();
