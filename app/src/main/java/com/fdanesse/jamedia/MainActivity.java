@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -30,15 +31,24 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, ListActivity.class);
-                //intent.putExtra("Planeta", planetas[i]);
                 startActivity(intent);
                 finish();
+            }
+        });
+
+        archivos.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //
             }
         });
 
         boolean i = network_check();
         findViewById(R.id.radio).setEnabled(i);
         findViewById(R.id.television).setEnabled(i);
+        if (!i){
+            Snackbar.make(radio, "No tienes conexión a internet", Snackbar.LENGTH_INDEFINITE);
+        }
     }
 
     private boolean network_check(){
@@ -49,33 +59,5 @@ public class MainActivity extends AppCompatActivity {
             return (activeNetwork.getType() == ConnectivityManager.TYPE_WIFI && activeNetwork.isConnectedOrConnecting());
         }
         return false;
-    }
-
-    @Override
-    protected void onStart() {super.onStart();}
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
     }
 }

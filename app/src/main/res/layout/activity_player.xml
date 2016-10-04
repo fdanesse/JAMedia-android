@@ -7,48 +7,76 @@
     android:layout_height="match_parent"
     tools:context=".JamediaPlayer.PlayerActivity">
 
-    <RelativeLayout
+    <LinearLayout
+        android:id="@+id/linearbase"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="vertical"
         android:background="#f0f0f0">
 
         <ImageView
             android:id="@+id/imagen"
-            android:layout_width="300dp"
-            android:layout_height="300dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.0"
+            android:adjustViewBounds="true"
             android:src="@drawable/jamedia"
-            android:layout_centerHorizontal="true"
+            android:layout_gravity="top|center_horizontal"
             android:alpha="0.3"
             />
 
-
-        <Button
-            android:layout_width="wrap_content"
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="prev"
-            android:id="@+id/anterior"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
+            android:layout_weight="0.0"
+            android:orientation="horizontal"
+            android:background="#ffffff"
+            android:layout_gravity="bottom|center_horizontal"
+            >
+            <!--android:background="Color.TRANSPARENT"-->
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="play"
-            android:id="@+id/pause_play"
-            android:layout_alignTop="@+id/anterior"
-            android:layout_toRightOf="@+id/anterior"
-            android:layout_toEndOf="@+id/anterior" />
+            <Button
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:id="@+id/anterior"
+                android:background="@drawable/anterior"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                />
 
+            <Button
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:id="@+id/play"
+                android:background="@drawable/play"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                />
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="next"
-            android:id="@+id/siguiente"
-            android:layout_alignTop="@+id/pause_play"
-            android:layout_toRightOf="@+id/pause_play"
-            android:layout_toEndOf="@+id/pause_play" />
+            <Button
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:id="@+id/siguiente"
+                android:background="@drawable/siguiente"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                />
+
+            <Button
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:id="@+id/stop"
+                android:background="@drawable/stop"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="5dp"
+                />
+
+        </android.support.v7.widget.Toolbar>
 
         <!--
         <SeekBar
@@ -92,6 +120,6 @@
             android:layout_centerHorizontal="true" />
         -->
 
-    </RelativeLayout>
+    </LinearLayout>
 
 </android.support.design.widget.CoordinatorLayout>
