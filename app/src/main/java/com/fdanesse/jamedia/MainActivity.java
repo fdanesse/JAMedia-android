@@ -10,9 +10,12 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 
 import com.fdanesse.jamedia.PlayerList.ListActivity;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -34,9 +37,27 @@ public class MainActivity extends AppCompatActivity {
         radio.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                final Animation animAlpha = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.anim_alpha);
+                view.startAnimation(animAlpha);
                 Intent intent = new Intent(MainActivity.this, ListActivity.class);
                 startActivity(intent);
                 finish();
+            }
+        });
+
+        television.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final Animation animAlpha = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.anim_alpha);
+                view.startAnimation(animAlpha);
+            }
+        });
+
+        archivos.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final Animation animAlpha = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.anim_alpha);
+                view.startAnimation(animAlpha);
             }
         });
 
@@ -77,7 +98,9 @@ public class MainActivity extends AppCompatActivity {
         }
         else{
             radio.setAlpha(1.0f);
-            television.setAlpha(1.0f);}
+            television.setAlpha(1.0f);
+            Snackbar.make(radio, "Conectando a internet...", Snackbar.LENGTH_LONG).show();
+        }
     }
 
     public class NetworkChangeReceiver extends BroadcastReceiver {
