@@ -59,7 +59,6 @@ public final class JAMediaPlayer{
             mediaPlayer.reset();
         }
 
-
         //mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         mediaPlayer.setAudioStreamType(AudioTrack.MODE_STREAM);
 
@@ -128,7 +127,7 @@ public final class JAMediaPlayer{
         /*
         mediaPlayer.setOnInfoListener(new MediaPlayer.OnInfoListener() {
             @Override
-            public boolean onInfo(MediaPlayer mediaPlayer, int codeinfo, int i1) {
+            public boolean onInfo(MediaPlayer mediaPlayer, int codeinfo, int extra) {
                 switch (codeinfo){
                     //case MediaPlayer.MEDIA_INFO_UNKNOWN:{
                     //    break;
@@ -166,16 +165,15 @@ public final class JAMediaPlayer{
                     case MediaPlayer.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING:{
                         break;
                     }
-                    default:{Log.i("**** INFO: ", " " + codeinfo + " " + i1);}
+                    default:{Log.i("**** INFO: ", " " + codeinfo + " " + extra);}
                 }
-
-                return false;
+                return true;
             }
         });
 
         mediaPlayer.setOnBufferingUpdateListener(new MediaPlayer.OnBufferingUpdateListener() {
             public void onBufferingUpdate(MediaPlayer mp, int percent) {
-                Log.i("***** Buffering:", "" + percent);
+                //Log.i("***** Buffering:", "" + percent);
             }
         });
 
