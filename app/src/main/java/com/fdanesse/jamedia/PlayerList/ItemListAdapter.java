@@ -6,6 +6,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -36,6 +38,8 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemLi
         v.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                final Animation animAlpha = AnimationUtils.loadAnimation(activity.getApplicationContext(), R.anim.anim_alpha);
+                view.startAnimation(animAlpha);
                 TextView textview1 = (TextView) view.findViewById(R.id.nombre);
                 TextView textview2 = (TextView) view.findViewById(R.id.url);
                 Intent intent = new Intent(activity, PlayerActivity.class);

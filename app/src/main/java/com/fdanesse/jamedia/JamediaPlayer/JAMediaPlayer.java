@@ -120,6 +120,8 @@ public final class JAMediaPlayer{
 
                 Log.i("**** ERROR: ", " " + what + " " + extra);
                 mediaPlayer.stop();
+                mediaPlayer.reset();
+                url = "";
                 return true;
             }
         });
