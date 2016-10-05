@@ -36,19 +36,18 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        archivos.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //
-            }
-        });
-
         boolean i = network_check();
-        findViewById(R.id.radio).setEnabled(i);
-        findViewById(R.id.television).setEnabled(i);
-        if (!i){
+        radio.setEnabled(i);
+        television.setEnabled(i);
+
+        if (i == false){
+            radio.setAlpha(0.5f);
+            television.setAlpha(0.5f);
             Snackbar.make(radio, "No tienes conexión a internet", Snackbar.LENGTH_INDEFINITE);
         }
+        else{
+            radio.setAlpha(1.0f);
+            television.setAlpha(1.0f);}
     }
 
     private boolean network_check(){
