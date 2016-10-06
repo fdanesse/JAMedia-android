@@ -30,7 +30,7 @@
             android:layout_height="wrap_content"
             android:text="Radios"
             android:textStyle="normal"
-            android:background="@drawable/rounded_corner_box2"
+            android:background="@drawable/background_buttons"
             android:textColor="#ffffffff"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="10dp"/>
@@ -42,7 +42,7 @@
             android:layout_height="wrap_content"
             android:text="Televisión"
             android:textStyle="normal"
-            android:background="@drawable/rounded_corner_box2"
+            android:background="@drawable/background_buttons"
             android:textColor="#ffffffff"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="10dp"/>
@@ -54,7 +54,7 @@
             android:layout_height="wrap_content"
             android:text="Archivos"
             android:textStyle="normal"
-            android:background="@drawable/rounded_corner_box2"
+            android:background="@drawable/background_buttons"
             android:textColor="#ffffffff"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="10dp" />

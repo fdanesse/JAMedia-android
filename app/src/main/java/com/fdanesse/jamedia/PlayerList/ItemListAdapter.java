@@ -38,7 +38,7 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemLi
         v.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final Animation animAlpha = AnimationUtils.loadAnimation(activity.getApplicationContext(), R.anim.anim_alpha);
+                final Animation animAlpha = AnimationUtils.loadAnimation(activity.getApplicationContext(), R.anim.anim_alpha1);
                 view.startAnimation(animAlpha);
                 TextView textview1 = (TextView) view.findViewById(R.id.nombre);
                 TextView textview2 = (TextView) view.findViewById(R.id.url);

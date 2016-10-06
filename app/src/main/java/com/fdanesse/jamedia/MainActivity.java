@@ -9,6 +9,7 @@ import android.net.NetworkInfo;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -34,30 +35,32 @@ public class MainActivity extends AppCompatActivity {
         television = (Button) findViewById(R.id.television);
         archivos = (Button) findViewById(R.id.archivos);
 
-        radio.setOnClickListener(new View.OnClickListener() {
+        radio.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onClick(View view) {
-                final Animation animAlpha = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.anim_alpha);
-                view.startAnimation(animAlpha);
-                Intent intent = new Intent(MainActivity.this, ListActivity.class);
-                startActivity(intent);
-                finish();
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                button_clicked(view, motionEvent);
+                if (motionEvent.getAction() == MotionEvent.ACTION_UP){
+                    Intent intent = new Intent(MainActivity.this, ListActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+                return true;
             }
         });
 
-        television.setOnClickListener(new View.OnClickListener() {
+        television.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onClick(View view) {
-                final Animation animAlpha = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.anim_alpha);
-                view.startAnimation(animAlpha);
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                button_clicked(view, motionEvent);
+                return true;
             }
         });
 
-        archivos.setOnClickListener(new View.OnClickListener() {
+        archivos.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onClick(View view) {
-                final Animation animAlpha = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.anim_alpha);
-                view.startAnimation(animAlpha);
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                button_clicked(view, motionEvent);
+                return true;
             }
         });
 
@@ -66,6 +69,25 @@ public class MainActivity extends AppCompatActivity {
         IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
         receiver = new NetworkChangeReceiver();
         registerReceiver(receiver, filter);
+    }
+
+    private void button_clicked(View view, MotionEvent motionEvent){
+        switch (motionEvent.getAction()){
+            case MotionEvent.ACTION_DOWN:{
+                final Animation animAlpha = AnimationUtils.loadAnimation(
+                        getApplicationContext(), R.anim.anim_alpha1);
+                view.startAnimation(animAlpha);
+                view.setAlpha(0.5f);
+                break;
+            }
+            case MotionEvent.ACTION_UP:{
+                final Animation animAlpha = AnimationUtils.loadAnimation(
+                        getApplicationContext(), R.anim.anim_alpha2);
+                view.startAnimation(animAlpha);
+                view.setAlpha(1.0f);
+                break;
+            }
+        }
     }
 
     @Override
@@ -92,12 +114,20 @@ public class MainActivity extends AppCompatActivity {
         television.setEnabled(i);
 
         if (i == false){
+            final Animation animAlpha = AnimationUtils.loadAnimation(
+                    getApplicationContext(), R.anim.anim_alpha1);
+            radio.startAnimation(animAlpha);
             radio.setAlpha(0.5f);
+            television.startAnimation(animAlpha);
             television.setAlpha(0.5f);
             Snackbar.make(radio, "No tienes conexión a internet", Snackbar.LENGTH_INDEFINITE).show();
         }
         else{
+            final Animation animAlpha = AnimationUtils.loadAnimation(
+                    getApplicationContext(), R.anim.anim_alpha2);
+            radio.startAnimation(animAlpha);
             radio.setAlpha(1.0f);
+            television.startAnimation(animAlpha);
             television.setAlpha(1.0f);
             Snackbar.make(radio, "Conectando a internet...", Snackbar.LENGTH_LONG).show();
         }
