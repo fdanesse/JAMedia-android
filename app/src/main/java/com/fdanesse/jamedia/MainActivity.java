@@ -6,15 +6,12 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.Uri;
+//import android.net.Uri;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
 
 import com.fdanesse.jamedia.PlayerList.ListActivity;
@@ -38,13 +35,12 @@ public class MainActivity extends AppCompatActivity {
         archivos = (Button) findViewById(R.id.archivos);
 
         set_touch_listeners();
+        Utils.setActiveView(archivos);
         network_changed();
 
         IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
         receiver = new NetworkChangeReceiver();
         registerReceiver(receiver, filter);
-
-        setActiveView(archivos);
     }
 
     private void set_touch_listeners(){
@@ -79,20 +75,6 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
-    }
-
-    private void setActiveView(View view){
-        final Animation animAlpha = AnimationUtils.loadAnimation(
-                getApplicationContext(), R.anim.anim_alpha2);
-        view.startAnimation(animAlpha);
-        view.setAlpha(1.0f);
-    }
-
-    private void setInactiveView(View view){
-        final Animation animAlpha = AnimationUtils.loadAnimation(
-                getApplicationContext(), R.anim.anim_alpha1);
-        view.startAnimation(animAlpha);
-        view.setAlpha(0.5f);
     }
 
     /*
@@ -132,11 +114,11 @@ public class MainActivity extends AppCompatActivity {
     private void button_clicked(View view, MotionEvent motionEvent){
         switch (motionEvent.getAction()){
             case MotionEvent.ACTION_DOWN:{
-                setInactiveView(view);
+                Utils.setInactiveView(view);
                 break;
             }
             case MotionEvent.ACTION_UP:{
-                setActiveView(view);
+                Utils.setActiveView(view);
                 break;
             }
         }
@@ -166,13 +148,13 @@ public class MainActivity extends AppCompatActivity {
         television.setEnabled(i);
 
         if (i == false){
-            setInactiveView(radio);
-            setInactiveView(television);
+            Utils.setInactiveView(radio);
+            Utils.setInactiveView(television);
             Snackbar.make(radio, "No tienes conexión a internet", Snackbar.LENGTH_INDEFINITE).show();
         }
         else{
-            setActiveView(radio);
-            setActiveView(television);
+            Utils.setActiveView(radio);
+            Utils.setActiveView(television);
             Snackbar.make(radio, "Conectando a internet...", Snackbar.LENGTH_LONG).show();
         }
     }

@@ -13,30 +13,22 @@ import com.fdanesse.jamedia.R;
 
 public class PlayerActivity extends AppCompatActivity {
 
+    private String trackName;
+    private String trackurl;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_player);
 
         Bundle extras = getIntent().getExtras();
+        trackName = extras.getString("name", "");
+        trackurl = extras.getString("url", "");
         Snackbar.make((View) findViewById(R.id.imagen),
-                "Reproducir: " + extras.getString("name", "") + extras.getString("url", ""),
-                Snackbar.LENGTH_SHORT).show();
+                "Reproducir: " + trackName + "\n" + trackurl, Snackbar.LENGTH_SHORT).show();
 
-        JAMediaPlayer.play(this, extras.getString("url", ""));
+        JAMediaPlayer.play(this, trackurl);
     }
-
-    /*
-    public boolean onKeyDown(int keycode, KeyEvent event){
-        if (keycode == KeyEvent.KEYCODE_BACK){
-            Intent intent = new Intent(this, ListActivity.class);
-            startActivity(intent);
-            finish();
-        }
-        //return super.onKeyDown(keycode, event);
-        return true;
-    }
-    */
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {

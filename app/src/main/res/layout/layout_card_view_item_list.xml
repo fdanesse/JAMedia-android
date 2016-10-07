@@ -8,6 +8,7 @@
     android:measureAllChildren="false"
     android:foregroundGravity="center_vertical"
     card_view:cardCornerRadius="10dp"
+    android:alpha="0.5"
     >
 
     <LinearLayout
@@ -36,7 +37,7 @@
             android:gravity="center_vertical"
             android:textAlignment="gravity"
             android:elegantTextHeight="false"
-            android:textColor="#000000" />
+            android:textColor="#ffffffff" />
 
         <TextView
             android:id="@+id/url"
@@ -47,7 +48,7 @@
             android:text="Url"
             android:textAlignment="gravity"
             android:gravity="center_vertical"
-            android:textColor="#000000"
+            android:textColor="#ffffffff"
             android:visibility="invisible"
             />
 
