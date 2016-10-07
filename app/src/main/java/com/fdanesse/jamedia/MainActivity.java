@@ -6,9 +6,11 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
@@ -35,6 +37,17 @@ public class MainActivity extends AppCompatActivity {
         television = (Button) findViewById(R.id.television);
         archivos = (Button) findViewById(R.id.archivos);
 
+        set_touch_listeners();
+        network_changed();
+
+        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        receiver = new NetworkChangeReceiver();
+        registerReceiver(receiver, filter);
+
+        setActiveView(archivos);
+    }
+
+    private void set_touch_listeners(){
         radio.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -60,31 +73,70 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 button_clicked(view, motionEvent);
+                //if (motionEvent.getAction() == MotionEvent.ACTION_UP){
+                //    showFileChooser();
+                //}
                 return true;
             }
         });
-
-        network_changed();
-
-        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
-        receiver = new NetworkChangeReceiver();
-        registerReceiver(receiver, filter);
     }
+
+    private void setActiveView(View view){
+        final Animation animAlpha = AnimationUtils.loadAnimation(
+                getApplicationContext(), R.anim.anim_alpha2);
+        view.startAnimation(animAlpha);
+        view.setAlpha(1.0f);
+    }
+
+    private void setInactiveView(View view){
+        final Animation animAlpha = AnimationUtils.loadAnimation(
+                getApplicationContext(), R.anim.anim_alpha1);
+        view.startAnimation(animAlpha);
+        view.setAlpha(0.5f);
+    }
+
+    /*
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case 0:
+                if (resultCode == RESULT_OK) {
+                    // Get the Uri of the selected file
+                    Uri uri = data.getData();
+                    Log.d("***", "File Uri: " + uri.toString());
+                    Snackbar.make(radio, "OK " + uri.toString(), Snackbar.LENGTH_INDEFINITE).show();
+                    // Get the path
+                    //String path = FileUtils.getPath(this, uri);
+                    //Log.d("***", "File Path: " + path);
+                    // Get the file instance
+                    // File file = new File(path);
+                    // Initiate the upload
+                }
+                else{
+                    Snackbar.make(radio, "No OK", Snackbar.LENGTH_INDEFINITE).show();
+                }
+                break;
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+    */
+
+    //private void showFileChooser() {
+    //    Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+    //    intent.setType("*/audio|*/video");
+    //    intent.addCategory(Intent.CATEGORY_OPENABLE);
+    //    try {
+    //        startActivityForResult(Intent.createChooser(intent, ""), 0);
+    //    } catch (android.content.ActivityNotFoundException ex) {}
+    //}
 
     private void button_clicked(View view, MotionEvent motionEvent){
         switch (motionEvent.getAction()){
             case MotionEvent.ACTION_DOWN:{
-                final Animation animAlpha = AnimationUtils.loadAnimation(
-                        getApplicationContext(), R.anim.anim_alpha1);
-                view.startAnimation(animAlpha);
-                view.setAlpha(0.5f);
+                setInactiveView(view);
                 break;
             }
             case MotionEvent.ACTION_UP:{
-                final Animation animAlpha = AnimationUtils.loadAnimation(
-                        getApplicationContext(), R.anim.anim_alpha2);
-                view.startAnimation(animAlpha);
-                view.setAlpha(1.0f);
+                setActiveView(view);
                 break;
             }
         }
@@ -114,21 +166,13 @@ public class MainActivity extends AppCompatActivity {
         television.setEnabled(i);
 
         if (i == false){
-            final Animation animAlpha = AnimationUtils.loadAnimation(
-                    getApplicationContext(), R.anim.anim_alpha1);
-            radio.startAnimation(animAlpha);
-            radio.setAlpha(0.5f);
-            television.startAnimation(animAlpha);
-            television.setAlpha(0.5f);
+            setInactiveView(radio);
+            setInactiveView(television);
             Snackbar.make(radio, "No tienes conexión a internet", Snackbar.LENGTH_INDEFINITE).show();
         }
         else{
-            final Animation animAlpha = AnimationUtils.loadAnimation(
-                    getApplicationContext(), R.anim.anim_alpha2);
-            radio.startAnimation(animAlpha);
-            radio.setAlpha(1.0f);
-            television.startAnimation(animAlpha);
-            television.setAlpha(1.0f);
+            setActiveView(radio);
+            setActiveView(television);
             Snackbar.make(radio, "Conectando a internet...", Snackbar.LENGTH_LONG).show();
         }
     }
