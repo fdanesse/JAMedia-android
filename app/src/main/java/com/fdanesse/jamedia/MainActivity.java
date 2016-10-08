@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-//import android.net.Uri;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -14,7 +13,12 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 
+import com.fdanesse.jamedia.Archivos.FileManager;
 import com.fdanesse.jamedia.PlayerList.ListActivity;
+import com.fdanesse.jamedia.PlayerList.ListItem;
+
+import java.io.IOException;
+import java.util.ArrayList;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -49,7 +53,9 @@ public class MainActivity extends AppCompatActivity {
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 button_clicked(view, motionEvent);
                 if (motionEvent.getAction() == MotionEvent.ACTION_UP){
+                    ArrayList<ListItem> radios = FileManager.get_radios();
                     Intent intent = new Intent(MainActivity.this, ListActivity.class);
+                    intent.putExtra("tracks", radios);
                     startActivity(intent);
                     finish();
                 }
@@ -61,6 +67,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 button_clicked(view, motionEvent);
+                if (motionEvent.getAction() == MotionEvent.ACTION_UP){
+                    //
+                }
                 return true;
             }
         });
@@ -69,47 +78,23 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 button_clicked(view, motionEvent);
-                //if (motionEvent.getAction() == MotionEvent.ACTION_UP){
-                //    showFileChooser();
-                //}
+                if (motionEvent.getAction() == MotionEvent.ACTION_UP){
+                    //FIXME: Agregar FilechooserDialog
+                    ArrayList<ListItem> musica = new ArrayList<ListItem>();
+                    try {
+                        musica = FileManager.get_music();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    Intent intent = new Intent(MainActivity.this, ListActivity.class);
+                    intent.putExtra("tracks", musica);
+                    startActivity(intent);
+                    finish();
+                }
                 return true;
             }
         });
     }
-
-    /*
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode) {
-            case 0:
-                if (resultCode == RESULT_OK) {
-                    // Get the Uri of the selected file
-                    Uri uri = data.getData();
-                    Log.d("***", "File Uri: " + uri.toString());
-                    Snackbar.make(radio, "OK " + uri.toString(), Snackbar.LENGTH_INDEFINITE).show();
-                    // Get the path
-                    //String path = FileUtils.getPath(this, uri);
-                    //Log.d("***", "File Path: " + path);
-                    // Get the file instance
-                    // File file = new File(path);
-                    // Initiate the upload
-                }
-                else{
-                    Snackbar.make(radio, "No OK", Snackbar.LENGTH_INDEFINITE).show();
-                }
-                break;
-        }
-        super.onActivityResult(requestCode, resultCode, data);
-    }
-    */
-
-    //private void showFileChooser() {
-    //    Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-    //    intent.setType("*/audio|*/video");
-    //    intent.addCategory(Intent.CATEGORY_OPENABLE);
-    //    try {
-    //        startActivityForResult(Intent.createChooser(intent, ""), 0);
-    //    } catch (android.content.ActivityNotFoundException ex) {}
-    //}
 
     private void button_clicked(View view, MotionEvent motionEvent){
         switch (motionEvent.getAction()){
