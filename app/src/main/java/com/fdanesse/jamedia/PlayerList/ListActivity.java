@@ -24,6 +24,7 @@ public class ListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_list);
 
         Bundle extras = getIntent().getExtras();
+        //FIXME: Si es llamada desde el reproductor, se debe mostrar activada la pista activa.
         lista = (ArrayList<ListItem>) extras.getSerializable("tracks");
         recyclerView = (RecyclerView) findViewById(R.id.reciclerview);
 
@@ -33,10 +34,6 @@ public class ListActivity extends AppCompatActivity {
 
         ItemListAdapter listAdapter = new ItemListAdapter(lista, this);
         recyclerView.setAdapter(listAdapter);
-
-        /**
-         * FIXME: Si es llamada desde el reproductor, se debe mostrar activada la pista activa.
-         */
     }
 
     public boolean onKeyDown(int keycode, KeyEvent event){

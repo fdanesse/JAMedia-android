@@ -16,17 +16,16 @@ import java.util.ArrayList;
 public class FileManager {
 
 
-    public static ArrayList<ListItem> get_music() throws IOException {
+    public static ArrayList<ListItem> get_music() {
 
         ArrayList<ListItem> lista = new ArrayList<ListItem>();
-        File file = new File("/mnt/sdcard/Musica"); //(Environment.DIRECTORY_MUSIC);
+        File file = new File("/mnt/sdcard/Musica/Alika");
         File[] files = file.listFiles();
-        //Log.i("<><>", file.getPath().toString() + " " + file.getAbsolutePath().toString());
         for (File f: files){
-            //FIXME: agregar comprobacion de tipo de archivos
+            //FIXME: agregar comprobación de tipo de archivos
             if (f.isFile()) {
+                //FIXME: Nombres no deben ser demasiado largos
                 lista.add(new ListItem(R.drawable.audio, f.getName(), f.getPath()));
-                //Log.i("<><>", f.getName() + " " + f.getPath());
             }
         }
         return lista;

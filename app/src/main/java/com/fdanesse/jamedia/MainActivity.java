@@ -80,16 +80,16 @@ public class MainActivity extends AppCompatActivity {
                 button_clicked(view, motionEvent);
                 if (motionEvent.getAction() == MotionEvent.ACTION_UP){
                     //FIXME: Agregar FilechooserDialog
-                    ArrayList<ListItem> musica = new ArrayList<ListItem>();
-                    try {
-                        musica = FileManager.get_music();
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                    ArrayList<ListItem> musica = FileManager.get_music();
+                    if (musica.isEmpty()){
+                        Snackbar.make(archivos, "No hay archivos para cargar", Snackbar.LENGTH_INDEFINITE).show();
                     }
-                    Intent intent = new Intent(MainActivity.this, ListActivity.class);
-                    intent.putExtra("tracks", musica);
-                    startActivity(intent);
-                    finish();
+                    else{
+                        Intent intent = new Intent(MainActivity.this, ListActivity.class);
+                        intent.putExtra("tracks", musica);
+                        startActivity(intent);
+                        finish();
+                    }
                 }
                 return true;
             }

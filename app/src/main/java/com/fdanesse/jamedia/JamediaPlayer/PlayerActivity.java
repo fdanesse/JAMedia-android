@@ -8,13 +8,17 @@ import android.view.KeyEvent;
 import android.view.View;
 
 import com.fdanesse.jamedia.PlayerList.ListActivity;
+import com.fdanesse.jamedia.PlayerList.ListItem;
 import com.fdanesse.jamedia.R;
+
+import java.util.ArrayList;
 
 
 public class PlayerActivity extends AppCompatActivity {
 
-    private String trackName;
-    private String trackurl;
+    private static String trackName;
+    private static String trackurl;
+    private static ArrayList<ListItem> tracks;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,8 +28,10 @@ public class PlayerActivity extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         trackName = extras.getString("name", "");
         trackurl = extras.getString("url", "");
+        tracks = (ArrayList<ListItem>) extras.getSerializable("tracks");
+
         Snackbar.make((View) findViewById(R.id.imagen),
-                "Reproducir: " + trackName + "\n" + trackurl, Snackbar.LENGTH_SHORT).show();
+                "Reproducir: " + trackName + "\n" + trackurl, Snackbar.LENGTH_INDEFINITE).show();
 
         JAMediaPlayer.play(this, trackurl);
     }
@@ -39,6 +45,8 @@ public class PlayerActivity extends AppCompatActivity {
             case KeyEvent.KEYCODE_BACK:{
                 if (action == KeyEvent.ACTION_DOWN) {
                     Intent intent = new Intent(this, ListActivity.class);
+                    intent.putExtra("tracks", tracks);
+                    //FIXME: Agregar "current track"
                     startActivity(intent);
                     finish();
                 }

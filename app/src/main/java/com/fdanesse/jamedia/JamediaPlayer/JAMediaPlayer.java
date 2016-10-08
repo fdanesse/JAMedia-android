@@ -59,8 +59,8 @@ public final class JAMediaPlayer{
             mediaPlayer.reset();
         }
 
-        //mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-        mediaPlayer.setAudioStreamType(AudioTrack.MODE_STREAM);
+        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        //mediaPlayer.setAudioStreamType(AudioTrack.MODE_STREAM);
 
         try {
             mediaPlayer.setDataSource(url);

@@ -43,6 +43,7 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemLi
                 Intent intent = new Intent(activity, PlayerActivity.class);
                 intent.putExtra("name", textview1.getText().toString());
                 intent.putExtra("url", textview2.getText().toString());
+                intent.putExtra("tracks", lista);
                 activity.startActivity(intent);
                 activity.finish();
             }
