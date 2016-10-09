@@ -2,9 +2,7 @@ package com.fdanesse.jamedia.JamediaPlayer;
 
 import android.app.Activity;
 import android.media.AudioManager;
-import android.media.AudioTrack;
 import android.media.MediaPlayer;
-import android.os.Build;
 import android.util.Log;
 
 import java.io.IOException;
@@ -39,6 +37,15 @@ public final class JAMediaPlayer{
         }
     }
 
+    public static void play(){
+        mediaPlayer.start();
+    }
+
+    public static void stop(){
+        mediaPlayer.stop();
+        mediaPlayer.reset();
+    }
+
     public static void play(Activity act, String u){
 
         activity = act;
@@ -55,8 +62,7 @@ public final class JAMediaPlayer{
             url = u;}
 
         if (mediaPlayer.isPlaying()){
-            mediaPlayer.stop();
-            mediaPlayer.reset();
+            stop();
         }
 
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
@@ -87,7 +93,14 @@ public final class JAMediaPlayer{
         mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             public void onPrepared(MediaPlayer mp) {
                 Log.i("**** Duracion: ", " " + mediaPlayer.getDuration());
-                mediaPlayer.start();
+                play();
+            }
+        });
+
+        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mediaPlayer) {
+                stop();
             }
         });
 
@@ -119,8 +132,7 @@ public final class JAMediaPlayer{
                 }
 
                 Log.i("**** ERROR: ", " " + what + " " + extra);
-                mediaPlayer.stop();
-                mediaPlayer.reset();
+                stop();
                 url = "";
                 return true;
             }
@@ -176,13 +188,6 @@ public final class JAMediaPlayer{
         mediaPlayer.setOnBufferingUpdateListener(new MediaPlayer.OnBufferingUpdateListener() {
             public void onBufferingUpdate(MediaPlayer mp, int percent) {
                 //Log.i("***** Buffering:", "" + percent);
-            }
-        });
-
-        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mediaPlayer) {
-
             }
         });
 
