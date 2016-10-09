@@ -9,15 +9,16 @@ import android.net.NetworkInfo;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 
 import com.fdanesse.jamedia.Archivos.FileManager;
+import com.fdanesse.jamedia.JamediaPlayer.JAMediaPlayer;
 import com.fdanesse.jamedia.PlayerList.ListActivity;
 import com.fdanesse.jamedia.PlayerList.ListItem;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 
@@ -82,7 +83,8 @@ public class MainActivity extends AppCompatActivity {
                     //FIXME: Agregar FilechooserDialog
                     ArrayList<ListItem> musica = FileManager.get_music();
                     if (musica.isEmpty()){
-                        Snackbar.make(archivos, "No hay archivos para cargar", Snackbar.LENGTH_INDEFINITE).show();
+                        Snackbar.make(archivos, "No hay archivos para cargar",
+                                Snackbar.LENGTH_INDEFINITE).show();
                     }
                     else{
                         Intent intent = new Intent(MainActivity.this, ListActivity.class);
@@ -106,6 +108,42 @@ public class MainActivity extends AppCompatActivity {
                 Utils.setActiveView(view);
                 break;
             }
+        }
+    }
+
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        int action = event.getAction();
+        int keyCode = event.getKeyCode();
+
+        switch (keyCode) {
+            /*
+            case KeyEvent.KEYCODE_BACK:{
+                if (action == KeyEvent.ACTION_DOWN) {
+                    Intent intent = new Intent(ListActivity.this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+                return true;
+            }*/
+            case KeyEvent.KEYCODE_VOLUME_UP: {
+                if (action == KeyEvent.ACTION_DOWN) {
+                    JAMediaPlayer.up_vol(this);
+                }
+                Snackbar.make(radio, "Volumen: " + JAMediaPlayer.get_vol(this),
+                        Snackbar.LENGTH_SHORT).show();
+                return true;
+            }
+            case KeyEvent.KEYCODE_VOLUME_DOWN: {
+                if (action == KeyEvent.ACTION_DOWN) {
+                    JAMediaPlayer.down_vol(this);
+                }
+                Snackbar.make(radio, "Volumen: " + JAMediaPlayer.get_vol(this),
+                        Snackbar.LENGTH_SHORT).show();
+                return true;
+            }
+            default:
+                return super.dispatchKeyEvent(event);
         }
     }
 

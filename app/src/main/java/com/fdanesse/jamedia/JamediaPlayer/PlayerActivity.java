@@ -54,14 +54,18 @@ public class PlayerActivity extends AppCompatActivity {
             }
             case KeyEvent.KEYCODE_VOLUME_UP: {
                 if (action == KeyEvent.ACTION_DOWN) {
-                    JAMediaPlayer.up_vol();
+                    JAMediaPlayer.up_vol(this);
                 }
+                Snackbar.make((View) findViewById(R.id.imagen),
+                        "Volumen: " + JAMediaPlayer.get_vol(this), Snackbar.LENGTH_SHORT).show();
                 return true;
             }
             case KeyEvent.KEYCODE_VOLUME_DOWN: {
                 if (action == KeyEvent.ACTION_DOWN) {
-                    JAMediaPlayer.down_vol();
+                    JAMediaPlayer.down_vol(this);
                 }
+                Snackbar.make((View) findViewById(R.id.imagen),
+                        "Volumen: " + JAMediaPlayer.get_vol(this), Snackbar.LENGTH_SHORT).show();
                 return true;
             }
             default:

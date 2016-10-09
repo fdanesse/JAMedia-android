@@ -18,23 +18,34 @@ public final class JAMediaPlayer{
 
     private static final MediaPlayer mediaPlayer = new MediaPlayer();
     private static String url = "";
-    private static AudioManager audioManager;
-    private static int maxvol;
-    private static Activity activity;
 
-    public static void up_vol(){
+    public static void up_vol(Activity activity){
+        AudioManager audioManager = (AudioManager) activity.getSystemService(activity.AUDIO_SERVICE);
+        activity.setVolumeControlStream(audioManager.STREAM_MUSIC);
+        int maxvol = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+
         int vol = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC) + 1;
         if (vol > 0 && vol < maxvol) {
             audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, vol,
                     AudioManager.FLAG_PLAY_SOUND);
         }
     }
-    public static void down_vol(){
+    public static void down_vol(Activity activity){
+        AudioManager audioManager = (AudioManager) activity.getSystemService(activity.AUDIO_SERVICE);
+        activity.setVolumeControlStream(audioManager.STREAM_MUSIC);
+        int maxvol = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+
         int vol = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC) - 1;
         if (vol > 0 && vol < maxvol) {
             audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, vol,
                     AudioManager.FLAG_PLAY_SOUND);
         }
+    }
+
+    public static int get_vol(Activity activity){
+        AudioManager audioManager = (AudioManager) activity.getSystemService(activity.AUDIO_SERVICE);
+        activity.setVolumeControlStream(audioManager.STREAM_MUSIC);
+        return audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
     }
 
     public static void play(){
@@ -46,8 +57,9 @@ public final class JAMediaPlayer{
         mediaPlayer.reset();
     }
 
-    public static void play(Activity act, String u){
+    public static void play(Activity activity, String u){
 
+        /*
         activity = act;
 
         if (audioManager == null){
@@ -55,6 +67,7 @@ public final class JAMediaPlayer{
             activity.setVolumeControlStream(AudioManager.STREAM_MUSIC);
             maxvol = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
         }
+        */
 
         if (u.compareTo(url) == 0 && mediaPlayer.isPlaying()){
             return;}
