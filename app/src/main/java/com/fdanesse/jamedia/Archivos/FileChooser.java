@@ -25,6 +25,9 @@ public class FileChooser extends AppCompatActivity {
         Toolbar myactionbar = (Toolbar) findViewById(R.id.file_chooser_toolbar);
         setSupportActionBar(myactionbar);
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
         Bundle extras = getIntent().getExtras();
         currentpath = extras.getString("currentpath", "/mnt/sdcard/Musica/");
 

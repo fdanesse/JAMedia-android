@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
                     Intent intent = new Intent(MainActivity.this, FileChooser.class);
                     intent.putExtra("currentpath", "/mnt/sdcard/Musica/");
                     startActivity(intent);
-                    finish();
+                    //finish();
                 }
                 return true;
             }
