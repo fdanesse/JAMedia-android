@@ -35,7 +35,16 @@ public class FileChooserItemListAdapter extends RecyclerView.Adapter<FileChooser
         v.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Utils.setActiveView(view);
+                TextView textview3 = (TextView) view.findViewById(R.id.selected);
+                String selected = textview3.getText().toString();
+                if (selected == "true"){
+                    Utils.setInactiveView(view);
+                    textview3.setText("false");
+                }
+                else{
+                    Utils.setActiveView(view);
+                    textview3.setText("true");
+                }
                 /*
                 TextView textview1 = (TextView) view.findViewById(R.id.nombre);
                 TextView textview2 = (TextView) view.findViewById(R.id.url);

@@ -38,6 +38,7 @@ public class FileChooser extends AppCompatActivity {
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
 
+        lista.add(new ItemFileChooser(R.drawable.folder, "AAA", "xxx"));
         lista.add(new ItemFileChooser(R.drawable.video, "AAA", "xxx"));
         lista.add(new ItemFileChooser(R.drawable.audio, "BBB", "xxx"));
 
