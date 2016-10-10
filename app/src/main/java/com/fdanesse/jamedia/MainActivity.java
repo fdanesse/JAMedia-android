@@ -14,6 +14,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 
+import com.fdanesse.jamedia.Archivos.FileChooser;
 import com.fdanesse.jamedia.Archivos.FileManager;
 import com.fdanesse.jamedia.JamediaPlayer.JAMediaPlayer;
 import com.fdanesse.jamedia.PlayerList.ListActivity;
@@ -81,6 +82,7 @@ public class MainActivity extends AppCompatActivity {
                 button_clicked(view, motionEvent);
                 if (motionEvent.getAction() == MotionEvent.ACTION_UP){
                     //FIXME: Agregar FilechooserDialog
+                    /*
                     ArrayList<ListItem> musica = FileManager.get_music();
                     if (musica.isEmpty()){
                         Snackbar.make(archivos, "No hay archivos para cargar",
@@ -92,6 +94,12 @@ public class MainActivity extends AppCompatActivity {
                         startActivity(intent);
                         finish();
                     }
+                    */
+
+                    Intent intent = new Intent(MainActivity.this, FileChooser.class);
+                    intent.putExtra("currentpath", "/mnt/sdcard/Musica/");
+                    startActivity(intent);
+                    finish();
                 }
                 return true;
             }

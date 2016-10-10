@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.fdanesse.jamedia.Archivos.FileChooser">
+
+    <include
+        android:id="@+id/file_chooser_toolbar"
+        layout="@layout/file_chooser_toolbar"
+        >
+    </include>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="4dp"
+        android:background="@drawable/reciclado_arrugado_azul"
+        android:scaleType="centerCrop"
+        >
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/file_chooser_reciclerview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true"
+            />
+
+    </RelativeLayout>
+
+</android.support.design.widget.CoordinatorLayout>
