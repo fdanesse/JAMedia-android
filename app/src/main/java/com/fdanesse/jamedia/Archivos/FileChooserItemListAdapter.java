@@ -18,13 +18,16 @@ import java.util.ArrayList;
  */
 public class FileChooserItemListAdapter extends RecyclerView.Adapter<FileChooserItemListAdapter.ItemListViewHolder>{
 
+    private FileChooser filechooser;
     private ArrayList<ItemFileChooser> lista;
     private Activity activity;
 
-    public FileChooserItemListAdapter(ArrayList<ItemFileChooser> lista, Activity activity){
+    public FileChooserItemListAdapter(ArrayList<ItemFileChooser> lista, Activity activity, FileChooser filechooser){
+        this.filechooser = filechooser;
         this.lista = lista;
         this.activity = activity;
     }
+
 
     @Override
     public ItemListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -35,26 +38,34 @@ public class FileChooserItemListAdapter extends RecyclerView.Adapter<FileChooser
         v.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                TextView textview1 = (TextView) view.findViewById(R.id.filename);
+                TextView textview2 = (TextView) view.findViewById(R.id.filepath);
                 TextView textview3 = (TextView) view.findViewById(R.id.selected);
+                TextView textview4 = (TextView) view.findViewById(R.id.tipo);
+
+                String filename = textview1.getText().toString();
+                String filepath = textview2.getText().toString();
                 String selected = textview3.getText().toString();
-                if (selected == "true"){
-                    Utils.setInactiveView(view);
-                    textview3.setText("false");
-                }
-                else{
+                String tipo = textview4.getText().toString();
+
+                if (tipo.compareTo("Directorio") == 0){
                     Utils.setActiveView(view);
                     textview3.setText("true");
+                    filechooser.load_path(filepath);
                 }
-                /*
-                TextView textview1 = (TextView) view.findViewById(R.id.nombre);
-                TextView textview2 = (TextView) view.findViewById(R.id.url);
-                Intent intent = new Intent(activity, PlayerActivity.class);
-                intent.putExtra("name", textview1.getText().toString());
-                intent.putExtra("url", textview2.getText().toString());
-                intent.putExtra("tracks", lista);
-                activity.startActivity(intent);
-                activity.finish();
-                */
+                else if (tipo.compareTo("Archivo") == 0){
+                    if (selected == "true"){
+                        //FIXME: Se quita de la lista
+                        Utils.setInactiveView(view);
+                        textview3.setText("false");
+                    }
+                    else if (selected == "false"){
+                        //FIXME: Se agrega a la lista
+                        Utils.setActiveView(view);
+                        textview3.setText("true");
+                    }
+                }
             }
         });
 
@@ -67,6 +78,8 @@ public class FileChooserItemListAdapter extends RecyclerView.Adapter<FileChooser
         holder.imagen_view.setImageResource(listItem.getImagen());
         holder.text_view_filename.setText(listItem.getFilename());
         holder.text_view_filepath.setText(listItem.getFilepath());
+        holder.text_view_selected.setText(listItem.getSelected());
+        holder.text_view_tipo.setText(listItem.getTipo());
     }
 
     @Override
@@ -80,12 +93,16 @@ public class FileChooserItemListAdapter extends RecyclerView.Adapter<FileChooser
         private ImageView imagen_view;
         private TextView text_view_filename;
         private TextView text_view_filepath;
+        private TextView text_view_selected;
+        private TextView text_view_tipo;
 
         public ItemListViewHolder(View itemView) {
             super(itemView);
             imagen_view = (ImageView) itemView.findViewById(R.id.imagen);
             text_view_filename = (TextView) itemView.findViewById(R.id.filename);
             text_view_filepath = (TextView) itemView.findViewById(R.id.filepath);
+            text_view_selected = (TextView) itemView.findViewById(R.id.selected);
+            text_view_tipo = (TextView) itemView.findViewById(R.id.tipo);
         }
     }
 }

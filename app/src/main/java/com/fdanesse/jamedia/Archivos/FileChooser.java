@@ -15,6 +15,7 @@ public class FileChooser extends AppCompatActivity {
 
     private String currentpath;
     private ArrayList<ItemFileChooser> lista;
+    private FileChooserItemListAdapter listAdapter;
     public RecyclerView recyclerView;
 
     @Override
@@ -31,18 +32,23 @@ public class FileChooser extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         currentpath = extras.getString("currentpath", "/mnt/sdcard/Musica/");
 
-        lista = new ArrayList<ItemFileChooser>();
         recyclerView = (RecyclerView) findViewById(R.id.file_chooser_reciclerview);
 
         LinearLayoutManager llm = new LinearLayoutManager(this);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
 
-        lista.add(new ItemFileChooser(R.drawable.folder, "AAA", "xxx"));
-        lista.add(new ItemFileChooser(R.drawable.video, "AAA", "xxx"));
-        lista.add(new ItemFileChooser(R.drawable.audio, "BBB", "xxx"));
+        lista = FileManager.readDirPath(currentpath);
 
-        FileChooserItemListAdapter listAdapter = new FileChooserItemListAdapter(lista, this);
+        listAdapter = new FileChooserItemListAdapter(lista, this, this);
+        recyclerView.setAdapter(listAdapter);
+    }
+
+    public void load_path(String dirpath) {
+        lista.clear();
+        currentpath = dirpath;
+        lista = FileManager.readDirPath(currentpath);
+        listAdapter = new FileChooserItemListAdapter(lista, this, this);
         recyclerView.setAdapter(listAdapter);
     }
 }

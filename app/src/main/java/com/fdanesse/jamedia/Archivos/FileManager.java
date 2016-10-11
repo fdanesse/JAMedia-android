@@ -1,6 +1,7 @@
 package com.fdanesse.jamedia.Archivos;
 
-import android.os.Environment;
+import android.app.Activity;
+import android.support.design.widget.Snackbar;
 import android.util.Log;
 
 import com.fdanesse.jamedia.PlayerList.ListItem;
@@ -8,12 +9,69 @@ import com.fdanesse.jamedia.R;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 
 /**
  * Created by flavio on 07/10/16.
  */
 public class FileManager {
+
+
+    public static ArrayList<ItemFileChooser> readDirPath(String dirpath){
+        ArrayList<ItemFileChooser> lista = new ArrayList<ItemFileChooser>();
+        File file = new File(dirpath);
+
+        if (file.exists()){
+            File[] files = file.listFiles();
+
+            for (File f: files){
+
+                String filename = f.getName();
+                if (f.getName().length() > 15){
+                    filename = f.getName().substring(0, 15) + "...";
+                }
+
+                if (f.isDirectory()){
+                    if (f.canRead()){
+                        lista.add(new ItemFileChooser(R.drawable.folder, filename,
+                                f.getPath(), "Directorio"));
+                    }
+                }
+                else if (f.isFile()){
+                    if (f.canRead()) {
+                        //FIXME: completar comprobación de tipo de archivos
+                        String mime = "Undetermined";
+                        // URLConnection.guessContentTypeFromName(f.getPath());
+
+                        try {
+                            final URL url = new URL("file://" + f.getPath());
+                            final URLConnection connection = url.openConnection();
+                            mime = connection.getContentType();
+                        }
+                        catch (MalformedURLException badUrlEx) {continue;}
+                        catch (IOException ioEx) {continue;}
+
+                        if (mime.contains("audio")){
+                            lista.add(new ItemFileChooser(R.drawable.audio, filename,
+                                    f.getPath(), "Archivo"));
+                        }
+                        else if(mime.contains("video")){
+                            lista.add(new ItemFileChooser(R.drawable.video, filename,
+                                    f.getPath(), "Archivo"));
+                        }
+                        else {
+                            Log.i("XXXXX", mime);
+                        }
+                    }
+                }
+            }
+        }
+
+        return lista;
+    }
 
 
     public static ArrayList<ListItem> get_music() {
