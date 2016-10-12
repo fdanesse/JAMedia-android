@@ -7,27 +7,35 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 
 import com.fdanesse.jamedia.JamediaPlayer.JAMediaPlayer;
 import com.fdanesse.jamedia.R;
+import com.fdanesse.jamedia.Utils;
 
+import java.io.File;
 import java.util.ArrayList;
 
 
 public class FileChooserActivity extends AppCompatActivity {
 
     private String currentpath;
+    private ArrayList<String> tracks;
+
     private ArrayList<ItemFileChooser> lista;
     private FileChooserItemListAdapter listAdapter;
-    public RecyclerView recyclerView;
+
+    private Toolbar myactionbar;
+    private RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_file_chooser);
 
-        Toolbar myactionbar = (Toolbar) findViewById(R.id.file_chooser_toolbar);
+        myactionbar = (Toolbar) findViewById(R.id.file_chooser_toolbar);
         setSupportActionBar(myactionbar);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -37,33 +45,108 @@ public class FileChooserActivity extends AppCompatActivity {
         currentpath = extras.getString("currentpath", "/mnt/sdcard/Musica/");
 
         recyclerView = (RecyclerView) findViewById(R.id.file_chooser_reciclerview);
-
         LinearLayoutManager llm = new LinearLayoutManager(this);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
 
-        lista = FileManager.readDirPath(currentpath);
+        tracks = new ArrayList<String>();
+        lista = new ArrayList<ItemFileChooser>();
 
-        listAdapter = new FileChooserItemListAdapter(lista, this, this);
-        recyclerView.setAdapter(listAdapter);
+        load_path(currentpath);
+
+        Button boton = (Button) myactionbar.findViewById(R.id.anterior);
+        boton.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+                    File file = new File(currentpath);
+                    if (file.getParentFile() != null) {
+                        File parentdir = file.getParentFile();
+                        load_path(parentdir.getPath());
+                        Snackbar.make(view, parentdir.getPath(), Snackbar.LENGTH_INDEFINITE).show();
+                    }
+                }
+                return true;
+            }
+        });
+
+        boton = (Button) myactionbar.findViewById(R.id.play);
+        boton.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                //FIXME: Llamar al reproductor con la lista de path
+                /*
+                button_clicked(view, motionEvent);
+                if (motionEvent.getAction() == MotionEvent.ACTION_DOWN){
+                    ArrayList<ListItem> radios = FileManager.get_radios();
+                    Intent intent = new Intent(MainActivity.this, ListActivity.class);
+                    intent.putExtra("tracks", radios);
+                    startActivity(intent);
+                    finish();
+                }
+                 */
+                return true;
+            }
+        });
     }
 
-    public void add_track_in_selected(String filename, String filepath){
-        Snackbar.make((View) findViewById(R.id.filename),
-                "add: " + filename, Snackbar.LENGTH_LONG).show();
+    private void check_button_anterior(){
+        File file = new File(currentpath);
+        Button boton = (Button) myactionbar.findViewById(R.id.anterior);
+        if (file.getParentFile() != null) {
+            if (file.getParentFile().canRead()) {
+                Utils.setActiveView(boton);
+                boton.setEnabled(true);
+            } else {
+                Utils.setInactiveView(boton);
+                boton.setEnabled(false);
+            }
+        }
+        else {
+            Utils.setInactiveView(boton);
+            boton.setEnabled(false);
+        }
     }
 
-    public void remove_track_in_selected(String filename, String filepath){
-        Snackbar.make((View) findViewById(R.id.filename),
-                "remove: " + filename, Snackbar.LENGTH_LONG).show();
+    private void check_button_play(){
+        Button boton = (Button) myactionbar.findViewById(R.id.play);
+        if (tracks.size() > 0 && !boton.isEnabled()){
+            Utils.setActiveView(boton);
+            boton.setEnabled(true);
+        }
+        else if (tracks.size() < 1 && boton.isEnabled()){
+            Utils.setInactiveView(boton);
+            boton.setEnabled(false);
+        }
+    }
+
+    public void add_track_in_selected(String filepath){
+        if (!tracks.contains(filepath)){
+            tracks.add(filepath);
+            check_button_play();
+        }
+        //Snackbar.make((View) findViewById(R.id.filename),
+        //        "add: " + tracks.size(), Snackbar.LENGTH_LONG).show();
+    }
+
+    public void remove_track_in_selected(String filepath){
+        if (tracks.contains(filepath)){
+            tracks.remove(filepath);
+            check_button_play();
+        }
+        //Snackbar.make((View) findViewById(R.id.filename),
+        //        "remove: " + tracks.size(), Snackbar.LENGTH_LONG).show();
     }
 
     public void load_path(String dirpath) {
-        lista.clear();
         currentpath = dirpath;
+        tracks.clear();
+        lista.clear();
         lista = FileManager.readDirPath(currentpath);
         listAdapter = new FileChooserItemListAdapter(lista, this, this);
         recyclerView.setAdapter(listAdapter);
+        check_button_anterior();
+        check_button_play();
     }
 
     @Override

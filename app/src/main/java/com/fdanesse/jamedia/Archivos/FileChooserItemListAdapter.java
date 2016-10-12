@@ -58,12 +58,12 @@ public class FileChooserItemListAdapter extends RecyclerView.Adapter<FileChooser
                     if (selected == "true"){
                         Utils.setInactiveView(view);
                         textview3.setText("false");
-                        filechooser.remove_track_in_selected(filename, filepath);
+                        filechooser.remove_track_in_selected(filepath);
                     }
                     else if (selected == "false"){
                         Utils.setActiveView(view);
                         textview3.setText("true");
-                        filechooser.add_track_in_selected(filename, filepath);
+                        filechooser.add_track_in_selected(filepath);
                     }
                 }
             }
