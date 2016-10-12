@@ -14,7 +14,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 
-import com.fdanesse.jamedia.Archivos.FileChooser;
+import com.fdanesse.jamedia.Archivos.FileChooserActivity;
 import com.fdanesse.jamedia.Archivos.FileManager;
 import com.fdanesse.jamedia.JamediaPlayer.JAMediaPlayer;
 import com.fdanesse.jamedia.PlayerList.ListActivity;
@@ -96,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                     */
 
-                    Intent intent = new Intent(MainActivity.this, FileChooser.class);
+                    Intent intent = new Intent(MainActivity.this, FileChooserActivity.class);
                     intent.putExtra("currentpath", "/mnt/sdcard/Musica/");
                     startActivity(intent);
                     //finish();

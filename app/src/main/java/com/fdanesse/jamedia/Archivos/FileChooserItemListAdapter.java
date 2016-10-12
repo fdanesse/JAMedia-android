@@ -18,11 +18,11 @@ import java.util.ArrayList;
  */
 public class FileChooserItemListAdapter extends RecyclerView.Adapter<FileChooserItemListAdapter.ItemListViewHolder>{
 
-    private FileChooser filechooser;
+    private FileChooserActivity filechooser;
     private ArrayList<ItemFileChooser> lista;
     private Activity activity;
 
-    public FileChooserItemListAdapter(ArrayList<ItemFileChooser> lista, Activity activity, FileChooser filechooser){
+    public FileChooserItemListAdapter(ArrayList<ItemFileChooser> lista, Activity activity, FileChooserActivity filechooser){
         this.filechooser = filechooser;
         this.lista = lista;
         this.activity = activity;
@@ -50,20 +50,20 @@ public class FileChooserItemListAdapter extends RecyclerView.Adapter<FileChooser
                 String tipo = textview4.getText().toString();
 
                 if (tipo.compareTo("Directorio") == 0){
-                    Utils.setActiveView(view);
+                    //Utils.setActiveView(view);
                     textview3.setText("true");
                     filechooser.load_path(filepath);
                 }
                 else if (tipo.compareTo("Archivo") == 0){
                     if (selected == "true"){
-                        //FIXME: Se quita de la lista
                         Utils.setInactiveView(view);
                         textview3.setText("false");
+                        filechooser.remove_track_in_selected(filename, filepath);
                     }
                     else if (selected == "false"){
-                        //FIXME: Se agrega a la lista
                         Utils.setActiveView(view);
                         textview3.setText("true");
+                        filechooser.add_track_in_selected(filename, filepath);
                     }
                 }
             }

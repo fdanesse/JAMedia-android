@@ -29,7 +29,7 @@
             android:parentActivityName=".PlayerList.ListActivity">
         </activity>
         <activity
-            android:name=".Archivos.FileChooser"
+            android:name=".Archivos.FileChooserActivity"
             android:parentActivityName=".MainActivity">
         </activity>
     </application>
