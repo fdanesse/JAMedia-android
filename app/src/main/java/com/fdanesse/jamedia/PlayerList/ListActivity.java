@@ -9,8 +9,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
 
 import com.fdanesse.jamedia.JamediaPlayer.JAMediaPlayer;
+import com.fdanesse.jamedia.JamediaPlayer.PlayerActivity;
 import com.fdanesse.jamedia.MainActivity;
 import com.fdanesse.jamedia.R;
+import com.fdanesse.jamedia.Utils;
 
 import java.util.ArrayList;
 
@@ -26,16 +28,24 @@ public class ListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_list);
 
         Bundle extras = getIntent().getExtras();
-        //FIXME: Si es llamada desde el reproductor, se debe mostrar activada la pista activa.
         lista = (ArrayList<ListItem>) extras.getSerializable("tracks");
+        //int idcurrenttrack = extras.getInt("idcurrenttrack", 0);
         recyclerView = (RecyclerView) findViewById(R.id.reciclerview);
 
         LinearLayoutManager llm = new LinearLayoutManager(this);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
 
-        ItemListAdapter listAdapter = new ItemListAdapter(lista, this);
+        ItemListAdapter listAdapter = new ItemListAdapter(lista, this, this);
         recyclerView.setAdapter(listAdapter);
+    }
+
+    protected void playtrack(int index){
+        Intent intent = new Intent(this, PlayerActivity.class);
+        intent.putExtra("tracks", lista);
+        intent.putExtra("idcurrenttrack", index);
+        this.startActivity(intent);
+        this.finish();
     }
 
     /*
@@ -56,6 +66,7 @@ public class ListActivity extends AppCompatActivity {
         int keyCode = event.getKeyCode();
 
         switch (keyCode) {
+            /*
             case KeyEvent.KEYCODE_BACK:{
                 if (action == KeyEvent.ACTION_DOWN) {
                     Intent intent = new Intent(ListActivity.this, MainActivity.class);
@@ -64,6 +75,7 @@ public class ListActivity extends AppCompatActivity {
                 }
                 return true;
             }
+            */
             case KeyEvent.KEYCODE_VOLUME_UP: {
                 if (action == KeyEvent.ACTION_DOWN) {
                     JAMediaPlayer.up_vol(this);

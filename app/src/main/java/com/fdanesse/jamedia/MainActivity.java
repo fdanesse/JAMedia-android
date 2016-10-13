@@ -81,21 +81,6 @@ public class MainActivity extends AppCompatActivity {
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 button_clicked(view, motionEvent);
                 if (motionEvent.getAction() == MotionEvent.ACTION_UP){
-                    //FIXME: Agregar FilechooserDialog
-                    /*
-                    ArrayList<ListItem> musica = FileManager.get_music();
-                    if (musica.isEmpty()){
-                        Snackbar.make(archivos, "No hay archivos para cargar",
-                                Snackbar.LENGTH_INDEFINITE).show();
-                    }
-                    else{
-                        Intent intent = new Intent(MainActivity.this, ListActivity.class);
-                        intent.putExtra("tracks", musica);
-                        startActivity(intent);
-                        finish();
-                    }
-                    */
-
                     Intent intent = new Intent(MainActivity.this, FileChooserActivity.class);
                     intent.putExtra("currentpath", "/mnt/sdcard/Musica/");
                     startActivity(intent);

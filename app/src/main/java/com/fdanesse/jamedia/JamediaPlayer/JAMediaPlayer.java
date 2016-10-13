@@ -18,6 +18,8 @@ public final class JAMediaPlayer{
 
     private static final MediaPlayer mediaPlayer = new MediaPlayer();
     private static String url = "";
+    private static PlayerActivity playeractivity;
+
 
     public static void up_vol(Activity activity){
         AudioManager audioManager = (AudioManager) activity.getSystemService(activity.AUDIO_SERVICE);
@@ -43,26 +45,14 @@ public final class JAMediaPlayer{
         return audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
     }
 
-    public static void play(){
-        mediaPlayer.start();
-    }
-
     public static void stop(){
         mediaPlayer.stop();
         mediaPlayer.reset();
     }
 
-    public static void play(Activity activity, String u){
+    public static void play(PlayerActivity activity, String u){
 
-        /*
-        activity = act;
-
-        if (audioManager == null){
-            audioManager = (AudioManager) activity.getSystemService(activity.AUDIO_SERVICE);
-            activity.setVolumeControlStream(AudioManager.STREAM_MUSIC);
-            maxvol = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
-        }
-        */
+        playeractivity = activity;
 
         if (u.compareTo(url) == 0 && mediaPlayer.isPlaying()){
             return;}
@@ -101,7 +91,8 @@ public final class JAMediaPlayer{
         mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             public void onPrepared(MediaPlayer mp) {
                 Log.i("**** Duracion: ", " " + mediaPlayer.getDuration());
-                play();
+                mediaPlayer.start();
+                //FIXME: PlayerActivity.set_playing()
             }
         });
 
@@ -109,6 +100,8 @@ public final class JAMediaPlayer{
             @Override
             public void onCompletion(MediaPlayer mediaPlayer) {
                 stop();
+                Log.i("**** END TRACK: ", url);
+                //FIXME: PlayerActivity.next_track()
             }
         });
 

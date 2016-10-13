@@ -16,7 +16,7 @@ import java.util.ArrayList;
 
 public class PlayerActivity extends AppCompatActivity {
 
-    //private static String trackName;
+    private static int idcurrenttrack;
     private static String trackurl;
     private static ArrayList<ListItem> tracks;
 
@@ -26,14 +26,11 @@ public class PlayerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_player);
 
         Bundle extras = getIntent().getExtras();
-        //trackName = extras.getString("name", "");
-        //trackurl = extras.getString("url", "");
+        idcurrenttrack = extras.getInt("idcurrenttrack", 0);
         tracks = (ArrayList<ListItem>) extras.getSerializable("tracks");
 
-        //Snackbar.make((View) findViewById(R.id.imagen),
-        //        "Reproducir: " + trackName + "\n" + trackurl, Snackbar.LENGTH_INDEFINITE).show();
-
-        trackurl = tracks.get(0).getUrl();
+        ListItem item = tracks.get(idcurrenttrack);
+        trackurl = item.getUrl();
         JAMediaPlayer.play(this, trackurl);
     }
 
@@ -43,18 +40,20 @@ public class PlayerActivity extends AppCompatActivity {
         int keyCode = event.getKeyCode();
 
         switch (keyCode) {
+
             /*
             case KeyEvent.KEYCODE_BACK:{
                 if (action == KeyEvent.ACTION_DOWN) {
                     Intent intent = new Intent(this, ListActivity.class);
                     intent.putExtra("tracks", tracks);
-                    //FIXME: Agregar "current track"
+                    intent.putExtra("idcurrenttrack", idcurrenttrack);
                     startActivity(intent);
                     finish();
                 }
                 return true;
             }
             */
+
             case KeyEvent.KEYCODE_VOLUME_UP: {
                 if (action == KeyEvent.ACTION_DOWN) {
                     JAMediaPlayer.up_vol(this);
