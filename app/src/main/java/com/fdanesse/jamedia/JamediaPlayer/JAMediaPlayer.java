@@ -23,22 +23,17 @@ public final class JAMediaPlayer{
         AudioManager audioManager = (AudioManager) activity.getSystemService(activity.AUDIO_SERVICE);
         activity.setVolumeControlStream(audioManager.STREAM_MUSIC);
         int maxvol = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
-
         int vol = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC) + 1;
-        if (vol > 0 && vol < maxvol) {
-            audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, vol,
-                    AudioManager.FLAG_PLAY_SOUND);
+        if (vol <= maxvol) {
+            audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, vol, AudioManager.FLAG_PLAY_SOUND);
         }
     }
     public static void down_vol(Activity activity){
         AudioManager audioManager = (AudioManager) activity.getSystemService(activity.AUDIO_SERVICE);
         activity.setVolumeControlStream(audioManager.STREAM_MUSIC);
-        int maxvol = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
-
         int vol = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC) - 1;
-        if (vol > 0 && vol < maxvol) {
-            audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, vol,
-                    AudioManager.FLAG_PLAY_SOUND);
+        if (vol >= 0) {
+            audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, vol, AudioManager.FLAG_PLAY_SOUND);
         }
     }
 

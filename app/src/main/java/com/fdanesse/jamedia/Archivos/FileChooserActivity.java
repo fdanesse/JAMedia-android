@@ -1,5 +1,6 @@
 package com.fdanesse.jamedia.Archivos;
 
+import android.content.Intent;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,6 +13,8 @@ import android.view.View;
 import android.widget.Button;
 
 import com.fdanesse.jamedia.JamediaPlayer.JAMediaPlayer;
+import com.fdanesse.jamedia.JamediaPlayer.PlayerActivity;
+import com.fdanesse.jamedia.PlayerList.ListItem;
 import com.fdanesse.jamedia.R;
 import com.fdanesse.jamedia.Utils;
 
@@ -74,17 +77,13 @@ public class FileChooserActivity extends AppCompatActivity {
         boton.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
-                //FIXME: Llamar al reproductor con la lista de path
-                /*
-                button_clicked(view, motionEvent);
                 if (motionEvent.getAction() == MotionEvent.ACTION_DOWN){
-                    ArrayList<ListItem> radios = FileManager.get_radios();
-                    Intent intent = new Intent(MainActivity.this, ListActivity.class);
-                    intent.putExtra("tracks", radios);
+                    ArrayList<ListItem> listItems = FileManager.get_ListItems(tracks);
+                    Intent intent = new Intent(FileChooserActivity.this, PlayerActivity.class);
+                    intent.putExtra("tracks", listItems);
                     startActivity(intent);
                     finish();
                 }
-                 */
                 return true;
             }
         });

@@ -74,17 +74,34 @@ public class FileManager {
     }
 
 
-    public static ArrayList<ListItem> get_music() {
+    public static ArrayList<ListItem> get_ListItems(ArrayList<String> tracks) {
 
         ArrayList<ListItem> lista = new ArrayList<ListItem>();
-        File file = new File("/mnt/sdcard/Musica/Alika");
-        File[] files = file.listFiles();
-        for (File f: files){
-            //FIXME: agregar comprobación de tipo de archivos
-            if (f.isFile()) {
-                //FIXME: Nombres no deben ser demasiado largos
-                lista.add(new ListItem(R.drawable.audio, f.getName(), f.getPath()));
+        for (String path: tracks){
+            File file = new File(path);
+            String mime = "Undetermined";
+            //FIXME: completar comprobación de tipo de archivos
+
+            try {
+                final URL url = new URL("file://" + file.getPath());
+                final URLConnection connection = url.openConnection();
+                mime = connection.getContentType();
             }
+            catch (MalformedURLException badUrlEx) {continue;}
+            catch (IOException ioEx) {continue;}
+
+            String filename = file.getName();
+            if (file.getName().length() > 15){
+                filename = file.getName().substring(0, 15) + "...";
+            }
+
+            if (mime.contains("audio")){
+                lista.add(new ListItem(R.drawable.audio, filename, file.getPath()));
+            }
+            else if(mime.contains("video")) {
+                lista.add(new ListItem(R.drawable.video, filename, file.getPath()));
+            }
+
         }
         return lista;
     }
