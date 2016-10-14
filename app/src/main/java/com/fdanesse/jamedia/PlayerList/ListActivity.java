@@ -10,17 +10,18 @@ import android.view.KeyEvent;
 
 import com.fdanesse.jamedia.JamediaPlayer.JAMediaPlayer;
 import com.fdanesse.jamedia.JamediaPlayer.PlayerActivity;
-import com.fdanesse.jamedia.MainActivity;
 import com.fdanesse.jamedia.R;
-import com.fdanesse.jamedia.Utils;
 
 import java.util.ArrayList;
 
+/**
+ * FIXME: Cuando se esta reproduciendo una pista y cambia a la siguiente, se debe ver reflejado aca
+ */
 
 public class ListActivity extends AppCompatActivity {
 
     private ArrayList<ListItem> lista;
-    public RecyclerView recyclerView;
+    private RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,14 +30,14 @@ public class ListActivity extends AppCompatActivity {
 
         Bundle extras = getIntent().getExtras();
         lista = (ArrayList<ListItem>) extras.getSerializable("tracks");
-        //int idcurrenttrack = extras.getInt("idcurrenttrack", 0);
+        int idcurrenttrack = extras.getInt("idcurrenttrack", -1);
         recyclerView = (RecyclerView) findViewById(R.id.reciclerview);
 
         LinearLayoutManager llm = new LinearLayoutManager(this);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
 
-        ItemListAdapter listAdapter = new ItemListAdapter(lista, this, this);
+        ItemListAdapter listAdapter = new ItemListAdapter(lista, this, idcurrenttrack);
         recyclerView.setAdapter(listAdapter);
     }
 

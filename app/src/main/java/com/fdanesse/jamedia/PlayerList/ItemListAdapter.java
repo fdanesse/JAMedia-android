@@ -1,16 +1,14 @@
 package com.fdanesse.jamedia.PlayerList;
 
-import android.app.Activity;
-import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewParent;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.fdanesse.jamedia.R;
+import com.fdanesse.jamedia.Utils;
 
 import java.util.ArrayList;
 
@@ -20,13 +18,24 @@ import java.util.ArrayList;
 public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemListViewHolder>{
 
     private ArrayList<ListItem> lista;
-    private Activity activity;
     private ListActivity listactivity;
+    private int idcurrenttrack;
 
-    public ItemListAdapter(ArrayList<ListItem> lista, Activity activity, ListActivity listactivity){
+    public ItemListAdapter(ArrayList<ListItem> lista, ListActivity listactivity, int idcurrenttrack){
         this.lista = lista;
-        this.activity = activity;
         this.listactivity = listactivity;
+        this.idcurrenttrack = idcurrenttrack;
+    }
+
+    @Override
+    public void onViewAttachedToWindow(ItemListViewHolder holder) {
+        super.onViewAttachedToWindow(holder);
+        if (holder.getAdapterPosition() == idcurrenttrack){
+            Utils.setActiveView(holder.itemView);
+        }
+        else{
+            Utils.setInactiveView(holder.itemView);
+        }
     }
 
     @Override
@@ -45,10 +54,7 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemLi
     }
 
     @Override
-    public int getItemCount() {
-        return lista.size();
-    }
-
+    public int getItemCount() {return lista.size();}
     protected void playtrack(int index){
         listactivity.playtrack(index);
     }
@@ -73,6 +79,7 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemLi
                     playtrack(index);
                 }
             });
+
         }
     }
 }

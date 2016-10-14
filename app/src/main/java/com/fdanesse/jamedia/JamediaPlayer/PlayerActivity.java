@@ -41,7 +41,6 @@ public class PlayerActivity extends AppCompatActivity {
 
         switch (keyCode) {
 
-            /*
             case KeyEvent.KEYCODE_BACK:{
                 if (action == KeyEvent.ACTION_DOWN) {
                     Intent intent = new Intent(this, ListActivity.class);
@@ -52,7 +51,6 @@ public class PlayerActivity extends AppCompatActivity {
                 }
                 return true;
             }
-            */
 
             case KeyEvent.KEYCODE_VOLUME_UP: {
                 if (action == KeyEvent.ACTION_DOWN) {
