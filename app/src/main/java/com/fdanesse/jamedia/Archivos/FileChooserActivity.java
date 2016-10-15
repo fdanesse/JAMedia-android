@@ -1,6 +1,7 @@
 package com.fdanesse.jamedia.Archivos;
 
 import android.content.Intent;
+import android.os.Environment;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -45,7 +46,8 @@ public class FileChooserActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         Bundle extras = getIntent().getExtras();
-        currentpath = extras.getString("currentpath", "/mnt/sdcard/Musica/");
+        currentpath = extras.getString("currentpath",
+                Environment.getExternalStorageDirectory().getAbsolutePath()); //"/mnt/sdcard/Musica/"
 
         recyclerView = (RecyclerView) findViewById(R.id.file_chooser_reciclerview);
         LinearLayoutManager llm = new LinearLayoutManager(this);

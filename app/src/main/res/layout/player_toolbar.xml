@@ -68,7 +68,6 @@
         android:background="@drawable/lista"
         android:layout_marginRight="20dp"
         android:layout_gravity="right"
-        android:alpha="0.5"
         android:enabled="false"
         />
 

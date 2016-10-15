@@ -13,7 +13,7 @@
         android:orientation="vertical"
         android:background="@drawable/reciclado_arrugado_azul">
 
-        <ImageView
+        <VideoView
             android:id="@+id/video"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
