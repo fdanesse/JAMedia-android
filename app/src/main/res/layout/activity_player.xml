@@ -8,117 +8,37 @@
     tools:context=".JamediaPlayer.PlayerActivity">
 
     <LinearLayout
-        android:id="@+id/linearbase"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:background="#f0f0f0">
+        android:background="@drawable/reciclado_arrugado_azul">
 
         <ImageView
-            android:id="@+id/imagen"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1.0"
-            android:adjustViewBounds="true"
-            android:src="@drawable/jamedia"
-            android:layout_gravity="top|center_horizontal"
-            android:alpha="0.3"
-            />
-
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
+            android:id="@+id/video"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="0.0"
-            android:orientation="horizontal"
-            android:background="#ffffff"
-            android:layout_gravity="bottom|center_horizontal"
+            android:layout_weight="1.0"
+            android:background="@drawable/jamedia"
+            android:alpha="0.4"
+            />
+
+        <ProgressBar
+            android:id="@+id/progress"
+            style="@android:style/Widget.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="100"
+            android:progress="50"
+            android:progressBackgroundTint="#000000"
+            android:progressTint="@color/colorPrimaryDark"
             >
-            <!--android:background="Color.TRANSPARENT"-->
+        </ProgressBar>
 
-            <Button
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:id="@+id/anterior"
-                android:background="@drawable/anterior"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                />
-
-            <Button
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:id="@+id/play"
-                android:background="@drawable/play"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                />
-
-            <Button
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:id="@+id/siguiente"
-                android:background="@drawable/siguiente"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                />
-
-            <Button
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:id="@+id/stop"
-                android:background="@drawable/stop"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="5dp"
-                />
-
-        </android.support.v7.widget.Toolbar>
-
-        <!--
-        <SeekBar
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/seekBar"
-            android:layout_alignLeft="@+id/textview"
-            android:layout_alignStart="@+id/textview"
-            android:layout_alignRight="@+id/textview"
-            android:layout_alignEnd="@+id/textview"
-            android:layout_above="@+id/button" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="Small Text"
-            android:id="@+id/textView2"
-            android:layout_above="@+id/seekBar"
-            android:layout_toLeftOf="@+id/textView"
-            android:layout_toStartOf="@+id/textView" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="Small Text"
-            android:id="@+id/textView3"
-            android:layout_above="@+id/seekBar"
-            android:layout_alignRight="@+id/button4"
-            android:layout_alignEnd="@+id/button4" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Medium Text"
-            android:id="@+id/textView4"
-            android:layout_alignBaseline="@+id/textView2"
-            android:layout_alignBottom="@+id/textView2"
-            android:layout_centerHorizontal="true" />
-        -->
+        <include
+            android:id="@+id/toolbar"
+            layout="@layout/player_toolbar"
+            >
+        </include>
 
     </LinearLayout>
 
