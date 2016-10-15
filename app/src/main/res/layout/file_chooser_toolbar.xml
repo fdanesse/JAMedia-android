@@ -15,24 +15,28 @@
         android:id="@+id/anterior"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/background_buttons"
+        android:background="@drawable/background_list_item"
         android:text="../"
         android:textColor="#ffffff"
         android:layout_gravity="left|center_horizontal"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
+        android:alpha="0.5"
+        android:enabled="false"
         />
 
     <Button
         android:id="@+id/play"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/background_buttons"
+        android:background="@drawable/background_list_item"
         android:text="Play"
         android:textColor="#ffffff"
         android:layout_gravity="right|center_horizontal"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
+        android:alpha="0.5"
+        android:enabled="false"
         />
 
 </android.support.v7.widget.Toolbar>

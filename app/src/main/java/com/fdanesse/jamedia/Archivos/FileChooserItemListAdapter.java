@@ -1,6 +1,5 @@
 package com.fdanesse.jamedia.Archivos;
 
-import android.app.Activity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,7 +8,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.fdanesse.jamedia.R;
-import com.fdanesse.jamedia.Utils;
 
 import java.util.ArrayList;
 
@@ -20,14 +18,11 @@ public class FileChooserItemListAdapter extends RecyclerView.Adapter<FileChooser
 
     private FileChooserActivity filechooser;
     private ArrayList<ItemFileChooser> lista;
-    private Activity activity;
 
-    public FileChooserItemListAdapter(ArrayList<ItemFileChooser> lista, Activity activity, FileChooserActivity filechooser){
+    public FileChooserItemListAdapter(ArrayList<ItemFileChooser> lista, FileChooserActivity filechooser){
         this.filechooser = filechooser;
         this.lista = lista;
-        this.activity = activity;
     }
-
 
     @Override
     public ItemListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -39,31 +34,28 @@ public class FileChooserItemListAdapter extends RecyclerView.Adapter<FileChooser
             @Override
             public void onClick(View view) {
 
-                TextView textview1 = (TextView) view.findViewById(R.id.filename);
+                //TextView textview1 = (TextView) view.findViewById(R.id.filename);
                 TextView textview2 = (TextView) view.findViewById(R.id.filepath);
                 TextView textview3 = (TextView) view.findViewById(R.id.selected);
                 TextView textview4 = (TextView) view.findViewById(R.id.tipo);
 
-                String filename = textview1.getText().toString();
+                //String filename = textview1.getText().toString();
                 String filepath = textview2.getText().toString();
                 String selected = textview3.getText().toString();
                 String tipo = textview4.getText().toString();
 
                 if (tipo.compareTo("Directorio") == 0){
-                    //Utils.setActiveView(view);
                     textview3.setText("true");
                     filechooser.load_path(filepath);
                 }
                 else if (tipo.compareTo("Archivo") == 0){
                     if (selected == "true"){
-                        Utils.setInactiveView(view);
                         textview3.setText("false");
-                        filechooser.remove_track_in_selected(filepath);
+                        filechooser.remove_track_in_selected(filepath, view);
                     }
                     else if (selected == "false"){
-                        Utils.setActiveView(view);
                         textview3.setText("true");
-                        filechooser.add_track_in_selected(filepath);
+                        filechooser.add_track_in_selected(filepath, view);
                     }
                 }
             }

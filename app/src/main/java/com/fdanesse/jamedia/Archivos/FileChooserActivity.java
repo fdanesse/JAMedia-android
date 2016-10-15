@@ -66,7 +66,6 @@ public class FileChooserActivity extends AppCompatActivity {
                     if (file.getParentFile() != null) {
                         File parentdir = file.getParentFile();
                         load_path(parentdir.getPath());
-                        Snackbar.make(view, parentdir.getPath(), Snackbar.LENGTH_INDEFINITE).show();
                     }
                 }
                 return true;
@@ -93,10 +92,10 @@ public class FileChooserActivity extends AppCompatActivity {
         File file = new File(currentpath);
         Button boton = (Button) myactionbar.findViewById(R.id.anterior);
         if (file.getParentFile() != null) {
-            if (file.getParentFile().canRead()) {
+            if (file.getParentFile().canRead() && !boton.isEnabled()) {
                 Utils.setActiveView(boton);
                 boton.setEnabled(true);
-            } else {
+            } else if (!file.getParentFile().canRead() && boton.isEnabled()) {
                 Utils.setInactiveView(boton);
                 boton.setEnabled(false);
             }
@@ -119,22 +118,20 @@ public class FileChooserActivity extends AppCompatActivity {
         }
     }
 
-    public void add_track_in_selected(String filepath){
+    public void add_track_in_selected(String filepath, View view){
         if (!tracks.contains(filepath)){
+            Utils.setActiveView(view);
             tracks.add(filepath);
             check_button_play();
         }
-        //Snackbar.make((View) findViewById(R.id.filename),
-        //        "add: " + tracks.size(), Snackbar.LENGTH_LONG).show();
     }
 
-    public void remove_track_in_selected(String filepath){
+    public void remove_track_in_selected(String filepath, View view){
         if (tracks.contains(filepath)){
+            Utils.setInactiveView(view);
             tracks.remove(filepath);
             check_button_play();
         }
-        //Snackbar.make((View) findViewById(R.id.filename),
-        //        "remove: " + tracks.size(), Snackbar.LENGTH_LONG).show();
     }
 
     public void load_path(String dirpath) {
@@ -142,7 +139,7 @@ public class FileChooserActivity extends AppCompatActivity {
         tracks.clear();
         lista.clear();
         lista = FileManager.readDirPath(currentpath);
-        listAdapter = new FileChooserItemListAdapter(lista, this, this);
+        listAdapter = new FileChooserItemListAdapter(lista, this);
         recyclerView.setAdapter(listAdapter);
         check_button_anterior();
         check_button_play();

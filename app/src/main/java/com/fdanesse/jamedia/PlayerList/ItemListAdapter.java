@@ -33,9 +33,9 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemLi
         if (holder.getAdapterPosition() == idcurrenttrack){
             Utils.setActiveView(holder.itemView);
         }
-        else{
-            Utils.setInactiveView(holder.itemView);
-        }
+        //else{
+        //    Utils.setInactiveView(holder.itemView);
+        //}
     }
 
     @Override
