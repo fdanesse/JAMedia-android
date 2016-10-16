@@ -8,7 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
 
-import com.fdanesse.jamedia.JamediaPlayer.JAMediaPlayer;
+//import com.fdanesse.jamedia.JamediaPlayer.JAMediaPlayer;
 import com.fdanesse.jamedia.JamediaPlayer.PlayerActivity;
 import com.fdanesse.jamedia.R;
 
@@ -77,6 +77,7 @@ public class ListActivity extends AppCompatActivity {
                 return true;
             }
             */
+            /*
             case KeyEvent.KEYCODE_VOLUME_UP: {
                 if (action == KeyEvent.ACTION_DOWN) {
                     JAMediaPlayer.up_vol(this);
@@ -93,6 +94,7 @@ public class ListActivity extends AppCompatActivity {
                         Snackbar.LENGTH_SHORT).show();
                 return true;
             }
+            */
             default:
                 return super.dispatchKeyEvent(event);
         }

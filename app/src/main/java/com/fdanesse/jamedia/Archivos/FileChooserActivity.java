@@ -2,7 +2,7 @@ package com.fdanesse.jamedia.Archivos;
 
 import android.content.Intent;
 import android.os.Environment;
-import android.support.design.widget.Snackbar;
+//import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,7 +13,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 
-import com.fdanesse.jamedia.JamediaPlayer.JAMediaPlayer;
+//import com.fdanesse.jamedia.JamediaPlayer.JAMediaPlayer;
 import com.fdanesse.jamedia.JamediaPlayer.PlayerActivity;
 import com.fdanesse.jamedia.PlayerList.ListItem;
 import com.fdanesse.jamedia.R;
@@ -156,13 +156,14 @@ public class FileChooserActivity extends AppCompatActivity {
             /*
             case KeyEvent.KEYCODE_BACK:{
                 if (action == KeyEvent.ACTION_DOWN) {
-                    //Intent intent = new Intent(this, ListActivity.class);
-                    //intent.putExtra("tracks", tracks);
-                    //startActivity(intent);
-                    //finish();
+                    Intent intent = new Intent(this, ListActivity.class);
+                    intent.putExtra("tracks", tracks);
+                    startActivity(intent);
+                    finish();
                 }
                 return true;
             }*/
+            /*
             case KeyEvent.KEYCODE_VOLUME_UP: {
                 if (action == KeyEvent.ACTION_DOWN) {
                     JAMediaPlayer.up_vol(this);
@@ -179,6 +180,7 @@ public class FileChooserActivity extends AppCompatActivity {
                         "Volumen: " + JAMediaPlayer.get_vol(this), Snackbar.LENGTH_SHORT).show();
                 return true;
             }
+            */
             default:
                 return super.dispatchKeyEvent(event);
         }

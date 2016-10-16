@@ -5,6 +5,7 @@ import android.media.MediaPlayer;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.widget.MediaController;
@@ -19,6 +20,8 @@ import java.util.ArrayList;
 
 public class PlayerActivity extends AppCompatActivity {
 
+    private Toolbar myactionbar;
+
     private static int idcurrenttrack;
     private static String trackurl;
     private static ArrayList<ListItem> tracks;
@@ -30,6 +33,12 @@ public class PlayerActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_player);
+
+        myactionbar = (Toolbar) findViewById(R.id.playertoolbar);
+        setSupportActionBar(myactionbar);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         Bundle extras = getIntent().getExtras();
         idcurrenttrack = extras.getInt("idcurrenttrack", 0);
@@ -115,47 +124,3 @@ public class PlayerActivity extends AppCompatActivity {
         }
     }
 }
-
-/**
- * private MediaController.MediaPlayerControl mcEvents = new MediaController.MediaPlayerControl() {
- public void start() {
- player.start();
- }
-
- public void seekTo(int pos) {
- player.seekTo(pos);
- }
-
- public void pause() {
- player.pause();
- }
-
- public boolean isPlaying() {
- return player.isPlaying();
- }
-
- public int getDuration() {
- return player.getDuration();
- }
-
- public int getCurrentPosition() {
- return player.getCurrentPosition();
- }
-
- public int getBufferPercentage() {
- return pBuffer;
- }
-
- public boolean canSeekForward() {
- return true;
- }
-
- public boolean canSeekBackward() {
- return true;
- }
-
- public boolean canPause() {
- return true;
- }
- };
- */

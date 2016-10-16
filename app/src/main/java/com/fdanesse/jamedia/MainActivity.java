@@ -17,7 +17,7 @@ import android.widget.Button;
 
 import com.fdanesse.jamedia.Archivos.FileChooserActivity;
 import com.fdanesse.jamedia.Archivos.FileManager;
-import com.fdanesse.jamedia.JamediaPlayer.JAMediaPlayer;
+//import com.fdanesse.jamedia.JamediaPlayer.JAMediaPlayer;
 import com.fdanesse.jamedia.PlayerList.ListActivity;
 import com.fdanesse.jamedia.PlayerList.ListItem;
 
@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
                     Intent intent = new Intent(MainActivity.this, ListActivity.class);
                     intent.putExtra("tracks", radios);
                     startActivity(intent);
-                    finish();
+                    //finish();
                 }
                 return true;
             }
@@ -71,7 +71,11 @@ public class MainActivity extends AppCompatActivity {
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 button_clicked(view, motionEvent);
                 if (motionEvent.getAction() == MotionEvent.ACTION_UP){
-                    //
+                    ArrayList<ListItem> tv = FileManager.get_tv();
+                    Intent intent = new Intent(MainActivity.this, ListActivity.class);
+                    intent.putExtra("tracks", tv);
+                    startActivity(intent);
+                    //finish();
                 }
                 return true;
             }
@@ -121,6 +125,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 return true;
             }*/
+            /*
             case KeyEvent.KEYCODE_VOLUME_UP: {
                 if (action == KeyEvent.ACTION_DOWN) {
                     JAMediaPlayer.up_vol(this);
@@ -137,6 +142,7 @@ public class MainActivity extends AppCompatActivity {
                         Snackbar.LENGTH_SHORT).show();
                 return true;
             }
+            */
             default:
                 return super.dispatchKeyEvent(event);
         }
