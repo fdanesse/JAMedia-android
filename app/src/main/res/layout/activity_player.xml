@@ -14,14 +14,19 @@
         android:background="@drawable/reciclado_arrugado_azul">
 
         <VideoView
-            android:id="@+id/video"
+            android:id="@+id/videoView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_weight="1.0"
-            android:background="@drawable/jamedia"
-            android:alpha="0.4"
+
+            android:layout_alignParentTop="true"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
             />
 
+        <!--
         <ProgressBar
             android:id="@+id/progress"
             style="@android:style/Widget.ProgressBar.Horizontal"
@@ -33,11 +38,15 @@
             android:progressTint="@color/colorPrimaryDark"
             >
         </ProgressBar>
+        -->
 
         <include
             android:id="@+id/toolbar"
             layout="@layout/player_toolbar"
-            >
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true">
         </include>
 
     </LinearLayout>

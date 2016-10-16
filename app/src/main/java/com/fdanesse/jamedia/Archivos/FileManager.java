@@ -62,9 +62,10 @@ public class FileManager {
                             lista.add(new ItemFileChooser(R.drawable.video, filename,
                                     f.getPath(), "Archivo"));
                         }
-                        else {
-                            Log.i("XXXXX", mime);
-                        }
+                        //else {
+                        //    Log.i("XXX Desconocido: ", mime);
+                        //}
+                        Log.i("XXX: ", mime);
                     }
                 }
             }
