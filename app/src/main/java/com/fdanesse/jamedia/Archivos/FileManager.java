@@ -62,10 +62,9 @@ public class FileManager {
                             lista.add(new ItemFileChooser(R.drawable.video, filename,
                                     f.getPath(), "Archivo"));
                         }
-                        //else {
-                        //    Log.i("XXX Desconocido: ", mime);
-                        //}
-                        Log.i("XXX: ", mime);
+                        else {
+                            Log.i("XXX Desconocido: ", mime);
+                        }
                     }
                 }
             }
@@ -205,18 +204,8 @@ public class FileManager {
 
     public static ArrayList<ListItem> get_tv() {
         ArrayList<ListItem> lista = new ArrayList<ListItem>();
-        lista.add(new ListItem(R.drawable.jamedia, "Alsharqiya Tv (Irak)", "rtmp://ns8.indexforce.com/alsharqiyalive/mystream"));
-        lista.add(new ListItem(R.drawable.jamedia, "Baden TV (Alemania)", "rtmp://badentv-stream2.siebnich.info/rtplive/vlc.sdp"));
-        lista.add(new ListItem(R.drawable.jamedia, "Canal 13 (Argentina)", "rtsp://stream.eltrecetv.com.ar/live13/13tv/13tv1"));
-        lista.add(new ListItem(R.drawable.jamedia, "Canal 53 UNAL (Mexico)", "mms://148.234.13.58/canal53bandaancha"));
         lista.add(new ListItem(R.drawable.jamedia, "Canal Rural 1 (Argentina)", "rtsp://streamrural.cmd.com.ar:554/liverural/crural/rural1"));
-        lista.add(new ListItem(R.drawable.jamedia, "CN5 (Argentina)", "rtmp://c5n.stweb.tv:1935/c5n/live"));
-        lista.add(new ListItem(R.drawable.jamedia, "DusonTV (España)", "mms://antena.fundaciongoldenclover.com/live"));
-        lista.add(new ListItem(R.drawable.jamedia, "Edad de Oro TV (Rusia)", "mms://195.62.63.238/tv_zolotoy_vek"));
         lista.add(new ListItem(R.drawable.jamedia, "TN (Argentina)", "rtsp://stream.tn.com.ar/live/tnhd1"));
-        lista.add(new ListItem(R.drawable.jamedia, "TV Grecia (Grecia)", "rtmp://82.192.84.30:1935/live/myStream.sdp"));
-        lista.add(new ListItem(R.drawable.jamedia, "TV Maná (Argentina)", "rtmp://streamspub.manasat.com/tvar/tvmanaar1"));
-        lista.add(new ListItem(R.drawable.jamedia, "VIT Channel 1 (España)", "rtmp://87.106.219.140/live/myStream_2"));
         return lista;
     }
 }

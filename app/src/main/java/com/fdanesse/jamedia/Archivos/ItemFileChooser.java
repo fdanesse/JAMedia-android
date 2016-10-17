@@ -8,7 +8,6 @@ public class ItemFileChooser {
     private int imagen;
     private String filename;
     private String filepath;
-    private String selected = "false";
     private String tipo;
 
     public ItemFileChooser(int imagen, String filename, String filepath, String tipo){
@@ -34,7 +33,4 @@ public class ItemFileChooser {
         return tipo;
     }
 
-    public String getSelected() {
-        return selected;
-    }
 }

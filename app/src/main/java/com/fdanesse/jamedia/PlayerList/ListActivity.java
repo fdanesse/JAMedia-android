@@ -10,6 +10,7 @@ import android.view.KeyEvent;
 
 //import com.fdanesse.jamedia.JamediaPlayer.JAMediaPlayer;
 import com.fdanesse.jamedia.JamediaPlayer.PlayerActivity;
+import com.fdanesse.jamedia.MainActivity;
 import com.fdanesse.jamedia.R;
 
 import java.util.ArrayList;
@@ -67,7 +68,7 @@ public class ListActivity extends AppCompatActivity {
         int keyCode = event.getKeyCode();
 
         switch (keyCode) {
-            /*
+
             case KeyEvent.KEYCODE_BACK:{
                 if (action == KeyEvent.ACTION_DOWN) {
                     Intent intent = new Intent(ListActivity.this, MainActivity.class);
@@ -76,7 +77,7 @@ public class ListActivity extends AppCompatActivity {
                 }
                 return true;
             }
-            */
+
             /*
             case KeyEvent.KEYCODE_VOLUME_UP: {
                 if (action == KeyEvent.ACTION_DOWN) {

@@ -8,13 +8,16 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 //import com.fdanesse.jamedia.JamediaPlayer.JAMediaPlayer;
 import com.fdanesse.jamedia.JamediaPlayer.PlayerActivity;
+import com.fdanesse.jamedia.MainActivity;
 import com.fdanesse.jamedia.PlayerList.ListItem;
 import com.fdanesse.jamedia.R;
 import com.fdanesse.jamedia.Utils;
@@ -28,9 +31,6 @@ public class FileChooserActivity extends AppCompatActivity {
     private String currentpath;
     private ArrayList<String> tracks;
 
-    private ArrayList<ItemFileChooser> lista;
-    private FileChooserItemListAdapter listAdapter;
-
     private Toolbar myactionbar;
     private RecyclerView recyclerView;
 
@@ -42,7 +42,7 @@ public class FileChooserActivity extends AppCompatActivity {
         myactionbar = (Toolbar) findViewById(R.id.file_chooser_toolbar);
         setSupportActionBar(myactionbar);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         Bundle extras = getIntent().getExtras();
@@ -55,7 +55,6 @@ public class FileChooserActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(llm);
 
         tracks = new ArrayList<String>();
-        lista = new ArrayList<ItemFileChooser>();
 
         load_path(currentpath);
 
@@ -94,10 +93,10 @@ public class FileChooserActivity extends AppCompatActivity {
         File file = new File(currentpath);
         Button boton = (Button) myactionbar.findViewById(R.id.anterior);
         if (file.getParentFile() != null) {
-            if (file.getParentFile().canRead() && !boton.isEnabled()) {
+            if (file.getParentFile().canRead() && ! boton.isEnabled()) {
                 Utils.setActiveView(boton);
                 boton.setEnabled(true);
-            } else if (!file.getParentFile().canRead() && boton.isEnabled()) {
+            } else if (! file.getParentFile().canRead() && boton.isEnabled()) {
                 Utils.setInactiveView(boton);
                 boton.setEnabled(false);
             }
@@ -110,7 +109,7 @@ public class FileChooserActivity extends AppCompatActivity {
 
     private void check_button_play(){
         Button boton = (Button) myactionbar.findViewById(R.id.play);
-        if (tracks.size() > 0 && !boton.isEnabled()){
+        if (tracks.size() > 0 && ! boton.isEnabled()){
             Utils.setActiveView(boton);
             boton.setEnabled(true);
         }
@@ -120,28 +119,24 @@ public class FileChooserActivity extends AppCompatActivity {
         }
     }
 
-    public void add_track_in_selected(String filepath, View view){
-        if (!tracks.contains(filepath)){
+    public void check_track_in_selected(String filepath, View view){
+        if (! tracks.contains(filepath)){
             Utils.setActiveView(view);
             tracks.add(filepath);
-            check_button_play();
         }
-    }
-
-    public void remove_track_in_selected(String filepath, View view){
-        if (tracks.contains(filepath)){
+        else if (tracks.contains(filepath)){
             Utils.setInactiveView(view);
             tracks.remove(filepath);
-            check_button_play();
         }
+        check_button_play();
+        //FIXME: LA vista del recyclerview no es coherente
     }
 
     public void load_path(String dirpath) {
         currentpath = dirpath;
         tracks.clear();
-        lista.clear();
-        lista = FileManager.readDirPath(currentpath);
-        listAdapter = new FileChooserItemListAdapter(lista, this);
+        ArrayList<ItemFileChooser> lista = FileManager.readDirPath(currentpath);
+        FileChooserItemListAdapter listAdapter = new FileChooserItemListAdapter(lista, this);
         recyclerView.setAdapter(listAdapter);
         check_button_anterior();
         check_button_play();
@@ -153,16 +148,15 @@ public class FileChooserActivity extends AppCompatActivity {
         int keyCode = event.getKeyCode();
 
         switch (keyCode) {
-            /*
+
             case KeyEvent.KEYCODE_BACK:{
                 if (action == KeyEvent.ACTION_DOWN) {
-                    Intent intent = new Intent(this, ListActivity.class);
-                    intent.putExtra("tracks", tracks);
+                    Intent intent = new Intent(FileChooserActivity.this, MainActivity.class);
                     startActivity(intent);
                     finish();
                 }
                 return true;
-            }*/
+            }
             /*
             case KeyEvent.KEYCODE_VOLUME_UP: {
                 if (action == KeyEvent.ACTION_DOWN) {

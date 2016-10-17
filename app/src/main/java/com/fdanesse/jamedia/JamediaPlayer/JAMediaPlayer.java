@@ -211,14 +211,6 @@ public final class JAMediaPlayer{
             mediaPlayer.seekTo(position);
             //}
         }
-
-        public void setLooping(boolean looping) {
-            mediaPlayer.setLooping(looping);
-        }
-
-        public void setVolume(float leftVolume, float rightVolume) {
-            mediaPlayer.setVolume(leftVolume, rightVolume);
-        }
         */
     }
 }

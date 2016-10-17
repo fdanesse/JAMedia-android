@@ -32,10 +32,8 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemLi
         super.onViewAttachedToWindow(holder);
         if (holder.getAdapterPosition() == idcurrenttrack){
             Utils.setActiveView(holder.itemView);
+            //FIXME: LA vista del recyclerview no es coherente
         }
-        //else{
-        //    Utils.setInactiveView(holder.itemView);
-        //}
     }
 
     @Override

@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
                     Intent intent = new Intent(MainActivity.this, ListActivity.class);
                     intent.putExtra("tracks", radios);
                     startActivity(intent);
-                    //finish();
+                    finish();
                 }
                 return true;
             }
@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
                     Intent intent = new Intent(MainActivity.this, ListActivity.class);
                     intent.putExtra("tracks", tv);
                     startActivity(intent);
-                    //finish();
+                    finish();
                 }
                 return true;
             }
@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
                     intent.putExtra("currentpath",
                             Environment.getExternalStorageDirectory().getAbsolutePath()); //"/mnt/sdcard/Musica/"
                     startActivity(intent);
-                    //finish();
+                    finish();
                 }
                 return true;
             }
