@@ -1,114 +1,68 @@
 package com.fdanesse.jamedia.JamediaPlayer;
 
-import android.app.Activity;
-import android.media.AudioManager;
+import android.content.Context;
 import android.media.MediaPlayer;
 import android.util.Log;
+//import android.widget.MediaController;
+import android.widget.VideoView;
 
-import java.io.IOException;
-
-//http://www.tutorialspoint.com/android/android_mediaplayer.htm
-//https://developer.android.com/reference/android/media/MediaPlayer.html
-//http://www.programcreek.com/java-api-examples/index.php?source_dir=Soundroid-2.x-master/src/com/siahmsoft/soundroid/sdk7/services/CopyOfMediaPlayerService.java
 
 /**
  * Created by flavio on 02/10/16.
  */
-public final class JAMediaPlayer{
+public final class JAMediaPlayer extends VideoView {
 
-    private static final MediaPlayer mediaPlayer = new MediaPlayer();
-    private static String url = "";
-    private static PlayerActivity playeractivity;
+    //private static MediaController mediaController;
 
+    public JAMediaPlayer(Context context) {
+        super(context);
 
-    public static void up_vol(Activity activity){
-        AudioManager audioManager = (AudioManager) activity.getSystemService(activity.AUDIO_SERVICE);
-        activity.setVolumeControlStream(audioManager.STREAM_MUSIC);
-        int maxvol = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
-        int vol = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC) + 1;
-        if (vol <= maxvol) {
-            audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, vol, AudioManager.FLAG_PLAY_SOUND);
-        }
-    }
-    public static void down_vol(Activity activity){
-        AudioManager audioManager = (AudioManager) activity.getSystemService(activity.AUDIO_SERVICE);
-        activity.setVolumeControlStream(audioManager.STREAM_MUSIC);
-        int vol = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC) - 1;
-        if (vol >= 0) {
-            audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, vol, AudioManager.FLAG_PLAY_SOUND);
-        }
+        //mediaController = new MediaController(context);
+        //mediaController.setAnchorView(this);
+        //mediaController.setMediaPlayer(this);
+        //videoView.setMediaController(mediaController);
+        //videoView.requestFocus();
+
+        listen();
     }
 
-    public static int get_vol(Activity activity){
-        AudioManager audioManager = (AudioManager) activity.getSystemService(activity.AUDIO_SERVICE);
-        activity.setVolumeControlStream(audioManager.STREAM_MUSIC);
-        return audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-    }
-
-    public static void stop(){
-        mediaPlayer.stop();
-        mediaPlayer.reset();
-    }
-
-    public static void play(PlayerActivity activity, String u){
-
-        playeractivity = activity;
-
-        if (u.compareTo(url) == 0 && mediaPlayer.isPlaying()){
-            return;}
-        else{
-            url = u;}
-
-        if (mediaPlayer.isPlaying()){
-            stop();
-        }
-
-        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-        //mediaPlayer.setAudioStreamType(AudioTrack.MODE_STREAM);
-
-        try {
-            mediaPlayer.setDataSource(url);
-        } catch (IllegalArgumentException e1) {
-            //e1.printStackTrace();
-            Log.i("***** 1: ", e1.getMessage());
-            return;
-        } catch (SecurityException e1) {
-            //e1.printStackTrace();
-            Log.i("***** 2: ", e1.getMessage());
-            return;
-        } catch (IllegalStateException e1) {
-            //e1.printStackTrace();
-            Log.i("***** 3: ", e1.getMessage());
-            return;
-        } catch (IOException e1) {
-            //e1.printStackTrace();
-            Log.i("***** 4: ", e1.getMessage());
-            return;
-        }
-
-        mediaPlayer.prepareAsync();
-
-        mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-            public void onPrepared(MediaPlayer mp) {
-                Log.i("**** Duracion: ", " " + mediaPlayer.getDuration());
-                mediaPlayer.start();
-                //FIXME: PlayerActivity.set_playing()
+    private void listen(){
+        setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mediaPlayer) {
+                Log.i("**** onPrepared: ", "OK");
+                seekTo(0);
+                start();
+                /*
+                Snackbar.make(videoView, trackurl, Snackbar.LENGTH_INDEFINITE).show();
+                check_buttons();
+                videoView.seekTo(0);
+                videoView.start();
+                */
+                //FIXME: playing? (actualizar botones play y stop)
+                /*
+                mediaPlayer.setOnVideoSizeChangedListener(new MediaPlayer.OnVideoSizeChangedListener() {
+                    @Override
+                    public void onVideoSizeChanged(MediaPlayer mediaPlayer, int i, int i1) {
+                        mediaController.setAnchorView(videoView);
+                    }
+                });
+                */
             }
         });
 
-        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+        setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mediaPlayer) {
-                stop();
-                Log.i("**** END TRACK: ", url);
-                //FIXME: PlayerActivity.next_track()
+                //next_track();
+                Log.i("**** Next Tack: ", "OK");
             }
         });
 
-        mediaPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener() {
+        setOnErrorListener(new MediaPlayer.OnErrorListener() {
             @Override
-            public boolean onError(MediaPlayer mediaPlayer, int what, int extra) {
-                switch (what){
+            public boolean onError(MediaPlayer mediaPlayer, int i, int i1) {
+                switch (i){
                     case MediaPlayer.MEDIA_ERROR_UNKNOWN:{
                         break;
                     }
@@ -117,7 +71,7 @@ public final class JAMediaPlayer{
                     }
                 }
 
-                switch (extra){
+                switch (i1){
                     case MediaPlayer.MEDIA_ERROR_IO:{
                         break;
                     }
@@ -132,85 +86,22 @@ public final class JAMediaPlayer{
                     }
                 }
 
-                Log.i("**** ERROR: ", " " + what + " " + extra);
+                Log.i("**** ERROR: ", " " + i + " " + i1);
                 stop();
-                url = "";
                 return true;
             }
         });
+    }
 
-        /*
-        mediaPlayer.setOnInfoListener(new MediaPlayer.OnInfoListener() {
-            @Override
-            public boolean onInfo(MediaPlayer mediaPlayer, int codeinfo, int extra) {
-                switch (codeinfo){
-                    //case MediaPlayer.MEDIA_INFO_UNKNOWN:{
-                    //    break;
-                    //}
-                    case MediaPlayer.MEDIA_INFO_BAD_INTERLEAVING:{
-                        break;
-                    }
-                    case MediaPlayer.MEDIA_INFO_BUFFERING_END:{
-                        break;
-                    }
-                    case MediaPlayer.MEDIA_INFO_BUFFERING_START:{
-                        break;
-                    }
-                    case MediaPlayer.MEDIA_INFO_METADATA_UPDATE:{
-                        break;
-                    }
-                    case MediaPlayer.MEDIA_INFO_NOT_SEEKABLE:{
-                        break;
-                    }
-                    case MediaPlayer.MEDIA_INFO_SUBTITLE_TIMED_OUT:{
-                        break;
-                    }
-                    case MediaPlayer.MEDIA_INFO_UNSUPPORTED_SUBTITLE:{
-                        break;
-                    }
-                    case MediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START:{
-                        break;
-                    }
-                    case MediaPlayer.MEDIA_INFO_VIDEO_TRACK_LAGGING:{
-                        break;
-                    }
-                    case MediaPlayer.VIDEO_SCALING_MODE_SCALE_TO_FIT:{
-                        break;
-                    }
-                    case MediaPlayer.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING:{
-                        break;
-                    }
-                    default:{Log.i("**** INFO: ", " " + codeinfo + " " + extra);}
-                }
-                return true;
-            }
-        });
+    public void stop(){
+        stopPlayback();
+    }
 
-        mediaPlayer.setOnBufferingUpdateListener(new MediaPlayer.OnBufferingUpdateListener() {
-            public void onBufferingUpdate(MediaPlayer mp, int percent) {
-                //Log.i("***** Buffering:", "" + percent);
-            }
-        });
-
-        mediaPlayer.setOnSeekCompleteListener(new MediaPlayer.OnSeekCompleteListener() {
-            @Override
-            public void onSeekComplete(MediaPlayer mediaPlayer) {
-
-            }
-        });
-
-        mediaPlayer.setOnVideoSizeChangedListener(new MediaPlayer.OnVideoSizeChangedListener() {
-            @Override
-            public void onVideoSizeChanged(MediaPlayer mediaPlayer, int i, int i1) {
-
-            }
-        });
-
-        public void seekTo(int position){
-            //if(mMediaPlayer.isPlaying()){
-            mediaPlayer.seekTo(position);
-            //}
+    public void load_and_play(String trackurl){
+        if (isPlaying()){
+            stop();
         }
-        */
+        setVideoPath(trackurl);
     }
 }
+

@@ -1,21 +1,18 @@
 package com.fdanesse.jamedia.Archivos;
 
 import android.content.Intent;
+import android.media.AudioManager;
 import android.os.Environment;
-//import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
 
-//import com.fdanesse.jamedia.JamediaPlayer.JAMediaPlayer;
 import com.fdanesse.jamedia.JamediaPlayer.PlayerActivity;
 import com.fdanesse.jamedia.MainActivity;
 import com.fdanesse.jamedia.PlayerList.ListItem;
@@ -42,7 +39,7 @@ public class FileChooserActivity extends AppCompatActivity {
         myactionbar = (Toolbar) findViewById(R.id.file_chooser_toolbar);
         setSupportActionBar(myactionbar);
 
-        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         Bundle extras = getIntent().getExtras();
@@ -57,6 +54,9 @@ public class FileChooserActivity extends AppCompatActivity {
         tracks = new ArrayList<String>();
 
         load_path(currentpath);
+
+        AudioManager audioManager = (AudioManager) this.getSystemService(this.AUDIO_SERVICE);
+        this.setVolumeControlStream(audioManager.STREAM_MUSIC);
 
         Button boton = (Button) myactionbar.findViewById(R.id.anterior);
         boton.setOnTouchListener(new View.OnTouchListener() {
@@ -146,9 +146,7 @@ public class FileChooserActivity extends AppCompatActivity {
     public boolean dispatchKeyEvent(KeyEvent event) {
         int action = event.getAction();
         int keyCode = event.getKeyCode();
-
         switch (keyCode) {
-
             case KeyEvent.KEYCODE_BACK:{
                 if (action == KeyEvent.ACTION_DOWN) {
                     Intent intent = new Intent(FileChooserActivity.this, MainActivity.class);
@@ -157,24 +155,6 @@ public class FileChooserActivity extends AppCompatActivity {
                 }
                 return true;
             }
-            /*
-            case KeyEvent.KEYCODE_VOLUME_UP: {
-                if (action == KeyEvent.ACTION_DOWN) {
-                    JAMediaPlayer.up_vol(this);
-                }
-                Snackbar.make((View) findViewById(R.id.filename),
-                        "Volumen: " + JAMediaPlayer.get_vol(this), Snackbar.LENGTH_SHORT).show();
-                return true;
-            }
-            case KeyEvent.KEYCODE_VOLUME_DOWN: {
-                if (action == KeyEvent.ACTION_DOWN) {
-                    JAMediaPlayer.down_vol(this);
-                }
-                Snackbar.make((View) findViewById(R.id.filename),
-                        "Volumen: " + JAMediaPlayer.get_vol(this), Snackbar.LENGTH_SHORT).show();
-                return true;
-            }
-            */
             default:
                 return super.dispatchKeyEvent(event);
         }

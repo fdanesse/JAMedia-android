@@ -1,9 +1,11 @@
 package com.fdanesse.jamedia;
 
+import android.app.Application;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.media.AudioManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Environment;
@@ -17,7 +19,6 @@ import android.widget.Button;
 
 import com.fdanesse.jamedia.Archivos.FileChooserActivity;
 import com.fdanesse.jamedia.Archivos.FileManager;
-//import com.fdanesse.jamedia.JamediaPlayer.JAMediaPlayer;
 import com.fdanesse.jamedia.PlayerList.ListActivity;
 import com.fdanesse.jamedia.PlayerList.ListItem;
 
@@ -48,6 +49,25 @@ public class MainActivity extends AppCompatActivity {
         IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
         receiver = new NetworkChangeReceiver();
         registerReceiver(receiver, filter);
+
+        AudioManager audioManager = (AudioManager) this.getSystemService(this.AUDIO_SERVICE);
+        this.setVolumeControlStream(audioManager.STREAM_MUSIC);
+    }
+
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        int action = event.getAction();
+        int keyCode = event.getKeyCode();
+        switch (keyCode) {
+            case KeyEvent.KEYCODE_BACK: {
+                if (action == KeyEvent.ACTION_DOWN) {
+                    finish();
+                }
+                return true;
+            }
+            default:
+                return super.dispatchKeyEvent(event);
+        }
     }
 
     private void set_touch_listeners(){
@@ -107,44 +127,6 @@ public class MainActivity extends AppCompatActivity {
                 Utils.setActiveView(view);
                 break;
             }
-        }
-    }
-
-    @Override
-    public boolean dispatchKeyEvent(KeyEvent event) {
-        int action = event.getAction();
-        int keyCode = event.getKeyCode();
-
-        switch (keyCode) {
-            /*
-            case KeyEvent.KEYCODE_BACK:{
-                if (action == KeyEvent.ACTION_DOWN) {
-                    Intent intent = new Intent(ListActivity.this, MainActivity.class);
-                    startActivity(intent);
-                    finish();
-                }
-                return true;
-            }*/
-            /*
-            case KeyEvent.KEYCODE_VOLUME_UP: {
-                if (action == KeyEvent.ACTION_DOWN) {
-                    JAMediaPlayer.up_vol(this);
-                }
-                Snackbar.make(radio, "Volumen: " + JAMediaPlayer.get_vol(this),
-                        Snackbar.LENGTH_SHORT).show();
-                return true;
-            }
-            case KeyEvent.KEYCODE_VOLUME_DOWN: {
-                if (action == KeyEvent.ACTION_DOWN) {
-                    JAMediaPlayer.down_vol(this);
-                }
-                Snackbar.make(radio, "Volumen: " + JAMediaPlayer.get_vol(this),
-                        Snackbar.LENGTH_SHORT).show();
-                return true;
-            }
-            */
-            default:
-                return super.dispatchKeyEvent(event);
         }
     }
 

@@ -1,6 +1,8 @@
 package com.fdanesse.jamedia.JamediaPlayer;
 
+import android.net.Uri;
 import android.content.Intent;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -20,13 +22,23 @@ import com.fdanesse.jamedia.Utils;
 
 import java.util.ArrayList;
 
+// Formatos: https://developer.android.com/guide/appendix/media-formats.html
+// Custom MediaController: http://stackoverflow.com/questions/12482203/how-to-create-custom-ui-for-android-mediacontroller/14323144#14323144
+
+/**
+ * MediaPLayer.setWakeMode(getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
+ * WifiLock wifiLock = ((WifiManager) getSystemService(Context.WIFI_SERVICE)).createWifiLock(WifiManager.WIFI_MODE_FULL, "mylock");
+ * wifiLock.acquire();
+ * wifiLock.release();
+ */
+
 
 public class PlayerActivity extends AppCompatActivity {
 
     private Toolbar myactionbar;
 
     private static int idcurrenttrack;
-    private static String trackurl;
+    private static Uri trackurl;
     private static ArrayList<ListItem> tracks;
 
     private VideoView videoView;
@@ -43,16 +55,12 @@ public class PlayerActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-        videoView = (VideoView) findViewById(R.id.videoView);
-        mediaController = new MediaController(this);
-        mediaController.setAnchorView(videoView);
-        mediaController.setMediaPlayer(videoView);
-        videoView.setMediaController(mediaController);
-        videoView.requestFocus();
-
         init();
         connect_buttons_actions();
         listen_videoView();
+
+        AudioManager audioManager = (AudioManager) this.getSystemService(this.AUDIO_SERVICE);
+        this.setVolumeControlStream(audioManager.STREAM_MUSIC);
     }
 
     private void listen_videoView(){
@@ -60,19 +68,11 @@ public class PlayerActivity extends AppCompatActivity {
         videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(MediaPlayer mediaPlayer) {
-                Snackbar.make(videoView, trackurl, Snackbar.LENGTH_INDEFINITE).show();
+                Snackbar.make(videoView, trackurl.toString(), Snackbar.LENGTH_INDEFINITE).show();
                 check_buttons();
                 videoView.seekTo(0);
                 videoView.start();
                 //FIXME: playing? (actualizar botones play y stop)
-                /*
-                mediaPlayer.setOnVideoSizeChangedListener(new MediaPlayer.OnVideoSizeChangedListener() {
-                    @Override
-                    public void onVideoSizeChanged(MediaPlayer mediaPlayer, int i, int i1) {
-                        mediaController.setAnchorView(videoView);
-                    }
-                });
-                */
             }
         });
 
@@ -140,8 +140,16 @@ public class PlayerActivity extends AppCompatActivity {
         idcurrenttrack = extras.getInt("idcurrenttrack", 0);
         tracks = (ArrayList<ListItem>) extras.getSerializable("tracks");
         ListItem item = tracks.get(idcurrenttrack);
-        trackurl = item.getUrl();
-        videoView.setVideoPath(trackurl);
+        //trackurl = item.getUrl();
+        trackurl = Uri.parse(item.getUrl());
+        videoView = (VideoView) findViewById(R.id.videoView);
+        mediaController = new MediaController(getApplicationContext());
+        mediaController.setAnchorView(videoView);
+        mediaController.setMediaPlayer(videoView);
+        videoView.setMediaController(mediaController);
+        videoView.requestFocus();
+        //videoView.setVideoPath(trackurl);
+        videoView.setVideoURI(trackurl);
     }
 
     private void check_buttons(){
@@ -149,7 +157,6 @@ public class PlayerActivity extends AppCompatActivity {
         View anterior = (View) findViewById(R.id.anterior);
         View siguiente = (View) findViewById(R.id.siguiente);
         if (idcurrenttrack < x-1){
-            //FIXME: hay mas pistas delante
             if (!siguiente.isEnabled()){
                 Utils.setActiveView(siguiente);
                 siguiente.setEnabled(true);
@@ -162,9 +169,7 @@ public class PlayerActivity extends AppCompatActivity {
             }
         }
 
-
         if (idcurrenttrack > 0){
-            //FIXME: hay mas pistas detras
             if (!anterior.isEnabled()){
                 Utils.setActiveView(anterior);
                 anterior.setEnabled(true);
@@ -187,8 +192,10 @@ public class PlayerActivity extends AppCompatActivity {
             idcurrenttrack = 0;
         }
         ListItem item = tracks.get(idcurrenttrack);
-        trackurl = item.getUrl();
-        videoView.setVideoPath(trackurl);
+        //trackurl = item.getUrl();
+        trackurl = Uri.parse(item.getUrl());
+        //videoView.setVideoPath(trackurl);
+        videoView.setVideoURI(trackurl);
     }
 
     public void previous_track(){
@@ -200,8 +207,10 @@ public class PlayerActivity extends AppCompatActivity {
             idcurrenttrack = x - 1;
         }
         ListItem item = tracks.get(idcurrenttrack);
-        trackurl = item.getUrl();
-        videoView.setVideoPath(trackurl);
+        //trackurl = item.getUrl();
+        trackurl = Uri.parse(item.getUrl());
+        //videoView.setVideoPath(trackurl);
+        videoView.setVideoURI(trackurl);
     }
 
     @Override
@@ -243,8 +252,8 @@ public class PlayerActivity extends AppCompatActivity {
                 Snackbar.make((View) findViewById(R.id.imagen),
                         "Volumen: " + JAMediaPlayer.get_vol(this), Snackbar.LENGTH_SHORT).show();
                 return true;
-            }
-            */
+            }*/
+
             default:
                 return super.dispatchKeyEvent(event);
         }
