@@ -140,7 +140,6 @@ public class PlayerActivity extends AppCompatActivity {
         idcurrenttrack = extras.getInt("idcurrenttrack", 0);
         tracks = (ArrayList<ListItem>) extras.getSerializable("tracks");
         ListItem item = tracks.get(idcurrenttrack);
-        //trackurl = item.getUrl();
         trackurl = Uri.parse(item.getUrl());
         videoView = (VideoView) findViewById(R.id.videoView);
         mediaController = new MediaController(getApplicationContext());
@@ -148,7 +147,6 @@ public class PlayerActivity extends AppCompatActivity {
         mediaController.setMediaPlayer(videoView);
         videoView.setMediaController(mediaController);
         videoView.requestFocus();
-        //videoView.setVideoPath(trackurl);
         videoView.setVideoURI(trackurl);
     }
 
@@ -192,9 +190,7 @@ public class PlayerActivity extends AppCompatActivity {
             idcurrenttrack = 0;
         }
         ListItem item = tracks.get(idcurrenttrack);
-        //trackurl = item.getUrl();
         trackurl = Uri.parse(item.getUrl());
-        //videoView.setVideoPath(trackurl);
         videoView.setVideoURI(trackurl);
     }
 
@@ -207,9 +203,7 @@ public class PlayerActivity extends AppCompatActivity {
             idcurrenttrack = x - 1;
         }
         ListItem item = tracks.get(idcurrenttrack);
-        //trackurl = item.getUrl();
         trackurl = Uri.parse(item.getUrl());
-        //videoView.setVideoPath(trackurl);
         videoView.setVideoURI(trackurl);
     }
 
@@ -222,9 +216,7 @@ public class PlayerActivity extends AppCompatActivity {
     public boolean dispatchKeyEvent(KeyEvent event) {
         int action = event.getAction();
         int keyCode = event.getKeyCode();
-
         switch (keyCode) {
-
             case KeyEvent.KEYCODE_BACK:{
                 if (action == KeyEvent.ACTION_DOWN) {
                     Intent intent = new Intent(PlayerActivity.this, ListActivity.class);
@@ -232,30 +224,11 @@ public class PlayerActivity extends AppCompatActivity {
                     intent.putExtra("idcurrenttrack", idcurrenttrack);
                     startActivity(intent);
                     finish();
+                    return true;
                 }
-                return true;
+                break;
             }
-
-            /*
-            case KeyEvent.KEYCODE_VOLUME_UP: {
-                if (action == KeyEvent.ACTION_DOWN) {
-                    JAMediaPlayer.up_vol(this);
-                }
-                Snackbar.make((View) findViewById(R.id.imagen),
-                        "Volumen: " + JAMediaPlayer.get_vol(this), Snackbar.LENGTH_SHORT).show();
-                return true;
-            }
-            case KeyEvent.KEYCODE_VOLUME_DOWN: {
-                if (action == KeyEvent.ACTION_DOWN) {
-                    JAMediaPlayer.down_vol(this);
-                }
-                Snackbar.make((View) findViewById(R.id.imagen),
-                        "Volumen: " + JAMediaPlayer.get_vol(this), Snackbar.LENGTH_SHORT).show();
-                return true;
-            }*/
-
-            default:
-                return super.dispatchKeyEvent(event);
         }
+        return super.dispatchKeyEvent(event);
     }
 }
