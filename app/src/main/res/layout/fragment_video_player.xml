@@ -2,12 +2,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.fdanesse.jamedia.JamediaPlayer.BlankFragment">
+    tools:context="com.fdanesse.jamedia.JamediaPlayer.FragmentVideoPlayer"
+    android:background="@drawable/reciclado_arrugado_azul"
+    android:scaleType="centerCrop">
 
     <VideoView
         android:id="@+id/videoView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:foreground="@drawable/jamedia"
         android:layout_gravity="center"
         />
 

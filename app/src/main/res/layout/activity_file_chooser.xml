@@ -16,7 +16,7 @@
 
         <include
             android:id="@+id/file_chooser_toolbar"
-            layout="@layout/file_chooser_toolbar"
+            layout="@layout/toolbar_file_chooser"
             >
         </include>
 

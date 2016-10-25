@@ -1,5 +1,6 @@
 package com.fdanesse.jamedia.JamediaPlayer;
 
+import android.content.Intent;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.support.design.widget.TabLayout;
@@ -8,7 +9,9 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.KeyEvent;
 
+import com.fdanesse.jamedia.MainActivity;
 import com.fdanesse.jamedia.PlayerList.ListItem;
 import com.fdanesse.jamedia.R;
 
@@ -24,7 +27,7 @@ import java.util.ArrayList;
  * wifiLock.release();
  */
 
-public class Main2Activity extends AppCompatActivity {
+public class PlayerActivity extends AppCompatActivity {
 
     private static int idcurrenttrack;
     private static Uri trackurl;
@@ -37,7 +40,7 @@ public class Main2Activity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main2);
+        setContentView(R.layout.activity_player);
 
         toolbar = (Toolbar) findViewById(R.id.JAMediaToolbar);
         tabLayout = (TabLayout) findViewById(R.id.lenguetas);
@@ -56,7 +59,7 @@ public class Main2Activity extends AppCompatActivity {
         this.setVolumeControlStream(audioManager.STREAM_MUSIC);
 
         ArrayList<Fragment> fragments = new ArrayList<Fragment>();
-        BlankFragment f2 = new BlankFragment();
+        FragmentVideoPlayer f2 = new FragmentVideoPlayer();
         fragments.add(f2);
         fragments.add(new Fragment());
 
@@ -71,12 +74,6 @@ public class Main2Activity extends AppCompatActivity {
         ListItem item = tracks.get(idcurrenttrack);
         trackurl = Uri.parse(item.getUrl());
         /*
-        videoView = (VideoView) findViewById(R.id.videoView);
-        mediaController = new MediaController(getApplicationContext());
-        mediaController.setAnchorView(videoView);
-        mediaController.setMediaPlayer(videoView);
-        videoView.setMediaController(mediaController);
-        videoView.requestFocus();
         videoView.setVideoURI(trackurl);
         */
     }
@@ -158,12 +155,9 @@ public class Main2Activity extends AppCompatActivity {
         trackurl = Uri.parse(item.getUrl());
         videoView.setVideoURI(trackurl);
     }
+    */
 
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        return super.onTouchEvent(event);
-    }
-
+    /*
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
         int action = event.getAction();
@@ -171,11 +165,9 @@ public class Main2Activity extends AppCompatActivity {
         switch (keyCode) {
             case KeyEvent.KEYCODE_BACK:{
                 if (action == KeyEvent.ACTION_DOWN) {
-                    Intent intent = new Intent(PlayerActivity.this, ListActivity.class);
-                    intent.putExtra("tracks", tracks);
-                    intent.putExtra("idcurrenttrack", idcurrenttrack);
+                    Intent intent = new Intent(PlayerActivity.this, MainActivity.class);
                     startActivity(intent);
-                    finish();
+                    //finish();
                     return true;
                 }
                 break;

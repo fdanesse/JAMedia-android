@@ -1,6 +1,5 @@
 package com.fdanesse.jamedia;
 
-import android.app.Application;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -19,6 +18,7 @@ import android.widget.Button;
 
 import com.fdanesse.jamedia.Archivos.FileChooserActivity;
 import com.fdanesse.jamedia.Archivos.FileManager;
+import com.fdanesse.jamedia.JamediaPlayer.PlayerActivity;
 import com.fdanesse.jamedia.PlayerList.ListActivity;
 import com.fdanesse.jamedia.PlayerList.ListItem;
 
@@ -92,10 +92,10 @@ public class MainActivity extends AppCompatActivity {
                 button_clicked(view, motionEvent);
                 if (motionEvent.getAction() == MotionEvent.ACTION_UP){
                     ArrayList<ListItem> tv = FileManager.get_tv();
-                    Intent intent = new Intent(MainActivity.this, ListActivity.class);
+                    Intent intent = new Intent(MainActivity.this, PlayerActivity.class);
                     intent.putExtra("tracks", tv);
                     startActivity(intent);
-                    finish();
+                    //finish();
                 }
                 return true;
             }
