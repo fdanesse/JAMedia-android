@@ -4,44 +4,37 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".JamediaPlayer.PlayerActivity">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="com.fdanesse.jamedia.JamediaPlayer.Main2Activity">
 
-    <LinearLayout
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/JAMediaToolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+            <!--app:layout_scrollFlags="scroll|enterAlways"-->
+
+        </android.support.v7.widget.Toolbar>
+
+        <android.support.design.widget.TabLayout
+            android:id="@+id/lenguetas"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        </android.support.design.widget.TabLayout>
+
+    </android.support.design.widget.AppBarLayout>
+
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewPager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:background="@drawable/reciclado_arrugado_azul">
-
-        <VideoView
-            android:id="@+id/videoView"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:layout_weight="2.0"
-            />
-
-        <!--
-        <ProgressBar
-            android:id="@+id/progress"
-            style="@android:style/Widget.ProgressBar.Horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:max="100"
-            android:progress="50"
-            android:progressBackgroundTint="#000000"
-            android:progressTint="@color/colorPrimaryDark"
-            >
-        </ProgressBar>
-        -->
-
-        <include
-            layout="@layout/player_toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal|bottom"
-            >
-        </include>
-
-    </LinearLayout>
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+    </android.support.v4.view.ViewPager>
 
 </android.support.design.widget.CoordinatorLayout>
