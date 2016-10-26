@@ -22,15 +22,13 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".PlayerList.ListActivity"
-            android:parentActivityName=".MainActivity"></activity>
-        <activity
-            android:name=".JamediaPlayer.PlayerActivity"
-            android:parentActivityName=".PlayerList.ListActivity"></activity>
+            android:name=".PlayerActivity"
+            android:parentActivityName=".MainActivity">
+        </activity>
         <activity
             android:name=".Archivos.FileChooserActivity"
-            android:parentActivityName=".MainActivity"></activity>
-        <activity android:name=".JamediaPlayer.Main2Activity"></activity>
+            android:parentActivityName=".MainActivity">
+        </activity>
     </application>
 
 </manifest>

@@ -18,22 +18,11 @@ import java.util.ArrayList;
 public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemListViewHolder>{
 
     private ArrayList<ListItem> lista;
-    private ListActivity listactivity;
-    private int idcurrenttrack;
+    private FragmentPlayerList fragmentPlayerList;
 
-    public ItemListAdapter(ArrayList<ListItem> lista, ListActivity listactivity, int idcurrenttrack){
+    public ItemListAdapter(ArrayList<ListItem> lista, FragmentPlayerList fragmentPlayerList){
         this.lista = lista;
-        this.listactivity = listactivity;
-        this.idcurrenttrack = idcurrenttrack;
-    }
-
-    @Override
-    public void onViewAttachedToWindow(ItemListViewHolder holder) {
-        super.onViewAttachedToWindow(holder);
-        if (holder.getAdapterPosition() == idcurrenttrack){
-            Utils.setActiveView(holder.itemView);
-            //FIXME: LA vista del recyclerview no es coherente
-        }
+        this.fragmentPlayerList = fragmentPlayerList;
     }
 
     @Override
@@ -53,10 +42,10 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemLi
 
     @Override
     public int getItemCount() {return lista.size();}
-    protected void playtrack(int index){
-        listactivity.playtrack(index);
-    }
 
+    protected void playtrack(int index, View view){
+        fragmentPlayerList.playtrack(index, view);
+    }
 
     public class ItemListViewHolder extends RecyclerView.ViewHolder {
 
@@ -74,10 +63,9 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemLi
                 @Override
                 public void onClick(View view) {
                     int index = getAdapterPosition();
-                    playtrack(index);
+                    playtrack(index, view);
                 }
             });
-
         }
     }
 }

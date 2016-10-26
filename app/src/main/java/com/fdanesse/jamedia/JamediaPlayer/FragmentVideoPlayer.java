@@ -1,20 +1,25 @@
 package com.fdanesse.jamedia.JamediaPlayer;
 
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.MediaController;
 import android.widget.VideoView;
 
+import com.fdanesse.jamedia.PlayerActivity;
 import com.fdanesse.jamedia.R;
 
 
 public class FragmentVideoPlayer extends Fragment {
 
-    private VideoView videoView;
-    private MediaController mediaController;
+    private static VideoView videoView;
+    private static MediaController mediaController;
 
     public FragmentVideoPlayer() {
     }
@@ -29,7 +34,71 @@ public class FragmentVideoPlayer extends Fragment {
         mediaController.setMediaPlayer(videoView);
         videoView.setMediaController(mediaController);
         videoView.requestFocus();
-        //videoView.setVideoURI(trackurl);
+        listen();
         return layout;
+    }
+
+    private void listen(){
+        videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mediaPlayer) {
+                videoView.seekTo(0);
+                videoView.start();
+                PlayerActivity.set_status(videoView.isPlaying());
+            }
+        });
+
+        videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mediaPlayer) {
+                PlayerActivity.next_track();
+            }
+        });
+
+        videoView.setOnErrorListener(new MediaPlayer.OnErrorListener() {
+            @Override
+            public boolean onError(MediaPlayer mediaPlayer, int i, int i1) {
+                switch (i){
+                    case MediaPlayer.MEDIA_ERROR_UNKNOWN:{
+                        break;
+                    }
+                    case MediaPlayer.MEDIA_ERROR_SERVER_DIED:{
+                        break;
+                    }
+                }
+
+                switch (i1){
+                    case MediaPlayer.MEDIA_ERROR_IO:{
+                        break;
+                    }
+                    case MediaPlayer.MEDIA_ERROR_MALFORMED:{
+                        break;
+                    }
+                    case MediaPlayer.MEDIA_ERROR_UNSUPPORTED:{
+                        break;
+                    }
+                    case MediaPlayer.MEDIA_ERROR_TIMED_OUT:{
+                        break;
+                    }
+                }
+
+                Log.i("**** ERROR: ", " " + i + " " + i1);
+                stop();
+                return true;
+            }
+        });
+    }
+
+    public static void stop(){
+        if (videoView.isPlaying()){
+            videoView.stopPlayback();
+        }
+        PlayerActivity.set_status(videoView.isPlaying());
+    }
+
+    public static void load_and_play(Uri trackurl){
+        stop();
+        videoView.setVideoURI(trackurl);
+        Snackbar.make(videoView, "Play: " + trackurl, Snackbar.LENGTH_LONG).show();
     }
 }

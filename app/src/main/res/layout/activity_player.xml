@@ -5,19 +5,79 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context="com.fdanesse.jamedia.JamediaPlayer.PlayerActivity">
+    tools:context=".PlayerActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+        android:background="#000000"
+        >
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/JAMediaToolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/jamediatoolbar15"
+            android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
             >
             <!--app:layout_scrollFlags="scroll|enterAlways"-->
+
+            <Button
+                android:id="@+id/anterior"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:background="@drawable/anterior"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_gravity="center_horizontal"
+                android:alpha="0.5"
+                android:enabled="false"
+                />
+
+            <Button
+                android:id="@+id/play"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:background="@drawable/play"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_gravity="center_horizontal"
+                android:alpha="0.5"
+                android:enabled="false"
+                />
+
+            <Button
+                android:id="@+id/siguiente"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:background="@drawable/siguiente"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_gravity="center_horizontal"
+                android:alpha="0.5"
+                android:enabled="false"
+                />
+
+            <Button
+                android:id="@+id/stop"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:background="@drawable/stop"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="5dp"
+                android:layout_gravity="center_horizontal"
+                android:alpha="0.5"
+                android:enabled="false"
+                />
+
+            <Button
+                android:id="@+id/list"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:background="@drawable/lista"
+                android:layout_marginRight="20dp"
+                android:layout_gravity="right"
+                />
 
         </android.support.v7.widget.Toolbar>
 
@@ -28,7 +88,6 @@
         </android.support.design.widget.TabLayout>
 
     </android.support.design.widget.AppBarLayout>
-
 
     <android.support.v4.view.ViewPager
         android:id="@+id/viewPager"

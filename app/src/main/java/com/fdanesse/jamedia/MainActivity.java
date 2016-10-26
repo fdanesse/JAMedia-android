@@ -18,8 +18,6 @@ import android.widget.Button;
 
 import com.fdanesse.jamedia.Archivos.FileChooserActivity;
 import com.fdanesse.jamedia.Archivos.FileManager;
-import com.fdanesse.jamedia.JamediaPlayer.PlayerActivity;
-import com.fdanesse.jamedia.PlayerList.ListActivity;
 import com.fdanesse.jamedia.PlayerList.ListItem;
 
 import java.util.ArrayList;
@@ -77,10 +75,10 @@ public class MainActivity extends AppCompatActivity {
                 button_clicked(view, motionEvent);
                 if (motionEvent.getAction() == MotionEvent.ACTION_UP){
                     ArrayList<ListItem> radios = FileManager.get_radios();
-                    Intent intent = new Intent(MainActivity.this, ListActivity.class);
+                    Intent intent = new Intent(MainActivity.this, PlayerActivity.class);
                     intent.putExtra("tracks", radios);
                     startActivity(intent);
-                    finish();
+                    //finish();
                 }
                 return true;
             }

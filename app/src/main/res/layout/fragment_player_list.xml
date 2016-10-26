@@ -1,10 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".PlayerList.ListActivity"
+    tools:context="com.fdanesse.jamedia.PlayerList.FragmentPlayerList"
     android:background="@drawable/reciclado_arrugado_azul"
     android:scaleType="centerCrop">
 
@@ -15,4 +13,4 @@
         android:layout_centerHorizontal="true"
         />
 
-</android.support.design.widget.CoordinatorLayout>
+</FrameLayout>

@@ -1,17 +1,22 @@
-package com.fdanesse.jamedia.JamediaPlayer;
+package com.fdanesse.jamedia;
 
 import android.content.Intent;
 import android.media.AudioManager;
 import android.net.Uri;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
+import android.view.View;
 
+import com.fdanesse.jamedia.JamediaPlayer.FragmentVideoPlayer;
+import com.fdanesse.jamedia.JamediaPlayer.Notebook;
 import com.fdanesse.jamedia.MainActivity;
+import com.fdanesse.jamedia.PlayerList.FragmentPlayerList;
 import com.fdanesse.jamedia.PlayerList.ListItem;
 import com.fdanesse.jamedia.R;
 
@@ -27,15 +32,22 @@ import java.util.ArrayList;
  * wifiLock.release();
  */
 
-public class PlayerActivity extends AppCompatActivity {
+public class PlayerActivity extends FragmentActivity {
 
-    private static int idcurrenttrack;
-    private static Uri trackurl;
+    private static int idcurrenttrack = 0;
     private static ArrayList<ListItem> tracks;
 
     private Toolbar toolbar;
+    private static View anterior;
+    private static View siguiente;
+    private static View play;
+    private static View list;
+
     private TabLayout tabLayout;
-    private ViewPager viewPager;
+    private static ViewPager viewPager;
+
+    private FragmentVideoPlayer fragmentVideoPlayer;
+    private FragmentPlayerList fragmentPlayerList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,41 +58,53 @@ public class PlayerActivity extends AppCompatActivity {
         tabLayout = (TabLayout) findViewById(R.id.lenguetas);
         viewPager = (ViewPager) findViewById(R.id.viewPager);
 
-        setSupportActionBar(toolbar);
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-
-        init();
-        //connect_buttons_actions();
-        //listen_videoView();
+        anterior = (View) findViewById(R.id.anterior);
+        siguiente = (View) findViewById(R.id.siguiente);
+        play = (View) findViewById(R.id.play);
+        list = (View) findViewById(R.id.list);
 
         AudioManager audioManager = (AudioManager) this.getSystemService(this.AUDIO_SERVICE);
         this.setVolumeControlStream(audioManager.STREAM_MUSIC);
 
         ArrayList<Fragment> fragments = new ArrayList<Fragment>();
-        FragmentVideoPlayer f2 = new FragmentVideoPlayer();
-        fragments.add(f2);
-        fragments.add(new Fragment());
+        fragmentVideoPlayer = new FragmentVideoPlayer();
+        fragmentPlayerList = new FragmentPlayerList();
+        fragments.add(fragmentPlayerList);
+        fragments.add(fragmentVideoPlayer);
 
         viewPager.setAdapter(new Notebook(getSupportFragmentManager(), fragments));
         tabLayout.setupWithViewPager(viewPager);
+
+        tabLayout.getTabAt(0).setText("Lista");
+        tabLayout.getTabAt(1).setText("Player");
+
+        init();
+        connect_buttons_actions();
     }
 
     private void init(){
         Bundle extras = getIntent().getExtras();
-        idcurrenttrack = extras.getInt("idcurrenttrack", 0);
         tracks = (ArrayList<ListItem>) extras.getSerializable("tracks");
-        ListItem item = tracks.get(idcurrenttrack);
-        trackurl = Uri.parse(item.getUrl());
-        /*
-        videoView.setVideoURI(trackurl);
-        */
+        fragmentPlayerList.setArguments(extras);
     }
 
-    /*
+    public static void playtrack(int index){
+        idcurrenttrack = index;
+        ListItem item = tracks.get(index);
+        viewPager.setCurrentItem(1);
+        FragmentVideoPlayer.load_and_play(Uri.parse(item.getUrl()));
+    }
+
+    public static void stop(){
+        FragmentVideoPlayer.stop();
+    }
+
+    public static void set_status(Boolean playing){
+        //FIXME: agregar actualizacion segun playing
+        check_buttons();
+    }
+
     private void connect_buttons_actions(){
-        View siguiente = (View) findViewById(R.id.siguiente);
         siguiente.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -88,7 +112,6 @@ public class PlayerActivity extends AppCompatActivity {
             }
         });
 
-        View anterior = (View) findViewById(R.id.anterior);
         anterior.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -96,13 +119,9 @@ public class PlayerActivity extends AppCompatActivity {
             }
         });
     }
-    */
 
-    /*
-    private void check_buttons(){
+    private static void check_buttons(){
         int x = tracks.size();
-        View anterior = (View) findViewById(R.id.anterior);
-        View siguiente = (View) findViewById(R.id.siguiente);
         if (idcurrenttrack < x-1){
             if (!siguiente.isEnabled()){
                 Utils.setActiveView(siguiente);
@@ -130,7 +149,7 @@ public class PlayerActivity extends AppCompatActivity {
         }
     }
 
-    public void next_track(){
+    public static void next_track(){
         int x = tracks.size();
         if (idcurrenttrack < x-1){
             idcurrenttrack += 1;
@@ -138,9 +157,7 @@ public class PlayerActivity extends AppCompatActivity {
         else{
             idcurrenttrack = 0;
         }
-        ListItem item = tracks.get(idcurrenttrack);
-        trackurl = Uri.parse(item.getUrl());
-        videoView.setVideoURI(trackurl);
+        playtrack(idcurrenttrack);
     }
 
     public void previous_track(){
@@ -151,13 +168,9 @@ public class PlayerActivity extends AppCompatActivity {
         else{
             idcurrenttrack = x - 1;
         }
-        ListItem item = tracks.get(idcurrenttrack);
-        trackurl = Uri.parse(item.getUrl());
-        videoView.setVideoURI(trackurl);
+        playtrack(idcurrenttrack);
     }
-    */
 
-    /*
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
         int action = event.getAction();
@@ -175,5 +188,4 @@ public class PlayerActivity extends AppCompatActivity {
         }
         return super.dispatchKeyEvent(event);
     }
-    */
 }
