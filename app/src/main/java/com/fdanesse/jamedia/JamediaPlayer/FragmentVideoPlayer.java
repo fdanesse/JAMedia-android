@@ -44,7 +44,7 @@ public class FragmentVideoPlayer extends Fragment {
             public void onPrepared(MediaPlayer mediaPlayer) {
                 videoView.seekTo(0);
                 videoView.start();
-                PlayerActivity.set_status(videoView.isPlaying());
+                PlayerActivity.set_status(videoView.isPlaying(), videoView.canPause());
             }
         });
 
@@ -89,11 +89,31 @@ public class FragmentVideoPlayer extends Fragment {
         });
     }
 
+    public static void pause_play(){
+        if (videoView.isPlaying()){
+            if (videoView.canPause()) {
+                videoView.pause();
+            }
+            else{
+                stop();
+            }
+        }
+        else{
+            if (videoView.canPause()) {
+                videoView.resume();
+            }
+            else{
+                videoView.start();
+            }
+        }
+        PlayerActivity.set_status(videoView.isPlaying(), videoView.canPause());
+    }
+
     public static void stop(){
         if (videoView.isPlaying()){
             videoView.stopPlayback();
         }
-        PlayerActivity.set_status(videoView.isPlaying());
+        PlayerActivity.set_status(videoView.isPlaying(), videoView.canPause());
     }
 
     public static void load_and_play(Uri trackurl){

@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.Button;
 
 import com.fdanesse.jamedia.JamediaPlayer.FragmentVideoPlayer;
 import com.fdanesse.jamedia.JamediaPlayer.Notebook;
@@ -38,10 +39,14 @@ public class PlayerActivity extends FragmentActivity {
     private static ArrayList<ListItem> tracks;
 
     private Toolbar toolbar;
-    private static View anterior;
-    private static View siguiente;
-    private static View play;
-    private static View list;
+    private static Button anterior;
+    private static Button siguiente;
+    private static Button play;
+    private static Button creditos;
+
+    private static int img_pausa = R.drawable.pausa;
+    private static int img_play = R.drawable.play;
+    private static int img_stop = R.drawable.stop;
 
     private TabLayout tabLayout;
     private static ViewPager viewPager;
@@ -58,10 +63,13 @@ public class PlayerActivity extends FragmentActivity {
         tabLayout = (TabLayout) findViewById(R.id.lenguetas);
         viewPager = (ViewPager) findViewById(R.id.viewPager);
 
-        anterior = (View) findViewById(R.id.anterior);
-        siguiente = (View) findViewById(R.id.siguiente);
-        play = (View) findViewById(R.id.play);
-        list = (View) findViewById(R.id.list);
+        anterior = (Button) findViewById(R.id.anterior);
+        siguiente = (Button) findViewById(R.id.siguiente);
+        play = (Button) findViewById(R.id.play);
+        creditos = (Button) findViewById(R.id.creditos);
+
+        img_pausa = R.drawable.pausa;
+        img_play = R.drawable.play;
 
         AudioManager audioManager = (AudioManager) this.getSystemService(this.AUDIO_SERVICE);
         this.setVolumeControlStream(audioManager.STREAM_MUSIC);
@@ -74,9 +82,6 @@ public class PlayerActivity extends FragmentActivity {
 
         viewPager.setAdapter(new Notebook(getSupportFragmentManager(), fragments));
         tabLayout.setupWithViewPager(viewPager);
-
-        tabLayout.getTabAt(0).setText("Lista");
-        tabLayout.getTabAt(1).setText("Player");
 
         init();
         connect_buttons_actions();
@@ -93,15 +98,26 @@ public class PlayerActivity extends FragmentActivity {
         ListItem item = tracks.get(index);
         viewPager.setCurrentItem(1);
         FragmentVideoPlayer.load_and_play(Uri.parse(item.getUrl()));
+        Utils.setActiveView(play);
+        play.setEnabled(true);
     }
 
     public static void stop(){
         FragmentVideoPlayer.stop();
     }
 
-    public static void set_status(Boolean playing){
+    public static void set_status(Boolean playing, Boolean canpause){
         //FIXME: agregar actualizacion segun playing
         check_buttons();
+        if (playing){
+            if (canpause){
+                play.setBackgroundResource(img_pausa);}
+            else{
+                play.setBackgroundResource(img_stop);}
+            }
+        else{
+            play.setBackgroundResource(img_play);
+        }
     }
 
     private void connect_buttons_actions(){
@@ -109,6 +125,13 @@ public class PlayerActivity extends FragmentActivity {
             @Override
             public void onClick(View view) {
                 next_track();
+            }
+        });
+
+        play.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FragmentVideoPlayer.pause_play();
             }
         });
 

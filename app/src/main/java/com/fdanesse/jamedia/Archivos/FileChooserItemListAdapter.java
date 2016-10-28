@@ -16,12 +16,18 @@ import java.util.ArrayList;
  */
 public class FileChooserItemListAdapter extends RecyclerView.Adapter<FileChooserItemListAdapter.ItemListViewHolder>{
 
-    private FileChooserActivity filechooser;
-    private ArrayList<ItemFileChooser> lista;
+    private FileChooserActivity filechooser = null;
+    private ArrayList<ItemFileChooser> lista = null;
+    private ArrayList<ItemListViewHolder> holders = null;
 
     public FileChooserItemListAdapter(ArrayList<ItemFileChooser> lista, FileChooserActivity filechooser){
         this.filechooser = filechooser;
         this.lista = lista;
+        this.holders = new ArrayList<ItemListViewHolder>();
+    }
+
+    public ArrayList<ItemListViewHolder> getHolders() {
+        return holders;
     }
 
     @Override
@@ -40,7 +46,7 @@ public class FileChooserItemListAdapter extends RecyclerView.Adapter<FileChooser
                     filechooser.load_path(filepath);
                 }
                 else if (tipo.compareTo("Archivo") == 0){
-                    filechooser.check_track_in_selected(filepath, view);
+                    filechooser.onClickItem(filepath, view);
                 }
             }
         });
@@ -50,7 +56,9 @@ public class FileChooserItemListAdapter extends RecyclerView.Adapter<FileChooser
     public ItemListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(
                 R.layout.cardview_file_item, parent, false);
-        return new ItemListViewHolder(v);
+        ItemListViewHolder view = new ItemListViewHolder(v);
+        holders.add(view);
+        return view;
     }
 
     @Override
@@ -81,6 +89,18 @@ public class FileChooserItemListAdapter extends RecyclerView.Adapter<FileChooser
             text_view_filename = (TextView) itemView.findViewById(R.id.filename);
             text_view_filepath = (TextView) itemView.findViewById(R.id.filepath);
             text_view_tipo = (TextView) itemView.findViewById(R.id.tipo);
+        }
+
+        public String get_filepath() {
+            return text_view_filepath.getText().toString();
+        }
+
+        public String get_filename() {
+            return text_view_filename.getText().toString();
+        }
+
+        public String get_tipo() {
+            return text_view_tipo.getText().toString();
         }
     }
 }

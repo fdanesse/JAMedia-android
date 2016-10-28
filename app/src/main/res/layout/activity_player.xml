@@ -17,18 +17,28 @@
             android:id="@+id/JAMediaToolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/jamediatoolbar15"
+            android:background="#000000"
             android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
             >
-            <!--app:layout_scrollFlags="scroll|enterAlways"-->
+            <!--app:layout_scrollFlags="scroll|enterAlways"
+            @color/jamediatoolbar15-->
+
+            <Button
+                android:id="@+id/creditos"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/jamedia"
+                android:layout_marginRight="20dp"
+                android:layout_gravity="left"
+                />
 
             <Button
                 android:id="@+id/anterior"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:background="@drawable/anterior"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
+                android:layout_marginLeft="0dp"
+                android:layout_marginRight="7dp"
                 android:layout_gravity="center_horizontal"
                 android:alpha="0.5"
                 android:enabled="false"
@@ -36,11 +46,11 @@
 
             <Button
                 android:id="@+id/play"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:background="@drawable/play"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
+                android:layout_marginLeft="7dp"
+                android:layout_marginRight="7dp"
                 android:layout_gravity="center_horizontal"
                 android:alpha="0.5"
                 android:enabled="false"
@@ -48,35 +58,14 @@
 
             <Button
                 android:id="@+id/siguiente"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:background="@drawable/siguiente"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
+                android:layout_marginLeft="0dp"
+                android:layout_marginRight="7dp"
                 android:layout_gravity="center_horizontal"
                 android:alpha="0.5"
                 android:enabled="false"
-                />
-
-            <Button
-                android:id="@+id/stop"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:background="@drawable/stop"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="5dp"
-                android:layout_gravity="center_horizontal"
-                android:alpha="0.5"
-                android:enabled="false"
-                />
-
-            <Button
-                android:id="@+id/list"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:background="@drawable/lista"
-                android:layout_marginRight="20dp"
-                android:layout_gravity="right"
                 />
 
         </android.support.v7.widget.Toolbar>
@@ -84,7 +73,8 @@
         <android.support.design.widget.TabLayout
             android:id="@+id/lenguetas"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="10dp"
+            >
         </android.support.design.widget.TabLayout>
 
     </android.support.design.widget.AppBarLayout>
