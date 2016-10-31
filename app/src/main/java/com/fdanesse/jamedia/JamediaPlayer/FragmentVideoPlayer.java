@@ -3,7 +3,7 @@ package com.fdanesse.jamedia.JamediaPlayer;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
+//import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -119,6 +119,6 @@ public class FragmentVideoPlayer extends Fragment {
     public static void load_and_play(Uri trackurl){
         stop();
         videoView.setVideoURI(trackurl);
-        Snackbar.make(videoView, "Play: " + trackurl, Snackbar.LENGTH_LONG).show();
+        //Snackbar.make(videoView, "Play: " + trackurl, Snackbar.LENGTH_LONG).show();
     }
 }

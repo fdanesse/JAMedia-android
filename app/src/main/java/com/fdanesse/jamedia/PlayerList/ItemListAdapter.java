@@ -8,7 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.fdanesse.jamedia.R;
-import com.fdanesse.jamedia.Utils;
+//import com.fdanesse.jamedia.Utils;
 
 import java.util.ArrayList;
 

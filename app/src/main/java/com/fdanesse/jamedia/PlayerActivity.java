@@ -3,7 +3,6 @@ package com.fdanesse.jamedia;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.net.Uri;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -16,10 +15,8 @@ import android.widget.Button;
 
 import com.fdanesse.jamedia.JamediaPlayer.FragmentVideoPlayer;
 import com.fdanesse.jamedia.JamediaPlayer.Notebook;
-import com.fdanesse.jamedia.MainActivity;
 import com.fdanesse.jamedia.PlayerList.FragmentPlayerList;
 import com.fdanesse.jamedia.PlayerList.ListItem;
-import com.fdanesse.jamedia.R;
 
 import java.util.ArrayList;
 
@@ -107,7 +104,6 @@ public class PlayerActivity extends FragmentActivity {
     }
 
     public static void set_status(Boolean playing, Boolean canpause){
-        //FIXME: agregar actualizacion segun playing
         check_buttons();
         if (playing){
             if (canpause){

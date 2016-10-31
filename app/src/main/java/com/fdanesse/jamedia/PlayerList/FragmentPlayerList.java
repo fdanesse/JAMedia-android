@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 
 import com.fdanesse.jamedia.PlayerActivity;
 import com.fdanesse.jamedia.R;
-import com.fdanesse.jamedia.Utils;
+//import com.fdanesse.jamedia.Utils;
 
 import java.util.ArrayList;
 
