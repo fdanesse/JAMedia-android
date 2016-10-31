@@ -19,17 +19,25 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemLi
 
     private ArrayList<ListItem> lista;
     private FragmentPlayerList fragmentPlayerList;
+    private ArrayList<ItemListViewHolder> holders = null;
 
     public ItemListAdapter(ArrayList<ListItem> lista, FragmentPlayerList fragmentPlayerList){
         this.lista = lista;
         this.fragmentPlayerList = fragmentPlayerList;
+        this.holders = new ArrayList<ItemListViewHolder>();
+    }
+
+    public ArrayList<ItemListViewHolder> getHolders() {
+        return holders;
     }
 
     @Override
     public ItemListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(
                 R.layout.cardview_list_item, parent, false);
-        return new ItemListViewHolder(v);
+        ItemListViewHolder view = new ItemListViewHolder(v);
+        holders.add(view);
+        return view;
     }
 
     @Override

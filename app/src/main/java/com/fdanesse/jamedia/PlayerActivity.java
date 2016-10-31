@@ -16,6 +16,7 @@ import android.widget.Button;
 import com.fdanesse.jamedia.JamediaPlayer.FragmentVideoPlayer;
 import com.fdanesse.jamedia.JamediaPlayer.Notebook;
 import com.fdanesse.jamedia.PlayerList.FragmentPlayerList;
+import com.fdanesse.jamedia.PlayerList.ItemListAdapter;
 import com.fdanesse.jamedia.PlayerList.ListItem;
 
 import java.util.ArrayList;
@@ -91,17 +92,29 @@ public class PlayerActivity extends FragmentActivity {
     }
 
     public static void playtrack(int index){
-        idcurrenttrack = index;
-        ListItem item = tracks.get(index);
-        viewPager.setCurrentItem(1);
-        FragmentVideoPlayer.load_and_play(Uri.parse(item.getUrl()));
-        Utils.setActiveView(play);
-        play.setEnabled(true);
-    }
+        /**
+         * Cuando se se clickea un item en la lista.
+         */
 
-    public static void stop(){
-        FragmentVideoPlayer.stop();
-    }
+        if (index != idcurrenttrack || !FragmentVideoPlayer.videoView.isPlaying()){
+            idcurrenttrack = index;
+            ListItem item = tracks.get(index);
+            viewPager.setCurrentItem(1);
+            FragmentVideoPlayer.load_and_play(Uri.parse(item.getUrl()));
+            Utils.setActiveView(play);
+            play.setEnabled(true);
+        }
+
+        ArrayList<ItemListAdapter.ItemListViewHolder> items = FragmentPlayerList.listAdapter.getHolders();
+        for (ItemListAdapter.ItemListViewHolder i : items) {
+            if (index == items.indexOf(i)){
+                i.itemView.setAlpha(1.0f);
+            }
+            else{
+                i.itemView.setAlpha(0.5f);
+            }
+            }
+        }
 
     public static void set_status(Boolean playing, Boolean canpause){
         check_buttons();

@@ -19,7 +19,7 @@ public class FragmentPlayerList extends Fragment {
 
     private ArrayList<ListItem> lista;
     private RecyclerView recyclerView;
-    private ItemListAdapter listAdapter;
+    public static ItemListAdapter listAdapter;
 
     public FragmentPlayerList() {
     }
@@ -43,14 +43,6 @@ public class FragmentPlayerList extends Fragment {
     }
 
     protected void playtrack(int index, View view){
-        //FIXME: Solucionar animacion
-        if (view.getAlpha() == 0.5f){
-            //Utils.setActiveView(view);
-            PlayerActivity.playtrack(index);
-        }
-        else{
-            //Utils.setInactiveView(view);
-            PlayerActivity.stop();
-        }
+        PlayerActivity.playtrack(index);
     }
 }
