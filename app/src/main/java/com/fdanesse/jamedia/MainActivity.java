@@ -7,7 +7,7 @@ import android.content.IntentFilter;
 import android.media.AudioManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.Environment;
+//import android.os.Environment;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -105,8 +105,8 @@ public class MainActivity extends AppCompatActivity {
                 button_clicked(view, motionEvent);
                 if (motionEvent.getAction() == MotionEvent.ACTION_UP){
                     Intent intent = new Intent(MainActivity.this, FileChooserActivity.class);
-                    intent.putExtra("currentpath",
-                            Environment.getExternalStorageDirectory().getAbsolutePath()); //"/mnt/sdcard/Musica/"
+                    //intent.putExtra("currentpath",
+                    //        Environment.getExternalStorageDirectory().getAbsolutePath());
                     startActivity(intent);
                     finish();
                 }

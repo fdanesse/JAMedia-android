@@ -1,6 +1,7 @@
 package com.fdanesse.jamedia.Archivos;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
@@ -8,7 +9,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -33,6 +33,8 @@ public class FileChooserActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private FileChooserItemListAdapter listAdapter;
 
+    private SharedPreferences.Editor conf;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,10 +46,6 @@ public class FileChooserActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-        Bundle extras = getIntent().getExtras();
-        currentpath = extras.getString("currentpath",
-                Environment.getExternalStorageDirectory().getAbsolutePath());
-
         recyclerView = (RecyclerView) findViewById(R.id.file_chooser_reciclerview);
         LinearLayoutManager llm = new LinearLayoutManager(this);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
@@ -58,8 +56,12 @@ public class FileChooserActivity extends AppCompatActivity {
         AudioManager audioManager = (AudioManager) this.getSystemService(this.AUDIO_SERVICE);
         this.setVolumeControlStream(audioManager.STREAM_MUSIC);
 
-        buttons_listen_clicks();
+        SharedPreferences pref = getSharedPreferences("config", MODE_PRIVATE);
+        conf = pref.edit();
+        currentpath = pref.getString("currentpath",
+                Environment.getExternalStorageDirectory().getAbsolutePath());
 
+        buttons_listen_clicks();
         load_path(currentpath);
     }
 
@@ -192,10 +194,14 @@ public class FileChooserActivity extends AppCompatActivity {
 
     public void load_path(String dirpath) {
         currentpath = dirpath;
+        conf.putString("currentpath", currentpath);
+        conf.commit();
+
         tracks.clear();
         ArrayList<ItemFileChooser> lista = FileManager.readDirPath(currentpath);
         listAdapter = new FileChooserItemListAdapter(lista, this);
         recyclerView.setAdapter(listAdapter);
+
         check_button_anterior();
         check_button_play();
         check_button_todos();
