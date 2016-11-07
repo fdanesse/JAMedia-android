@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.fdanesse.jamedia.R;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by flavio on 09/10/16.

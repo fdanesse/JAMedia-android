@@ -19,50 +19,53 @@ public class FileManager {
 
 
     public static ArrayList<ItemFileChooser> readDirPath(String dirpath){
+        /**
+         * Lee un directorio devolviendo la lista de directorios y archivos en él.
+         */
         ArrayList<ItemFileChooser> lista = new ArrayList<ItemFileChooser>();
         File file = new File(dirpath);
 
-        if (file.exists()){
-            File[] files = file.listFiles();
+        if (!file.exists()){return lista;}
+        if (!file.isDirectory()){return lista;}
 
-            for (File f: files){
+        File[] files = file.listFiles();
+        for (File f: files){
 
-                String filename = f.getName();
-                if (f.getName().length() > 15){
-                    filename = f.getName().substring(0, 15) + "...";
+            String filename = f.getName();
+            if (f.getName().length() > 20){
+                filename = f.getName().substring(0, 20) + "...";
+            }
+
+            if (f.isDirectory()){
+                if (f.canRead()){
+                    lista.add(new ItemFileChooser(R.drawable.folder, filename,
+                            f.getPath(), "Directorio"));
                 }
+            }
+            else if (f.isFile()){
+                if (f.canRead()) {
+                    //FIXME: completar comprobación de tipo de archivos
+                    String mime = "Undetermined";
+                    // URLConnection.guessContentTypeFromName(f.getPath());
 
-                if (f.isDirectory()){
-                    if (f.canRead()){
-                        lista.add(new ItemFileChooser(R.drawable.folder, filename,
-                                f.getPath(), "Directorio"));
+                    try {
+                        final URL url = new URL("file://" + f.getPath());
+                        final URLConnection connection = url.openConnection();
+                        mime = connection.getContentType();
                     }
-                }
-                else if (f.isFile()){
-                    if (f.canRead()) {
-                        //FIXME: completar comprobación de tipo de archivos
-                        String mime = "Undetermined";
-                        // URLConnection.guessContentTypeFromName(f.getPath());
+                    catch (MalformedURLException badUrlEx) {continue;}
+                    catch (IOException ioEx) {continue;}
 
-                        try {
-                            final URL url = new URL("file://" + f.getPath());
-                            final URLConnection connection = url.openConnection();
-                            mime = connection.getContentType();
-                        }
-                        catch (MalformedURLException badUrlEx) {continue;}
-                        catch (IOException ioEx) {continue;}
-
-                        if (mime.contains("audio")){
-                            lista.add(new ItemFileChooser(R.drawable.audio, filename,
-                                    f.getPath(), "Archivo"));
-                        }
-                        else if(mime.contains("video")){
-                            lista.add(new ItemFileChooser(R.drawable.video, filename,
-                                    f.getPath(), "Archivo"));
-                        }
-                        else {
-                            Log.i("XXX Desconocido: ", mime);
-                        }
+                    if (mime.contains("audio")){
+                        lista.add(new ItemFileChooser(R.drawable.audio, filename,
+                                f.getPath(), "Archivo"));
+                    }
+                    else if(mime.contains("video")){
+                        lista.add(new ItemFileChooser(R.drawable.video, filename,
+                                f.getPath(), "Archivo"));
+                    }
+                    else {
+                        Log.i("XXX Desconocido: ", mime);
                     }
                 }
             }

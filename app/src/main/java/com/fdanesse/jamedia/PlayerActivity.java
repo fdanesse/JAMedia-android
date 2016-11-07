@@ -33,7 +33,7 @@ import java.util.ArrayList;
 
 public class PlayerActivity extends FragmentActivity {
 
-    private static int idcurrenttrack = 0;
+    private static int idcurrenttrack = -1;
     private static ArrayList<ListItem> tracks;
 
     private Toolbar toolbar;
@@ -96,22 +96,26 @@ public class PlayerActivity extends FragmentActivity {
          * Cuando se se clickea un item en la lista.
          */
 
-        if (index != idcurrenttrack || !FragmentVideoPlayer.videoView.isPlaying()){
+        if (index != idcurrenttrack){
             idcurrenttrack = index;
-            ListItem item = tracks.get(index);
-            viewPager.setCurrentItem(1);
-            FragmentVideoPlayer.load_and_play(Uri.parse(item.getUrl()));
-            Utils.setActiveView(play);
-            play.setEnabled(true);
         }
+
+        ListItem item = tracks.get(idcurrenttrack);
+        Uri url = Uri.parse(item.getUrl());
+
+        viewPager.setCurrentItem(1);
+        FragmentVideoPlayer.load_and_play(url);
+        Utils.setActiveView(play);
+        play.setEnabled(true);
 
         ArrayList<ItemListAdapter.ItemListViewHolder> items = FragmentPlayerList.listAdapter.getHolders();
         for (ItemListAdapter.ItemListViewHolder i : items) {
-            if (index == items.indexOf(i)){
-                i.itemView.setAlpha(1.0f);
+            Uri turl = Uri.parse(i.getText_view_url().getText().toString());
+            if (turl.compareTo(url) == 0){
+                Utils.setActiveView(i.itemView);
             }
             else{
-                i.itemView.setAlpha(0.5f);
+                Utils.setInactiveView(i.itemView);
             }
             }
         }
@@ -183,13 +187,13 @@ public class PlayerActivity extends FragmentActivity {
 
     public static void next_track(){
         int x = tracks.size();
-        if (idcurrenttrack < x-1){
+        if (idcurrenttrack < x - 1){
             idcurrenttrack += 1;
         }
         else{
             idcurrenttrack = 0;
         }
-        playtrack(idcurrenttrack);
+        playtrack((int)idcurrenttrack);
     }
 
     public void previous_track(){
@@ -200,7 +204,7 @@ public class PlayerActivity extends FragmentActivity {
         else{
             idcurrenttrack = x - 1;
         }
-        playtrack(idcurrenttrack);
+        playtrack((int)idcurrenttrack);
     }
 
     @Override

@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 
 import com.fdanesse.jamedia.PlayerActivity;
 import com.fdanesse.jamedia.R;
-//import com.fdanesse.jamedia.Utils;
 
 import java.util.ArrayList;
 
@@ -42,7 +41,7 @@ public class FragmentPlayerList extends Fragment {
         return layout;
     }
 
-    protected void playtrack(int index, View view){
+    protected void playtrack(int index){
         PlayerActivity.playtrack(index);
     }
 }

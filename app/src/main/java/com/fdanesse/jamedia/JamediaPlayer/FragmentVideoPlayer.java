@@ -86,6 +86,7 @@ public class FragmentVideoPlayer extends Fragment {
                 return true;
             }
         });
+
     }
 
     public static void pause_play(){
@@ -102,6 +103,7 @@ public class FragmentVideoPlayer extends Fragment {
                 videoView.resume();
             }
             else{
+                videoView.seekTo(0);
                 videoView.start();
             }
         }

@@ -8,7 +8,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.fdanesse.jamedia.R;
-//import com.fdanesse.jamedia.Utils;
 
 import java.util.ArrayList;
 
@@ -51,10 +50,8 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemLi
     @Override
     public int getItemCount() {return lista.size();}
 
-    protected void playtrack(int index, View view){
-        fragmentPlayerList.playtrack(index, view);
-    }
 
+    //Clase interna
     public class ItemListViewHolder extends RecyclerView.ViewHolder {
 
         private ImageView imagen_view;
@@ -71,9 +68,13 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemLi
                 @Override
                 public void onClick(View view) {
                     int index = getAdapterPosition();
-                    playtrack(index, view);
+                    fragmentPlayerList.playtrack(index);
                 }
             });
+        }
+
+        public TextView getText_view_url() {
+            return text_view_url;
         }
     }
 }

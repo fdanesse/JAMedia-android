@@ -28,7 +28,7 @@ public class FileChooserActivity extends AppCompatActivity {
 
     private String currentpath;
     private ArrayList<String> tracks;
-
+    private ArrayList<ItemFileChooser> lista;
     private Toolbar myactionbar;
     private RecyclerView recyclerView;
     private FileChooserItemListAdapter listAdapter;
@@ -52,6 +52,7 @@ public class FileChooserActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(llm);
 
         tracks = new ArrayList<String>();
+        lista = new ArrayList<ItemFileChooser>();
 
         AudioManager audioManager = (AudioManager) this.getSystemService(this.AUDIO_SERVICE);
         this.setVolumeControlStream(audioManager.STREAM_MUSIC);
@@ -101,16 +102,23 @@ public class FileChooserActivity extends AppCompatActivity {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 if (motionEvent.getAction() == MotionEvent.ACTION_DOWN){
-                    ArrayList<FileChooserItemListAdapter.ItemListViewHolder> items = listAdapter.getHolders();
                     tracks.clear();
-                    for (FileChooserItemListAdapter.ItemListViewHolder i : items) {
-                        if (i.get_tipo() == "Archivo"){
-                            Utils.setActiveView(i.itemView);
-                            tracks.add(i.get_filepath());
+
+                    for (ItemFileChooser fc : lista){
+                        if (fc.getTipo() == "Archivo"){
+                            tracks.add(fc.getFilepath());
                         }
                     }
-                    check_button_todos();
+
+                    ArrayList<FileChooserItemListAdapter.ItemListViewHolder> items = listAdapter.getHolders();
+                    for (FileChooserItemListAdapter.ItemListViewHolder i : items){
+                        if (tracks.contains(i.get_filepath())){
+                            Utils.setActiveView(i.itemView);
+                        }
+                    }
+
                     check_button_play();
+                    check_button_todos();
                 }
                 return true;
             }
@@ -157,14 +165,17 @@ public class FileChooserActivity extends AppCompatActivity {
         /**
          * Si al menos un archivo no está seleccionado,se activa el boton todos
          */
-        ArrayList<FileChooserItemListAdapter.ItemListViewHolder> items = listAdapter.getHolders();
         Boolean f = false;
-        for (FileChooserItemListAdapter.ItemListViewHolder i : items) {
-            if (i.get_tipo() == "Archivo" && !tracks.contains(i.get_filepath())) {
-                f = true;
-                break;
+
+        if (!lista.isEmpty()){
+            for (ItemFileChooser ifc : lista) {
+                if (ifc.getTipo() == "Archivo" && !tracks.contains(ifc.getFilepath())) {
+                    f = true;
+                    break;
+                }
             }
         }
+
         Button boton = (Button) myactionbar.findViewById(R.id.todos);
         if (f){
             Utils.setActiveView(boton);
@@ -198,7 +209,7 @@ public class FileChooserActivity extends AppCompatActivity {
         conf.commit();
 
         tracks.clear();
-        ArrayList<ItemFileChooser> lista = FileManager.readDirPath(currentpath);
+        lista = FileManager.readDirPath(currentpath);
         listAdapter = new FileChooserItemListAdapter(lista, this);
         recyclerView.setAdapter(listAdapter);
 
