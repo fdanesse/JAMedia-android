@@ -86,10 +86,10 @@ public class FragmentVideoPlayer extends Fragment {
                 return true;
             }
         });
-
     }
 
     public static void pause_play(){
+        //FIXME: Nunca pausa y/o resume
         if (videoView.isPlaying()){
             if (videoView.canPause()) {
                 videoView.pause();

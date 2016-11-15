@@ -9,6 +9,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -26,14 +27,14 @@ import java.util.ArrayList;
 
 public class FileChooserActivity extends AppCompatActivity {
 
-    private String currentpath;
-    private ArrayList<String> tracks;
-    private ArrayList<ItemFileChooser> lista;
+    private String currentpath;                         // Directorio actual
+    private ArrayList<String> tracks;                   // Archivos reproducibles seleccionados
+    private ArrayList<ItemFileChooser> lista;           // Archivos y Directorios en directorio actual
     private Toolbar myactionbar;
     private RecyclerView recyclerView;
     private FileChooserItemListAdapter listAdapter;
 
-    private SharedPreferences.Editor conf;
+    private SharedPreferences.Editor conf;              // Guardamos el último directorio leido
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +68,8 @@ public class FileChooserActivity extends AppCompatActivity {
     }
 
     private void buttons_listen_clicks(){
+
+        // Leer Directorio padre al actual
         Button boton = (Button) myactionbar.findViewById(R.id.anterior);
         boton.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -82,6 +85,7 @@ public class FileChooserActivity extends AppCompatActivity {
             }
         });
 
+        // Reproducir los archivos seleccionados
         boton = (Button) myactionbar.findViewById(R.id.play);
         boton.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -97,6 +101,7 @@ public class FileChooserActivity extends AppCompatActivity {
             }
         });
 
+        // Seleccionar todos los archivos reproducibles
         boton = (Button) myactionbar.findViewById(R.id.todos);
         boton.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -186,7 +191,7 @@ public class FileChooserActivity extends AppCompatActivity {
         }
     }
 
-    public void onClickItem(String filepath, View view){
+    public void onClickFileItem(String filepath, View view){
         /**
          * Cuando se hace click en un item de la lista
          */
@@ -200,7 +205,10 @@ public class FileChooserActivity extends AppCompatActivity {
         }
         check_button_play();
         check_button_todos();
-        //FIXME: LA vista del recyclerview no es coherente
+    }
+
+    public Boolean check_path(String path){
+        return tracks.contains(path);
     }
 
     public void load_path(String dirpath) {

@@ -96,10 +96,7 @@ public class PlayerActivity extends FragmentActivity {
          * Cuando se se clickea un item en la lista.
          */
 
-        if (index != idcurrenttrack){
-            idcurrenttrack = index;
-        }
-
+        idcurrenttrack = index;
         ListItem item = tracks.get(idcurrenttrack);
         Uri url = Uri.parse(item.getUrl());
 

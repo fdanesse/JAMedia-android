@@ -32,6 +32,7 @@ public class FragmentPlayerList extends Fragment {
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
+        recyclerView.setHasFixedSize(true);
 
         Bundle bundle = getArguments();
         lista = (ArrayList<ListItem>) bundle.getSerializable("tracks");
