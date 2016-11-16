@@ -33,14 +33,11 @@ import java.util.ArrayList;
 
 public class PlayerActivity extends FragmentActivity {
 
-    private static int idcurrenttrack = -1;
-    private static ArrayList<ListItem> tracks;
-
     private Toolbar toolbar;
     private static Button anterior;
     private static Button siguiente;
     private static Button play;
-    private static Button creditos;
+    private static Button creditos;  // FIXME: terminar
 
     private static int img_pausa = R.drawable.pausa;
     private static int img_play = R.drawable.play;
@@ -75,6 +72,8 @@ public class PlayerActivity extends FragmentActivity {
         ArrayList<Fragment> fragments = new ArrayList<Fragment>();
         fragmentVideoPlayer = new FragmentVideoPlayer();
         fragmentPlayerList = new FragmentPlayerList();
+        fragmentVideoPlayer.set_parent(this);
+        fragmentPlayerList.set_parent(this);
         fragments.add(fragmentPlayerList);
         fragments.add(fragmentVideoPlayer);
 
@@ -87,37 +86,25 @@ public class PlayerActivity extends FragmentActivity {
 
     private void init(){
         Bundle extras = getIntent().getExtras();
-        tracks = (ArrayList<ListItem>) extras.getSerializable("tracks");
         fragmentPlayerList.setArguments(extras);
     }
 
-    public static void playtrack(int index){
-        /**
-         * Cuando se se clickea un item en la lista.
-         */
-
-        idcurrenttrack = index;
-        ListItem item = tracks.get(idcurrenttrack);
+    public void playtrack(int index){
+        // Cuando se se clickea un item en la lista.
+        ListItem item = fragmentPlayerList.getListAdapter().getLista().get(index);
         Uri url = Uri.parse(item.getUrl());
 
         viewPager.setCurrentItem(1);
-        FragmentVideoPlayer.load_and_play(url);
+        fragmentVideoPlayer.load_and_play(url);
         Utils.setActiveView(play);
         play.setEnabled(true);
-
-        ArrayList<ItemListAdapter.ItemListViewHolder> items = FragmentPlayerList.listAdapter.getHolders();
-        for (ItemListAdapter.ItemListViewHolder i : items) {
-            Uri turl = Uri.parse(i.getText_view_url().getText().toString());
-            if (turl.compareTo(url) == 0){
-                Utils.setActiveView(i.itemView);
-            }
-            else{
-                Utils.setInactiveView(i.itemView);
-            }
-            }
         }
 
-    public static void set_status(Boolean playing, Boolean canpause){
+    public void next_track(){
+        fragmentPlayerList.getListAdapter().next();
+    }
+
+    public void set_status(Boolean playing, Boolean canpause){
         check_buttons();
         if (playing){
             if (canpause){
@@ -134,28 +121,30 @@ public class PlayerActivity extends FragmentActivity {
         siguiente.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                next_track();
+                fragmentPlayerList.getListAdapter().next();
             }
         });
 
         play.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                FragmentVideoPlayer.pause_play();
+                fragmentVideoPlayer.pause_play();
             }
         });
 
         anterior.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                previous_track();
+                fragmentPlayerList.getListAdapter().previous();
             }
         });
     }
 
-    private static void check_buttons(){
-        int x = tracks.size();
-        if (idcurrenttrack < x-1){
+    private void check_buttons() {
+        int x = fragmentPlayerList.getListAdapter().getItemCount();
+        int trackselected = fragmentPlayerList.getListAdapter().getTrackselected();
+
+        if (trackselected < x-1){
             if (!siguiente.isEnabled()){
                 Utils.setActiveView(siguiente);
                 siguiente.setEnabled(true);
@@ -168,7 +157,7 @@ public class PlayerActivity extends FragmentActivity {
             }
         }
 
-        if (idcurrenttrack > 0){
+        if (trackselected > 0){
             if (!anterior.isEnabled()){
                 Utils.setActiveView(anterior);
                 anterior.setEnabled(true);
@@ -180,28 +169,6 @@ public class PlayerActivity extends FragmentActivity {
                 anterior.setEnabled(false);
             }
         }
-    }
-
-    public static void next_track(){
-        int x = tracks.size();
-        if (idcurrenttrack < x - 1){
-            idcurrenttrack += 1;
-        }
-        else{
-            idcurrenttrack = 0;
-        }
-        playtrack((int)idcurrenttrack);
-    }
-
-    public void previous_track(){
-        int x = tracks.size();
-        if (idcurrenttrack > 0){
-            idcurrenttrack -= 1;
-        }
-        else{
-            idcurrenttrack = x - 1;
-        }
-        playtrack((int)idcurrenttrack);
     }
 
     @Override

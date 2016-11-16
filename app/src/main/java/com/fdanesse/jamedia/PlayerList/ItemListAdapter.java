@@ -20,14 +20,52 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemLi
     private FragmentPlayerList fragmentPlayerList;
     private ArrayList<ItemListViewHolder> holders = null;
 
+    private int trackselected = -1;                         //Pista en reproducción
+    public String trackpath = "";                           //Pista en reproducción
+
+
     public ItemListAdapter(ArrayList<ListItem> lista, FragmentPlayerList fragmentPlayerList){
         this.lista = lista;
         this.fragmentPlayerList = fragmentPlayerList;
         this.holders = new ArrayList<ItemListViewHolder>();
     }
 
+    public int getTrackselected() {
+        return trackselected;
+    }
+
+    public ArrayList<ListItem> getLista() {
+        return lista;
+    }
+
     public ArrayList<ItemListViewHolder> getHolders() {
         return holders;
+    }
+
+    public void previous(){
+        int x = getItemCount();
+        if (trackselected > 0){
+            trackselected -= 1;
+        }
+        else{
+            trackselected = x - 1;
+        }
+        ListItem i = lista.get(trackselected);
+        trackpath = i.getUrl();
+        fragmentPlayerList.playtrack(trackselected);
+    }
+
+    public void next(){
+        int x = getItemCount();
+        if (trackselected < x - 1){
+            trackselected += 1;
+        }
+        else{
+            trackselected = 0;
+        }
+        ListItem i = lista.get(trackselected);
+        trackpath = i.getUrl();
+        fragmentPlayerList.playtrack(trackselected);
     }
 
     @Override
@@ -45,6 +83,13 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemLi
         holder.imagen_view.setImageResource(listItem.getImagen());
         holder.text_view_nombre.setText(listItem.getNombre());
         holder.text_view_url.setText(listItem.getUrl());
+
+        if (position == trackselected){
+            holder.itemView.setAlpha(1.0f);
+        }
+        else{
+            holder.itemView.setAlpha(0.5f);
+        }
     }
 
     @Override
@@ -58,7 +103,7 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemLi
         private TextView text_view_nombre;
         private TextView text_view_url;
 
-        public ItemListViewHolder(View itemView) {
+        public ItemListViewHolder(final View itemView) {
             super(itemView);
             imagen_view = (ImageView) itemView.findViewById(R.id.imagen);
             text_view_nombre = (TextView) itemView.findViewById(R.id.nombre);
@@ -67,8 +112,9 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemLi
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    int index = getAdapterPosition();
-                    fragmentPlayerList.playtrack(index);
+                    trackselected = getAdapterPosition();
+                    trackpath = getText_view_url().getText().toString();
+                    fragmentPlayerList.playtrack(trackselected);
                 }
             });
         }

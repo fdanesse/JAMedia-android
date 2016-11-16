@@ -19,8 +19,13 @@ public class FragmentVideoPlayer extends Fragment {
 
     public static VideoView videoView;
     private static MediaController mediaController;
+    private PlayerActivity playerActivity;
 
     public FragmentVideoPlayer() {
+    }
+
+    public void set_parent(PlayerActivity playerActivity){
+        this.playerActivity = playerActivity;
     }
 
     @Override
@@ -43,14 +48,14 @@ public class FragmentVideoPlayer extends Fragment {
             public void onPrepared(MediaPlayer mediaPlayer) {
                 videoView.seekTo(0);
                 videoView.start();
-                PlayerActivity.set_status(videoView.isPlaying(), videoView.canPause());
+                playerActivity.set_status(videoView.isPlaying(), videoView.canPause());
             }
         });
 
         videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mediaPlayer) {
-                PlayerActivity.next_track();
+                playerActivity.next_track();
             }
         });
 
@@ -88,7 +93,7 @@ public class FragmentVideoPlayer extends Fragment {
         });
     }
 
-    public static void pause_play(){
+    public void pause_play(){
         //FIXME: Nunca pausa y/o resume
         if (videoView.isPlaying()){
             if (videoView.canPause()) {
@@ -107,17 +112,17 @@ public class FragmentVideoPlayer extends Fragment {
                 videoView.start();
             }
         }
-        PlayerActivity.set_status(videoView.isPlaying(), videoView.canPause());
+        playerActivity.set_status(videoView.isPlaying(), videoView.canPause());
     }
 
-    public static void stop(){
+    public void stop(){
         if (videoView.isPlaying()){
             videoView.stopPlayback();
         }
-        PlayerActivity.set_status(videoView.isPlaying(), videoView.canPause());
+        playerActivity.set_status(videoView.isPlaying(), videoView.canPause());
     }
 
-    public static void load_and_play(Uri trackurl){
+    public void load_and_play(Uri trackurl){
         stop();
         videoView.setVideoURI(trackurl);
     }

@@ -10,17 +10,21 @@ import android.view.ViewGroup;
 
 import com.fdanesse.jamedia.PlayerActivity;
 import com.fdanesse.jamedia.R;
+import com.fdanesse.jamedia.Utils;
 
 import java.util.ArrayList;
 
 
 public class FragmentPlayerList extends Fragment {
 
-    private ArrayList<ListItem> lista;
+    private PlayerActivity playerActivity;
     private RecyclerView recyclerView;
-    public static ItemListAdapter listAdapter;
+    private ItemListAdapter listAdapter;
 
-    public FragmentPlayerList() {
+    public FragmentPlayerList(){}
+
+    public void set_parent(PlayerActivity playerActivity) {
+        this.playerActivity = playerActivity;
     }
 
     @Override
@@ -35,14 +39,32 @@ public class FragmentPlayerList extends Fragment {
         recyclerView.setHasFixedSize(true);
 
         Bundle bundle = getArguments();
-        lista = (ArrayList<ListItem>) bundle.getSerializable("tracks");
-
-        listAdapter = new ItemListAdapter(lista, this);
+        listAdapter = new ItemListAdapter(
+                (ArrayList<ListItem>) bundle.getSerializable("tracks"), this);
         recyclerView.setAdapter(listAdapter);
         return layout;
     }
 
+    public ItemListAdapter getListAdapter() {
+        return listAdapter;
+    }
+
     protected void playtrack(int index){
-        PlayerActivity.playtrack(index);
+
+        ArrayList<ItemListAdapter.ItemListViewHolder> items = listAdapter.getHolders();
+
+        for (ItemListAdapter.ItemListViewHolder i : items) {
+            String trackpath = i.getText_view_url().getText().toString();
+            if (trackpath == listAdapter.trackpath){
+                Utils.setActiveView(i.itemView);
+            }
+            else{
+                if (i.itemView.getAlpha() == 1.0f){
+                    Utils.setInactiveView(i.itemView);
+                }
+            }
+        }
+
+        playerActivity.playtrack(index);
     }
 }
