@@ -31,7 +31,9 @@ public class FragmentVideoPlayer extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         View layout = inflater.inflate(R.layout.fragment_video_player, container, false);
+
         videoView = (VideoView) layout.findViewById(R.id.videoView);
         mediaController = new MediaController(getActivity());
         mediaController.setAnchorView(videoView);

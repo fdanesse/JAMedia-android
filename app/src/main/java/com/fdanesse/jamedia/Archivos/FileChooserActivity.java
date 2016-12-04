@@ -9,7 +9,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -44,7 +43,7 @@ public class FileChooserActivity extends AppCompatActivity {
         myactionbar = (Toolbar) findViewById(R.id.file_chooser_toolbar);
         setSupportActionBar(myactionbar);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         recyclerView = (RecyclerView) findViewById(R.id.file_chooser_reciclerview);
@@ -95,7 +94,6 @@ public class FileChooserActivity extends AppCompatActivity {
                     Intent intent = new Intent(FileChooserActivity.this, PlayerActivity.class);
                     intent.putExtra("tracks", listItems);
                     startActivity(intent);
-                    finish();
                 }
                 return true;
             }

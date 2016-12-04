@@ -16,20 +16,10 @@ import android.widget.Button;
 import com.fdanesse.jamedia.JamediaPlayer.FragmentVideoPlayer;
 import com.fdanesse.jamedia.JamediaPlayer.Notebook;
 import com.fdanesse.jamedia.PlayerList.FragmentPlayerList;
-import com.fdanesse.jamedia.PlayerList.ItemListAdapter;
 import com.fdanesse.jamedia.PlayerList.ListItem;
 
 import java.util.ArrayList;
 
-// Formatos: https://developer.android.com/guide/appendix/media-formats.html
-// Custom MediaController: http://stackoverflow.com/questions/12482203/how-to-create-custom-ui-for-android-mediacontroller/14323144#14323144
-
-/**
- * MediaPLayer.setWakeMode(getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
- * WifiLock wifiLock = ((WifiManager) getSystemService(Context.WIFI_SERVICE)).createWifiLock(WifiManager.WIFI_MODE_FULL, "mylock");
- * wifiLock.acquire();
- * wifiLock.release();
- */
 
 public class PlayerActivity extends FragmentActivity {
 
@@ -89,8 +79,13 @@ public class PlayerActivity extends FragmentActivity {
         fragmentPlayerList.setArguments(extras);
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
+
     public void playtrack(int index){
-        // Cuando se se clickea un item en la lista.
+        // Cuando se clickea un item en la lista.
         ListItem item = fragmentPlayerList.getListAdapter().getLista().get(index);
         Uri url = Uri.parse(item.getUrl());
 
@@ -180,7 +175,6 @@ public class PlayerActivity extends FragmentActivity {
                 if (action == KeyEvent.ACTION_DOWN) {
                     Intent intent = new Intent(PlayerActivity.this, MainActivity.class);
                     startActivity(intent);
-                    //finish();
                     return true;
                 }
                 break;

@@ -51,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
         this.setVolumeControlStream(audioManager.STREAM_MUSIC);
     }
 
+    /*
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
         int action = event.getAction();
@@ -66,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
                 return super.dispatchKeyEvent(event);
         }
     }
+    */
 
     private void set_touch_listeners(){
         radio.setOnTouchListener(new View.OnTouchListener() {
@@ -77,7 +79,6 @@ public class MainActivity extends AppCompatActivity {
                     Intent intent = new Intent(MainActivity.this, PlayerActivity.class);
                     intent.putExtra("tracks", radios);
                     startActivity(intent);
-                    //finish();
                 }
                 return true;
             }
@@ -92,7 +93,6 @@ public class MainActivity extends AppCompatActivity {
                     Intent intent = new Intent(MainActivity.this, PlayerActivity.class);
                     intent.putExtra("tracks", tv);
                     startActivity(intent);
-                    //finish();
                 }
                 return true;
             }
@@ -105,7 +105,6 @@ public class MainActivity extends AppCompatActivity {
                 if (motionEvent.getAction() == MotionEvent.ACTION_UP){
                     Intent intent = new Intent(MainActivity.this, FileChooserActivity.class);
                     startActivity(intent);
-                    finish();
                 }
                 return true;
             }
@@ -156,7 +155,7 @@ public class MainActivity extends AppCompatActivity {
         else{
             Utils.setActiveView(radio);
             Utils.setActiveView(television);
-            Snackbar.make(radio, "Conectando a internet...", Snackbar.LENGTH_LONG).show();
+            //Snackbar.make(radio, "Conectando a internet...", Snackbar.LENGTH_LONG).show();
         }
     }
 

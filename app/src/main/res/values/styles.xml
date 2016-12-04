@@ -10,4 +10,12 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="main_buttons_style" parent="Theme.AppCompat.Light">
+        <!-- Customize your theme here. -->
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">#ffffffff</item>
+        <item name="android:alpha">0.5</item>
+
+    </style>
+
 </resources>
