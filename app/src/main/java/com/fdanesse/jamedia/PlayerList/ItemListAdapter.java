@@ -114,7 +114,10 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemLi
                 public void onClick(View view) {
                     trackselected = getAdapterPosition();
                     trackpath = getText_view_url().getText().toString();
-                    fragmentPlayerList.playtrack(trackselected);
+                    try{
+                        fragmentPlayerList.playtrack(trackselected); //FIXME: falla
+                    }
+                    catch (Exception e){}
                 }
             });
         }

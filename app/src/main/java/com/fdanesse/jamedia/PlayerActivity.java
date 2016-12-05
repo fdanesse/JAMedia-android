@@ -70,18 +70,75 @@ public class PlayerActivity extends FragmentActivity {
         viewPager.setAdapter(new Notebook(getSupportFragmentManager(), fragments));
         tabLayout.setupWithViewPager(viewPager);
 
-        init();
+        //init();
         connect_buttons_actions();
+
+        /*sigue:
+            onStart()
+        */
     }
 
+    /*
     private void init(){
+        Bundle extras = getIntent().getExtras();
+        fragmentPlayerList.setArguments(extras);
+    }
+    */
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        /*persistir
+        sigue:
+            onResume()
+            o
+            onStop()
+         */
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        /*no siempre ocurre
+        sigue:
+            onRestart()
+            o
+            onDestroy()
+        */
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        /*sigue:
+            onResume()
+            o
+            onStop()
+        */
         Bundle extras = getIntent().getExtras();
         fragmentPlayerList.setArguments(extras);
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
+    protected void onRestart() {
+        super.onRestart();
+        /*sigue:
+            onStart()
+        */
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        /*sigue:
+            onPause()
+        */
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        //no simpre ocurre
     }
 
     public void playtrack(int index){
