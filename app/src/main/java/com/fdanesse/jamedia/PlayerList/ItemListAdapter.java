@@ -103,7 +103,7 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemLi
         private TextView text_view_nombre;
         private TextView text_view_url;
 
-        public ItemListViewHolder(final View itemView) {
+        public ItemListViewHolder(View itemView) {
             super(itemView);
             imagen_view = (ImageView) itemView.findViewById(R.id.imagen);
             text_view_nombre = (TextView) itemView.findViewById(R.id.nombre);
@@ -114,7 +114,7 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemLi
                 public void onClick(View view) {
                     trackselected = getAdapterPosition();
                     trackpath = getText_view_url().getText().toString();
-                    try{
+                    try {
                         fragmentPlayerList.playtrack(trackselected); //FIXME: falla
                     }
                     catch (Exception e){}

@@ -1,8 +1,10 @@
 package com.fdanesse.jamedia;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.media.AudioManager;
 import android.net.Uri;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -12,6 +14,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
+import android.view.ViewGroup.LayoutParams;
+import android.widget.VideoView;
 
 import com.fdanesse.jamedia.JamediaPlayer.FragmentVideoPlayer;
 import com.fdanesse.jamedia.JamediaPlayer.Notebook;
@@ -70,7 +74,6 @@ public class PlayerActivity extends FragmentActivity {
         viewPager.setAdapter(new Notebook(getSupportFragmentManager(), fragments));
         tabLayout.setupWithViewPager(viewPager);
 
-        //init();
         connect_buttons_actions();
 
         /*sigue:
@@ -78,12 +81,23 @@ public class PlayerActivity extends FragmentActivity {
         */
     }
 
-    /*
-    private void init(){
-        Bundle extras = getIntent().getExtras();
-        fragmentPlayerList.setArguments(extras);
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        VideoView v = (VideoView) findViewById(R.id.videoView);
+        LayoutParams params = v.getLayoutParams();
+
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            params.width = LayoutParams.WRAP_CONTENT;
+            params.height = LayoutParams.MATCH_PARENT;
+        } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT){
+            params.width = LayoutParams.MATCH_PARENT;
+            params.height = LayoutParams.WRAP_CONTENT;
+        }
+
+        v.setLayoutParams(params);
     }
-    */
 
     @Override
     protected void onPause() {

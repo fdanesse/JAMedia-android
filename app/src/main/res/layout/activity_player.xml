@@ -17,7 +17,7 @@
             android:id="@+id/JAMediaToolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#000000"
+            android:background="@color/jamediatoolbar15"
             android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
             >
             <!--app:layout_scrollFlags="scroll|enterAlways"

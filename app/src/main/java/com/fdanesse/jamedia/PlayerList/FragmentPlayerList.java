@@ -64,7 +64,6 @@ public class FragmentPlayerList extends Fragment {
                 }
             }
         }
-
         playerActivity.playtrack(index);
     }
 }

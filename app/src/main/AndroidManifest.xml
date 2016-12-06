@@ -26,7 +26,8 @@
 
         <activity
             android:name=".PlayerActivity"
-            android:parentActivityName=".MainActivity">
+            android:parentActivityName=".MainActivity"
+            android:configChanges="orientation|screenSize">
         </activity>
 
         <activity
