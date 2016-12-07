@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.media.AudioManager;
 import android.net.Uri;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -79,6 +78,9 @@ public class PlayerActivity extends FragmentActivity {
         /*sigue:
             onStart()
         */
+
+        Bundle extras = getIntent().getExtras();
+        fragmentPlayerList.setArguments(extras);
     }
 
     @Override
@@ -129,8 +131,6 @@ public class PlayerActivity extends FragmentActivity {
             o
             onStop()
         */
-        Bundle extras = getIntent().getExtras();
-        fragmentPlayerList.setArguments(extras);
     }
 
     @Override
@@ -152,7 +152,7 @@ public class PlayerActivity extends FragmentActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        //no simpre ocurre
+        //no siempre ocurre
     }
 
     public void playtrack(int index){
@@ -246,9 +246,8 @@ public class PlayerActivity extends FragmentActivity {
                 if (action == KeyEvent.ACTION_DOWN) {
                     Intent intent = new Intent(PlayerActivity.this, MainActivity.class);
                     startActivity(intent);
-                    return true;
                 }
-                break;
+                return true;
             }
         }
         return super.dispatchKeyEvent(event);

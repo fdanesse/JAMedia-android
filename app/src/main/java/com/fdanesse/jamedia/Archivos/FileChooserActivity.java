@@ -237,8 +237,7 @@ public class FileChooserActivity extends AppCompatActivity {
                 }
                 return true;
             }
-            default:
-                return super.dispatchKeyEvent(event);
         }
+        return super.dispatchKeyEvent(event);
     }
 }
