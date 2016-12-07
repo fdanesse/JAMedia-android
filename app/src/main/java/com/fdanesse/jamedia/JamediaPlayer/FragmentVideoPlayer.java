@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.MediaController;
 import android.widget.VideoView;
 
-import com.fdanesse.jamedia.PlayerActivity;
 import com.fdanesse.jamedia.R;
 
 
@@ -20,6 +19,7 @@ public class FragmentVideoPlayer extends Fragment {
     public static VideoView videoView;
     private static MediaController mediaController;
     private PlayerActivity playerActivity;
+
 
     public FragmentVideoPlayer() {
     }

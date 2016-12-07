@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.Toolbar
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/player_toolbar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/jamediatoolbar15"
+    android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+    >
+
+    <Button
+        android:id="@+id/creditos"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@drawable/jamedia"
+        android:layout_marginRight="20dp"
+        android:layout_gravity="left"
+        />
+
+    <Button
+        android:id="@+id/anterior"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@drawable/anterior"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="7dp"
+        android:layout_gravity="center_horizontal"
+        android:alpha="0.5"
+        android:enabled="false"
+        />
+
+    <Button
+        android:id="@+id/play"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@drawable/play"
+        android:layout_marginLeft="7dp"
+        android:layout_marginRight="7dp"
+        android:layout_gravity="center_horizontal"
+        android:alpha="0.5"
+        android:enabled="false"
+        />
+
+    <Button
+        android:id="@+id/siguiente"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@drawable/siguiente"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="7dp"
+        android:layout_gravity="center_horizontal"
+        android:alpha="0.5"
+        android:enabled="false"
+        />
+
+</android.support.v7.widget.Toolbar>

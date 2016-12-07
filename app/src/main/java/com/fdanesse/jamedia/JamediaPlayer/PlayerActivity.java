@@ -1,4 +1,4 @@
-package com.fdanesse.jamedia;
+package com.fdanesse.jamedia.JamediaPlayer;
 
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -16,10 +16,11 @@ import android.widget.Button;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.VideoView;
 
-import com.fdanesse.jamedia.JamediaPlayer.FragmentVideoPlayer;
-import com.fdanesse.jamedia.JamediaPlayer.Notebook;
+import com.fdanesse.jamedia.MainActivity;
 import com.fdanesse.jamedia.PlayerList.FragmentPlayerList;
 import com.fdanesse.jamedia.PlayerList.ListItem;
+import com.fdanesse.jamedia.R;
+import com.fdanesse.jamedia.Utils;
 
 import java.util.ArrayList;
 
@@ -47,7 +48,7 @@ public class PlayerActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_player);
 
-        toolbar = (Toolbar) findViewById(R.id.JAMediaToolbar);
+        toolbar = (Toolbar) findViewById(R.id.player_toolbar);
         tabLayout = (TabLayout) findViewById(R.id.lenguetas);
         viewPager = (ViewPager) findViewById(R.id.viewPager);
 
@@ -99,6 +100,11 @@ public class PlayerActivity extends FragmentActivity {
         }
 
         v.setLayoutParams(params);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
     }
 
     @Override

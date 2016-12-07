@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".PlayerActivity">
+    tools:context=".JamediaPlayer.PlayerActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -13,62 +13,11 @@
         android:background="#000000"
         >
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/JAMediaToolbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/jamediatoolbar15"
-            android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        <include
+            android:id="@+id/player_toolbar"
+            layout="@layout/player_toolbar"
             >
-            <!--app:layout_scrollFlags="scroll|enterAlways"
-            @color/jamediatoolbar15-->
-
-            <Button
-                android:id="@+id/creditos"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:background="@drawable/jamedia"
-                android:layout_marginRight="20dp"
-                android:layout_gravity="left"
-                />
-
-            <Button
-                android:id="@+id/anterior"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:background="@drawable/anterior"
-                android:layout_marginLeft="0dp"
-                android:layout_marginRight="7dp"
-                android:layout_gravity="center_horizontal"
-                android:alpha="0.5"
-                android:enabled="false"
-                />
-
-            <Button
-                android:id="@+id/play"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:background="@drawable/play"
-                android:layout_marginLeft="7dp"
-                android:layout_marginRight="7dp"
-                android:layout_gravity="center_horizontal"
-                android:alpha="0.5"
-                android:enabled="false"
-                />
-
-            <Button
-                android:id="@+id/siguiente"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:background="@drawable/siguiente"
-                android:layout_marginLeft="0dp"
-                android:layout_marginRight="7dp"
-                android:layout_gravity="center_horizontal"
-                android:alpha="0.5"
-                android:enabled="false"
-                />
-
-        </android.support.v7.widget.Toolbar>
+        </include>
 
         <android.support.design.widget.TabLayout
             android:id="@+id/lenguetas"
