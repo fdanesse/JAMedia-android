@@ -74,7 +74,7 @@ public class PlayerActivity extends FragmentActivity {
         viewPager.setAdapter(new Notebook(getSupportFragmentManager(), fragments));
         tabLayout.setupWithViewPager(viewPager);
 
-        connect_buttons_actions();
+        //connect_buttons_actions();
 
         /*sigue:
             onStart()
@@ -189,6 +189,7 @@ public class PlayerActivity extends FragmentActivity {
         }
     }
 
+    /*
     private void connect_buttons_actions(){
         siguiente.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -211,6 +212,7 @@ public class PlayerActivity extends FragmentActivity {
             }
         });
     }
+    */
 
     private void check_buttons() {
         int x = fragmentPlayerList.getListAdapter().getItemCount();

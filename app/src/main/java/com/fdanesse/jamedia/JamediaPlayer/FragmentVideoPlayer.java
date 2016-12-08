@@ -8,6 +8,7 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -29,6 +30,7 @@ public class FragmentVideoPlayer extends Fragment {
 
     private JAMediaPLayerService jaMediaPLayerService;
     boolean serviceBound = false;
+
 
     public FragmentVideoPlayer() {
     }
@@ -54,6 +56,45 @@ public class FragmentVideoPlayer extends Fragment {
         return layout;
     }
 
+
+
+    //Binding this Client to the AudioPlayer Service
+    private ServiceConnection mConnection = new ServiceConnection() {
+
+        @Override
+        public void onServiceConnected(ComponentName className,
+                                       IBinder service) {
+            JAMediaPLayerService.LocalBinder binder = (JAMediaPLayerService.LocalBinder) service;
+            jaMediaPLayerService = binder.getService();
+            serviceBound = true;
+            //listen();
+            Snackbar.make(videoView, "JAMediaPlayerService ON", Snackbar.LENGTH_LONG).show();
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName arg0) {
+            Snackbar.make(videoView, "JAMediaPlayerService OFF", Snackbar.LENGTH_LONG).show();
+            serviceBound = false;
+        }
+    };
+
+    public void load_and_play(Uri trackurl){
+        if (!serviceBound) {
+            Intent intent = new Intent(getContext(), JAMediaPLayerService.class);
+            intent.putExtra("media", trackurl.toString());
+            getContext().startService(intent);
+            playerActivity.bindService(intent, mConnection, getContext().BIND_AUTO_CREATE);
+        }
+        else {
+            //Service is active
+            //Send media with BroadcastReceiver
+        }
+    }
+
+
+
+
+    /*
     @Override
     public void onStop() {
         super.onStop();
@@ -63,25 +104,6 @@ public class FragmentVideoPlayer extends Fragment {
             serviceBound = false;
         }
     }
-
-    /** Defines callbacks for service binding, passed to bindService() */
-    private ServiceConnection mConnection = new ServiceConnection() {
-
-        @Override
-        public void onServiceConnected(ComponentName className,
-                                       IBinder service) {
-            JAMediaPLayerService.LocalBinder binder = (JAMediaPLayerService.LocalBinder) service;
-            jaMediaPLayerService = binder.getService();
-            serviceBound = true;
-            listen();
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName arg0) {
-            Log.i("***", "Disconected");
-            serviceBound = false;
-        }
-    };
 
     private void listen() {
         jaMediaPLayerService.mPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
@@ -134,10 +156,12 @@ public class FragmentVideoPlayer extends Fragment {
             }
         });
     }
+    */
 
+    /*
     public void pause_play(){
         //FIXME: Nunca pausa y/o resume
-        /*
+        /
         if (jaMediaPLayerService.mPlayer.isPlaying()){
             if (jaMediaPLayerService.mPlayer.canPause()) {
                 jaMediaPLayerService.mPlayer.pause();
@@ -155,7 +179,7 @@ public class FragmentVideoPlayer extends Fragment {
                 jaMediaPLayerService.mPlayer.start();
             }
         }
-        */
+        /
         if (jaMediaPLayerService.mPlayer.isPlaying()) {
             jaMediaPLayerService.mPlayer.pause();
         }
@@ -166,7 +190,9 @@ public class FragmentVideoPlayer extends Fragment {
         //playerActivity.set_status(jaMediaPLayerService.mPlayer.isPlaying(), jaMediaPLayerService.mPlayer.canPause());
         playerActivity.set_status(jaMediaPLayerService.mPlayer.isPlaying(), true);
     }
+    */
 
+    /*
     public void stop(){
         if (serviceBound) {
             if (jaMediaPLayerService.mPlayer.isPlaying()) {
@@ -177,30 +203,6 @@ public class FragmentVideoPlayer extends Fragment {
             playerActivity.set_status(jaMediaPLayerService.mPlayer.isPlaying(), true);
         }
     }
-
-    public void load_and_play(Uri trackurl){
-        stop();
-        if (!serviceBound) {
-            Intent intent = new Intent(getContext(), JAMediaPLayerService.class);
-            //startService(intent); ??
-            playerActivity.bindService(intent, mConnection, getContext().BIND_AUTO_CREATE);
-        }
-        /*
-        else {
-            //Service is active
-            //Send media with BroadcastReceiver
-        }
-        */
-
-        try {
-            jaMediaPLayerService.mPlayer.setDataSource(trackurl.toString());
-            jaMediaPLayerService.mPlayer.prepareAsync();
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-            jaMediaPLayerService.stopSelf();
-            Log.i("***", e.toString());
-        }
-    }
+    */
 
 }
