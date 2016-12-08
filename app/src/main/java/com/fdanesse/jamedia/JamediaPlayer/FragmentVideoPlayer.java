@@ -28,8 +28,8 @@ public class FragmentVideoPlayer extends Fragment {
     //private static MediaController mediaController;
     private PlayerActivity playerActivity;
 
-    private JAMediaPLayerService jaMediaPLayerService;
-    boolean serviceBound = false;
+    public JAMediaPLayerService jaMediaPLayerService;
+    public boolean serviceBound = false;
 
 
     public FragmentVideoPlayer() {
@@ -56,10 +56,8 @@ public class FragmentVideoPlayer extends Fragment {
         return layout;
     }
 
-
-
     //Binding this Client to the AudioPlayer Service
-    private ServiceConnection mConnection = new ServiceConnection() {
+    public ServiceConnection mConnection = new ServiceConnection() {
 
         @Override
         public void onServiceConnected(ComponentName className,
@@ -90,6 +88,7 @@ public class FragmentVideoPlayer extends Fragment {
             //Send media with BroadcastReceiver
         }
     }
+
 
 
 

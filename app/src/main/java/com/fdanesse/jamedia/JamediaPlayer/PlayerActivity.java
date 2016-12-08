@@ -74,7 +74,7 @@ public class PlayerActivity extends FragmentActivity {
         viewPager.setAdapter(new Notebook(getSupportFragmentManager(), fragments));
         tabLayout.setupWithViewPager(viewPager);
 
-        //connect_buttons_actions();
+        connect_buttons_actions();
 
         /*sigue:
             onStart()
@@ -155,11 +155,34 @@ public class PlayerActivity extends FragmentActivity {
         */
     }
 
+
+
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        //no siempre ocurre
+        if (fragmentVideoPlayer.serviceBound) {
+            unbindService(fragmentVideoPlayer.mConnection);
+            //service is active
+            fragmentVideoPlayer.jaMediaPLayerService.stopSelf();
+        }
     }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        savedInstanceState.putBoolean("ServiceState", fragmentVideoPlayer.serviceBound);
+        super.onSaveInstanceState(savedInstanceState);
+    }
+
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        fragmentVideoPlayer.serviceBound = savedInstanceState.getBoolean("ServiceState");
+    }
+
+
+
+
 
     public void playtrack(int index){
         // Cuando se clickea un item en la lista.
@@ -189,7 +212,6 @@ public class PlayerActivity extends FragmentActivity {
         }
     }
 
-    /*
     private void connect_buttons_actions(){
         siguiente.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -201,7 +223,7 @@ public class PlayerActivity extends FragmentActivity {
         play.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                fragmentVideoPlayer.pause_play();
+                //fragmentVideoPlayer.pause_play();
             }
         });
 
@@ -212,7 +234,6 @@ public class PlayerActivity extends FragmentActivity {
             }
         });
     }
-    */
 
     private void check_buttons() {
         int x = fragmentPlayerList.getListAdapter().getItemCount();
