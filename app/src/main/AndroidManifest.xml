@@ -21,18 +21,22 @@
             android:alwaysRetainTaskState="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".JamediaPlayer.PlayerActivity"
             android:configChanges="orientation|screenSize"
-            android:parentActivityName=".MainActivity"></activity>
+            android:parentActivityName=".MainActivity" />
         <activity
             android:name=".Archivos.FileChooserActivity"
             android:parentActivityName=".MainActivity">
         </activity>
+        <service
+            android:name=".JamediaPlayer.JAMediaPLayerService"
+            android:enabled="true"
+            android:exported="false">
+        </service>
     </application>
 
 </manifest>

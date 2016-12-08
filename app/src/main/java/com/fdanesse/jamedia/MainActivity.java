@@ -7,6 +7,7 @@ import android.content.IntentFilter;
 import android.media.AudioManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.wifi.WifiManager;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -29,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
     private Button archivos;
 
     private NetworkChangeReceiver receiver;
+    private WifiManager.WifiLock wifiLock;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +51,10 @@ public class MainActivity extends AppCompatActivity {
 
         AudioManager audioManager = (AudioManager) this.getSystemService(this.AUDIO_SERVICE);
         this.setVolumeControlStream(audioManager.STREAM_MUSIC);
+
+        wifiLock = ((WifiManager) getSystemService(Context.WIFI_SERVICE))
+                .createWifiLock(WifiManager.WIFI_MODE_FULL, "mylock");
+        wifiLock.acquire();
     }
 
     /*
@@ -128,6 +134,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         unregisterReceiver(receiver);
+        wifiLock.release();
     }
 
     private boolean network_check(){
