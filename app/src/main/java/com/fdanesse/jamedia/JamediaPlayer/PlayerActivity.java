@@ -1,9 +1,15 @@
 package com.fdanesse.jamedia.JamediaPlayer;
 
+import android.content.BroadcastReceiver;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.content.res.Configuration;
 import android.media.AudioManager;
-import android.net.Uri;
+import android.os.IBinder;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -42,6 +48,13 @@ public class PlayerActivity extends FragmentActivity {
 
     private FragmentVideoPlayer fragmentVideoPlayer;
     private FragmentPlayerList fragmentPlayerList;
+
+    private JAMediaPLayerService jaMediaPLayerService;
+    private boolean serviceBound = false;
+
+    // SEÑALES
+    public static final String Broadcast_PLAY_NEW_AUDIO = "com.fdanesse.jamedia.JamediaPlayer";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +95,9 @@ public class PlayerActivity extends FragmentActivity {
 
         Bundle extras = getIntent().getExtras();
         fragmentPlayerList.setArguments(extras);
+
+        //IntentFilter filter = new IntentFilter(JAMediaPLayerService.Broadcast_END_TRACK);
+        //registerReceiver(end_track, filter);
     }
 
     @Override
@@ -94,7 +110,8 @@ public class PlayerActivity extends FragmentActivity {
         if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             params.width = LayoutParams.WRAP_CONTENT;
             params.height = LayoutParams.MATCH_PARENT;
-        } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT){
+        }
+        else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT){
             params.width = LayoutParams.MATCH_PARENT;
             params.height = LayoutParams.WRAP_CONTENT;
         }
@@ -102,21 +119,18 @@ public class PlayerActivity extends FragmentActivity {
         v.setLayoutParams(params);
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-    }
-
+    /*
     @Override
     protected void onPause() {
         super.onPause();
-        /*persistir
+        /persistir
         sigue:
             onResume()
             o
             onStop()
-         */
+        /
     }
+    */
 
     @Override
     protected void onStop() {
@@ -127,77 +141,127 @@ public class PlayerActivity extends FragmentActivity {
             o
             onDestroy()
         */
+        /*
+        try {
+            if (serviceBound) {
+                unbindService(mConnection);
+                serviceBound = false;
+            }
+        }
+        catch (Exception e){}
+        */
     }
 
+    /*
     @Override
     protected void onStart() {
         super.onStart();
-        /*sigue:
+        /sigue:
             onResume()
             o
             onStop()
-        */
+        /
     }
 
     @Override
     protected void onRestart() {
         super.onRestart();
-        /*sigue:
+        /sigue:
             onStart()
-        */
+        /
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        /*sigue:
+        /sigue:
             onPause()
-        */
+        /
     }
-
+    */
 
 
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (fragmentVideoPlayer.serviceBound) {
-            unbindService(fragmentVideoPlayer.mConnection);
-            //service is active
-            fragmentVideoPlayer.jaMediaPLayerService.stopSelf();
+        if (serviceBound) {
+            unbindService(mConnection);
+            //unregisterReceiver(end_track);
+            jaMediaPLayerService.stopSelf();
+            serviceBound = false;
         }
     }
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
-        savedInstanceState.putBoolean("ServiceState", fragmentVideoPlayer.serviceBound);
+        savedInstanceState.putBoolean("ServiceState", serviceBound);
         super.onSaveInstanceState(savedInstanceState);
     }
 
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        fragmentVideoPlayer.serviceBound = savedInstanceState.getBoolean("ServiceState");
+        serviceBound = savedInstanceState.getBoolean("ServiceState");
     }
 
 
+
+
+    //> ********** Conexion y Desconexion del servidor **********
+    public ServiceConnection mConnection = new ServiceConnection() {
+
+        @Override
+        public void onServiceConnected(ComponentName className, IBinder service) {
+            JAMediaPLayerService.LocalBinder binder = (JAMediaPLayerService.LocalBinder) service;
+            jaMediaPLayerService = binder.getService();
+            serviceBound = true;
+            Snackbar.make(viewPager, "JAMediaPlayerService ON", Snackbar.LENGTH_LONG).show();
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName arg0) {
+            Snackbar.make(viewPager, "JAMediaPlayerService OFF", Snackbar.LENGTH_LONG).show();
+            serviceBound = false;
+        }
+    };
+    //< ********** Conexion y Desconexion del servidor **********
 
 
 
     public void playtrack(int index){
         // Cuando se clickea un item en la lista.
         ListItem item = fragmentPlayerList.getListAdapter().getLista().get(index);
-        Uri url = Uri.parse(item.getUrl());
-
         viewPager.setCurrentItem(1);
-        fragmentVideoPlayer.load_and_play(url);
-        Utils.setActiveView(play);
-        play.setEnabled(true);
+
+        if (!serviceBound) {
+            Intent intent = new Intent(getApplicationContext(), JAMediaPLayerService.class);
+            //intent.putExtra("media", item.getUrl());
+            getApplicationContext().startService(intent);
+            bindService(intent, mConnection, getApplicationContext().BIND_AUTO_CREATE);
+            }
+
+        if (serviceBound) {
+            Intent broadcastIntent = new Intent(Broadcast_PLAY_NEW_AUDIO);
+            broadcastIntent.putExtra("media", item.getUrl());
+            sendBroadcast(broadcastIntent);
+            Utils.setActiveView(play);
+            play.setEnabled(true);
+            }
         }
 
-    public void next_track(){
-        fragmentPlayerList.getListAdapter().next();
-    }
+
+
+
+    // Cambio de pista
+    /*
+    private BroadcastReceiver end_track = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            fragmentPlayerList.getListAdapter().next();
+        }
+    };
+    */
 
     public void set_status(Boolean playing, Boolean canpause){
         check_buttons();
@@ -273,8 +337,15 @@ public class PlayerActivity extends FragmentActivity {
         switch (keyCode) {
             case KeyEvent.KEYCODE_BACK:{
                 if (action == KeyEvent.ACTION_DOWN) {
+                    //jaMediaPLayerService.stopMedia();
+                    jaMediaPLayerService.stopSelf();
+                    //unbindService(mConnection);
+                    serviceBound = false;
+
                     Intent intent = new Intent(PlayerActivity.this, MainActivity.class);
                     startActivity(intent);
+
+                    finish();
                 }
                 return true;
             }

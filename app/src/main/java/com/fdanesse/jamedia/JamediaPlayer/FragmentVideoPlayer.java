@@ -1,16 +1,7 @@
 package com.fdanesse.jamedia.JamediaPlayer;
 
-import android.content.ComponentName;
-import android.content.Intent;
-import android.content.ServiceConnection;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.IBinder;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,8 +10,6 @@ import android.widget.VideoView;
 
 import com.fdanesse.jamedia.R;
 
-import java.io.IOException;
-
 
 public class FragmentVideoPlayer extends Fragment {
 
@@ -28,23 +17,16 @@ public class FragmentVideoPlayer extends Fragment {
     //private static MediaController mediaController;
     private PlayerActivity playerActivity;
 
-    public JAMediaPLayerService jaMediaPLayerService;
-    public boolean serviceBound = false;
 
-
-    public FragmentVideoPlayer() {
-    }
+    public FragmentVideoPlayer() {}
 
     public void set_parent(PlayerActivity playerActivity){
         this.playerActivity = playerActivity;
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.fragment_video_player, container, false);
-
         videoView = (VideoView) layout.findViewById(R.id.videoView);
         /*
         mediaController = new MediaController(getActivity());
@@ -56,54 +38,8 @@ public class FragmentVideoPlayer extends Fragment {
         return layout;
     }
 
-    //Binding this Client to the AudioPlayer Service
-    public ServiceConnection mConnection = new ServiceConnection() {
-
-        @Override
-        public void onServiceConnected(ComponentName className,
-                                       IBinder service) {
-            JAMediaPLayerService.LocalBinder binder = (JAMediaPLayerService.LocalBinder) service;
-            jaMediaPLayerService = binder.getService();
-            serviceBound = true;
-            //listen();
-            Snackbar.make(videoView, "JAMediaPlayerService ON", Snackbar.LENGTH_LONG).show();
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName arg0) {
-            Snackbar.make(videoView, "JAMediaPlayerService OFF", Snackbar.LENGTH_LONG).show();
-            serviceBound = false;
-        }
-    };
-
-    public void load_and_play(Uri trackurl){
-        if (!serviceBound) {
-            Intent intent = new Intent(getContext(), JAMediaPLayerService.class);
-            intent.putExtra("media", trackurl.toString());
-            getContext().startService(intent);
-            playerActivity.bindService(intent, mConnection, getContext().BIND_AUTO_CREATE);
-        }
-        else {
-            //Service is active
-            //Send media with BroadcastReceiver
-        }
-    }
-
-
-
-
 
     /*
-    @Override
-    public void onStop() {
-        super.onStop();
-        // Unbind from the service
-        if (serviceBound) {
-            playerActivity.unbindService(mConnection);
-            serviceBound = false;
-        }
-    }
-
     private void listen() {
         jaMediaPLayerService.mPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
