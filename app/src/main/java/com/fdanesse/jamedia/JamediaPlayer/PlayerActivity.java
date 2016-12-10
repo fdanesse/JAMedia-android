@@ -91,22 +91,20 @@ public class PlayerActivity extends FragmentActivity {
         Bundle extras = getIntent().getExtras();
         fragmentPlayerList.setArguments(extras);
 
+        Intent intent = new Intent(getApplicationContext(), JAMediaPLayerService.class);
+        getApplicationContext().startService(intent);
+        bindService(intent, mConnection, getApplicationContext().BIND_AUTO_CREATE);
+
         try {
+            // Registro de señales del server
             IntentFilter filter = new IntentFilter(JAMediaPLayerService.END_TRACK);
             registerReceiver(end_track, filter);
+            filter = new IntentFilter(JAMediaPLayerService.PLAY);
+            registerReceiver(playing_track, filter);
+            filter = new IntentFilter(JAMediaPLayerService.STOP);
+            registerReceiver(stoped_track, filter);
         }
         catch(Exception e){}
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        /*no siempre ocurre
-        sigue:
-            onRestart()
-            o
-            onDestroy()
-        */
     }
 
     @Override
@@ -121,9 +119,10 @@ public class PlayerActivity extends FragmentActivity {
                 jaMediaPLayerService.stopSelf();
             }
             catch (Exception e){}
-            serviceBound = false;
         }
-        //unregisterReceiver(end_track);
+        unregisterReceiver(end_track);
+        unregisterReceiver(stoped_track);
+        unregisterReceiver(playing_track);
     }
 
     @Override
@@ -164,7 +163,6 @@ public class PlayerActivity extends FragmentActivity {
             JAMediaPLayerService.LocalBinder binder = (JAMediaPLayerService.LocalBinder) service;
             jaMediaPLayerService = binder.getService();
             serviceBound = true;
-            //Snackbar.make(viewPager, "JAMediaPlayerService ON", Snackbar.LENGTH_LONG).show();
         }
         @Override
         public void onServiceDisconnected(ComponentName arg0) {
@@ -178,26 +176,12 @@ public class PlayerActivity extends FragmentActivity {
         // Cuando se clickea un item en la lista.
         ListItem item = fragmentPlayerList.getListAdapter().getLista().get(index);
         viewPager.setCurrentItem(1);
-
-        if (!serviceBound) {
-            Intent intent = new Intent(getApplicationContext(), JAMediaPLayerService.class);
-            //intent.putExtra("media", item.getUrl());
-            getApplicationContext().startService(intent);
-            bindService(intent, mConnection, getApplicationContext().BIND_AUTO_CREATE);
-            Utils.setActiveView(play);
-            play.setEnabled(true);
+        Intent broadcastIntent = new Intent(NEW_TRACK);
+        broadcastIntent.putExtra("media", item.getUrl());
+        sendBroadcast(broadcastIntent);
         }
 
-        else {
-            Intent broadcastIntent = new Intent(NEW_TRACK);
-            broadcastIntent.putExtra("media", item.getUrl());
-            sendBroadcast(broadcastIntent);
-            Utils.setActiveView(play);
-            play.setEnabled(true);
-            }
-        }
-
-    // Cambio de pista
+    // Reproductor pide Cambio de pista
     private BroadcastReceiver end_track = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -205,20 +189,22 @@ public class PlayerActivity extends FragmentActivity {
         }
     };
 
-    /*
-    public void set_status(Boolean playing, Boolean canpause){
-        check_buttons();
-        if (playing){
-            if (canpause){
-                play.setBackgroundResource(img_pausa);}
-            else{
-                play.setBackgroundResource(img_stop);}
-            }
-        else{
+    // Reproductor está play
+    private BroadcastReceiver playing_track = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            play.setBackgroundResource(img_pausa);
+            check_buttons();
+        }
+    };
+
+    // Reproductor está stop
+    private BroadcastReceiver stoped_track = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
             play.setBackgroundResource(img_play);
         }
-    }
-    */
+    };
 
     private void connect_buttons_actions(){
         siguiente.setOnClickListener(new View.OnClickListener() {
@@ -231,7 +217,7 @@ public class PlayerActivity extends FragmentActivity {
         play.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //fragmentVideoPlayer.pause_play();
+                // FIXME: pausar o reanudar reproductor
             }
         });
 
@@ -243,38 +229,24 @@ public class PlayerActivity extends FragmentActivity {
         });
     }
 
-    /*
     private void check_buttons() {
-        int x = fragmentPlayerList.getListAdapter().getItemCount();
-        int trackselected = fragmentPlayerList.getListAdapter().getTrackselected();
-
-        if (trackselected < x-1){
-            if (!siguiente.isEnabled()){
-                Utils.setActiveView(siguiente);
-                siguiente.setEnabled(true);
-            }
+        if (fragmentPlayerList.getListAdapter().getItemCount() > 1){
+            Utils.setActiveView(siguiente);
+            siguiente.setEnabled(true);
+            Utils.setActiveView(anterior);
+            anterior.setEnabled(true);
+            Utils.setActiveView(play);
+            play.setEnabled(true);
         }
         else{
-            if (siguiente.isEnabled()){
-                Utils.setInactiveView(siguiente);
-                siguiente.setEnabled(false);
-            }
-        }
-
-        if (trackselected > 0){
-            if (!anterior.isEnabled()){
-                Utils.setActiveView(anterior);
-                anterior.setEnabled(true);
-            }
-        }
-        else{
-            if (anterior.isEnabled()){
-                Utils.setInactiveView(anterior);
-                anterior.setEnabled(false);
-            }
+            Utils.setInactiveView(siguiente);
+            siguiente.setEnabled(false);
+            Utils.setInactiveView(anterior);
+            anterior.setEnabled(false);
+            Utils.setInactiveView(play);
+            play.setEnabled(false);
         }
     }
-    */
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
@@ -285,11 +257,9 @@ public class PlayerActivity extends FragmentActivity {
                 if (action == KeyEvent.ACTION_DOWN) {
                     if (serviceBound){
                         try{
-                            //jaMediaPLayerService.stopMedia();
                             jaMediaPLayerService.stopSelf();
                         }
                         catch(Exception e){}
-                        serviceBound = false;
                     }
                     Intent intent = new Intent(PlayerActivity.this, MainActivity.class);
                     startActivity(intent);

@@ -28,6 +28,8 @@ public class JAMediaPLayerService extends Service implements MediaPlayer.OnCompl
     private final IBinder iBinder = new LocalBinder();
 
     public static final String END_TRACK = "END_TRACK";
+    public static final String PLAY = "PLAY";
+    public static final String STOP = "STOP";
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -111,7 +113,7 @@ public class JAMediaPLayerService extends Service implements MediaPlayer.OnCompl
         }
 
         Log.i("**** ERROR: ", " " + what + " " + extra);
-        //stop();
+        stopMedia();
         return true;
     }
 
@@ -141,6 +143,7 @@ public class JAMediaPLayerService extends Service implements MediaPlayer.OnCompl
             mediaPlayer.setOnInfoListener(this);
             mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
             mediaPlayer.setVolume(1.0f, 1.0f);
+            //mediaPlayer.setVideoScalingMode(1);
         }
 
         stopMedia();
@@ -151,10 +154,7 @@ public class JAMediaPLayerService extends Service implements MediaPlayer.OnCompl
         try {
             mediaPlayer.setDataSource(mediaFile);
             }
-        catch (IOException e) {
-            e.printStackTrace();
-            //stopSelf();
-            }
+        catch (IOException e) {}
 
         mediaPlayer.prepareAsync();
     }
@@ -163,8 +163,8 @@ public class JAMediaPLayerService extends Service implements MediaPlayer.OnCompl
         if (!mediaPlayer.isPlaying()) {
             mediaPlayer.seekTo(0);
             mediaPlayer.start();
-            //playerActivity.set_status(jaMediaPLayerService.mPlayer.isPlaying(), jaMediaPLayerService.mPlayer.canPause());
-            //playerActivity.set_status(mediaPlayer.isPlaying(), true);
+            Intent broadcastIntent = new Intent(PLAY);
+            sendBroadcast(broadcastIntent);
         }
     }
 
@@ -173,8 +173,8 @@ public class JAMediaPLayerService extends Service implements MediaPlayer.OnCompl
         if (mediaPlayer.isPlaying()) {
             mediaPlayer.stop();
             mediaPlayer.reset();
-            //playerActivity.set_status(jaMediaPLayerService.mPlayer.isPlaying(), jaMediaPLayerService.mPlayer.canPause());
-            //playerActivity.set_status(jaMediaPLayerService.mPlayer.isPlaying(), true);
+            Intent broadcastIntent = new Intent(STOP);
+            sendBroadcast(broadcastIntent);
         }
     }
 
