@@ -53,8 +53,7 @@ public class PlayerActivity extends FragmentActivity {
     private boolean serviceBound = false;
 
     // SEÑALES
-    public static final String Broadcast_PLAY_NEW_AUDIO = "com.fdanesse.jamedia.JamediaPlayer";
-
+    public static final String NEW_TRACK = "NEW_TRACK";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,15 +88,54 @@ public class PlayerActivity extends FragmentActivity {
 
         connect_buttons_actions();
 
-        /*sigue:
-            onStart()
-        */
-
         Bundle extras = getIntent().getExtras();
         fragmentPlayerList.setArguments(extras);
 
-        //IntentFilter filter = new IntentFilter(JAMediaPLayerService.Broadcast_END_TRACK);
-        //registerReceiver(end_track, filter);
+        try {
+            IntentFilter filter = new IntentFilter(JAMediaPLayerService.END_TRACK);
+            registerReceiver(end_track, filter);
+        }
+        catch(Exception e){}
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        /*no siempre ocurre
+        sigue:
+            onRestart()
+            o
+            onDestroy()
+        */
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (serviceBound) {
+            try {
+                unbindService(mConnection);
+            }
+            catch(Exception e){}
+            try {
+                jaMediaPLayerService.stopSelf();
+            }
+            catch (Exception e){}
+            serviceBound = false;
+        }
+        //unregisterReceiver(end_track);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        savedInstanceState.putBoolean("ServiceState", serviceBound);
+        super.onSaveInstanceState(savedInstanceState);
+    }
+
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        serviceBound = savedInstanceState.getBoolean("ServiceState");
     }
 
     @Override
@@ -119,106 +157,15 @@ public class PlayerActivity extends FragmentActivity {
         v.setLayoutParams(params);
     }
 
-    /*
-    @Override
-    protected void onPause() {
-        super.onPause();
-        /persistir
-        sigue:
-            onResume()
-            o
-            onStop()
-        /
-    }
-    */
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        /*no siempre ocurre
-        sigue:
-            onRestart()
-            o
-            onDestroy()
-        */
-        /*
-        try {
-            if (serviceBound) {
-                unbindService(mConnection);
-                serviceBound = false;
-            }
-        }
-        catch (Exception e){}
-        */
-    }
-
-    /*
-    @Override
-    protected void onStart() {
-        super.onStart();
-        /sigue:
-            onResume()
-            o
-            onStop()
-        /
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        /sigue:
-            onStart()
-        /
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        /sigue:
-            onPause()
-        /
-    }
-    */
-
-
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (serviceBound) {
-            unbindService(mConnection);
-            //unregisterReceiver(end_track);
-            jaMediaPLayerService.stopSelf();
-            serviceBound = false;
-        }
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle savedInstanceState) {
-        savedInstanceState.putBoolean("ServiceState", serviceBound);
-        super.onSaveInstanceState(savedInstanceState);
-    }
-
-    @Override
-    public void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        serviceBound = savedInstanceState.getBoolean("ServiceState");
-    }
-
-
-
-
     //> ********** Conexion y Desconexion del servidor **********
     public ServiceConnection mConnection = new ServiceConnection() {
-
         @Override
         public void onServiceConnected(ComponentName className, IBinder service) {
             JAMediaPLayerService.LocalBinder binder = (JAMediaPLayerService.LocalBinder) service;
             jaMediaPLayerService = binder.getService();
             serviceBound = true;
-            Snackbar.make(viewPager, "JAMediaPlayerService ON", Snackbar.LENGTH_LONG).show();
+            //Snackbar.make(viewPager, "JAMediaPlayerService ON", Snackbar.LENGTH_LONG).show();
         }
-
         @Override
         public void onServiceDisconnected(ComponentName arg0) {
             Snackbar.make(viewPager, "JAMediaPlayerService OFF", Snackbar.LENGTH_LONG).show();
@@ -226,8 +173,6 @@ public class PlayerActivity extends FragmentActivity {
         }
     };
     //< ********** Conexion y Desconexion del servidor **********
-
-
 
     public void playtrack(int index){
         // Cuando se clickea un item en la lista.
@@ -239,10 +184,12 @@ public class PlayerActivity extends FragmentActivity {
             //intent.putExtra("media", item.getUrl());
             getApplicationContext().startService(intent);
             bindService(intent, mConnection, getApplicationContext().BIND_AUTO_CREATE);
-            }
+            Utils.setActiveView(play);
+            play.setEnabled(true);
+        }
 
-        if (serviceBound) {
-            Intent broadcastIntent = new Intent(Broadcast_PLAY_NEW_AUDIO);
+        else {
+            Intent broadcastIntent = new Intent(NEW_TRACK);
             broadcastIntent.putExtra("media", item.getUrl());
             sendBroadcast(broadcastIntent);
             Utils.setActiveView(play);
@@ -250,19 +197,15 @@ public class PlayerActivity extends FragmentActivity {
             }
         }
 
-
-
-
     // Cambio de pista
-    /*
     private BroadcastReceiver end_track = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             fragmentPlayerList.getListAdapter().next();
         }
     };
-    */
 
+    /*
     public void set_status(Boolean playing, Boolean canpause){
         check_buttons();
         if (playing){
@@ -275,6 +218,7 @@ public class PlayerActivity extends FragmentActivity {
             play.setBackgroundResource(img_play);
         }
     }
+    */
 
     private void connect_buttons_actions(){
         siguiente.setOnClickListener(new View.OnClickListener() {
@@ -299,6 +243,7 @@ public class PlayerActivity extends FragmentActivity {
         });
     }
 
+    /*
     private void check_buttons() {
         int x = fragmentPlayerList.getListAdapter().getItemCount();
         int trackselected = fragmentPlayerList.getListAdapter().getTrackselected();
@@ -329,6 +274,7 @@ public class PlayerActivity extends FragmentActivity {
             }
         }
     }
+    */
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
@@ -337,14 +283,16 @@ public class PlayerActivity extends FragmentActivity {
         switch (keyCode) {
             case KeyEvent.KEYCODE_BACK:{
                 if (action == KeyEvent.ACTION_DOWN) {
-                    //jaMediaPLayerService.stopMedia();
-                    jaMediaPLayerService.stopSelf();
-                    //unbindService(mConnection);
-                    serviceBound = false;
-
+                    if (serviceBound){
+                        try{
+                            //jaMediaPLayerService.stopMedia();
+                            jaMediaPLayerService.stopSelf();
+                        }
+                        catch(Exception e){}
+                        serviceBound = false;
+                    }
                     Intent intent = new Intent(PlayerActivity.this, MainActivity.class);
                     startActivity(intent);
-
                     finish();
                 }
                 return true;

@@ -38,61 +38,6 @@ public class FragmentVideoPlayer extends Fragment {
         return layout;
     }
 
-
-    /*
-    private void listen() {
-        jaMediaPLayerService.mPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-            @Override
-            public void onPrepared(MediaPlayer mediaPlayer) {
-                mediaPlayer.seekTo(0);
-                mediaPlayer.start();
-                //playerActivity.set_status(jaMediaPLayerService.mPlayer.isPlaying(), jaMediaPLayerService.mPlayer.canPause());
-                playerActivity.set_status(mediaPlayer.isPlaying(), true);
-            }
-        });
-
-        jaMediaPLayerService.mPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mediaPlayer) {
-                playerActivity.next_track();
-            }
-        });
-
-        jaMediaPLayerService.mPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener() {
-            @Override
-            public boolean onError(MediaPlayer mediaPlayer, int i, int i1) {
-                switch (i){
-                    case MediaPlayer.MEDIA_ERROR_UNKNOWN:{
-                        break;
-                    }
-                    case MediaPlayer.MEDIA_ERROR_SERVER_DIED:{
-                        break;
-                    }
-                }
-
-                switch (i1){
-                    case MediaPlayer.MEDIA_ERROR_IO:{
-                        break;
-                    }
-                    case MediaPlayer.MEDIA_ERROR_MALFORMED:{
-                        break;
-                    }
-                    case MediaPlayer.MEDIA_ERROR_UNSUPPORTED:{
-                        break;
-                    }
-                    case MediaPlayer.MEDIA_ERROR_TIMED_OUT:{
-                        break;
-                    }
-                }
-
-                Log.i("**** ERROR: ", " " + i + " " + i1);
-                stop();
-                return true;
-            }
-        });
-    }
-    */
-
     /*
     public void pause_play(){
         //FIXME: Nunca pausa y/o resume
@@ -126,18 +71,4 @@ public class FragmentVideoPlayer extends Fragment {
         playerActivity.set_status(jaMediaPLayerService.mPlayer.isPlaying(), true);
     }
     */
-
-    /*
-    public void stop(){
-        if (serviceBound) {
-            if (jaMediaPLayerService.mPlayer.isPlaying()) {
-                jaMediaPLayerService.mPlayer.stop();
-                jaMediaPLayerService.mPlayer.reset();
-            }
-            //playerActivity.set_status(jaMediaPLayerService.mPlayer.isPlaying(), jaMediaPLayerService.mPlayer.canPause());
-            playerActivity.set_status(jaMediaPLayerService.mPlayer.isPlaying(), true);
-        }
-    }
-    */
-
 }
