@@ -3,17 +3,21 @@ package com.fdanesse.jamedia.JamediaPlayer;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
 //import android.widget.MediaController;
-import android.widget.VideoView;
+
+
 
 import com.fdanesse.jamedia.R;
 
 
-public class FragmentVideoPlayer extends Fragment {
+public class FragmentVideoPlayer extends Fragment{
 
-    public static VideoView videoView;
+    public SurfaceView surfaceView;
+    public SurfaceHolder surfaceHolder;
     //private static MediaController mediaController;
     private PlayerActivity playerActivity;
 
@@ -27,7 +31,12 @@ public class FragmentVideoPlayer extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.fragment_video_player, container, false);
-        videoView = (VideoView) layout.findViewById(R.id.videoView);
+        surfaceView = (SurfaceView) layout.findViewById(R.id.videoView);
+
+        surfaceHolder = surfaceView.getHolder();
+        //surfaceHolder.setFixedSize(800, 480);
+        //surfaceHolder.setSizeFromLayout();
+        //surfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
         /*
         mediaController = new MediaController(getActivity());
         mediaController.setAnchorView(videoView);

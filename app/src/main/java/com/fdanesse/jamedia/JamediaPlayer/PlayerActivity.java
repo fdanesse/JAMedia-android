@@ -17,10 +17,12 @@ import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
+import android.view.Surface;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
 import android.view.View;
 import android.widget.Button;
 import android.view.ViewGroup.LayoutParams;
-import android.widget.VideoView;
 
 import com.fdanesse.jamedia.MainActivity;
 import com.fdanesse.jamedia.PlayerList.FragmentPlayerList;
@@ -31,7 +33,7 @@ import com.fdanesse.jamedia.Utils;
 import java.util.ArrayList;
 
 
-public class PlayerActivity extends FragmentActivity {
+public class PlayerActivity extends FragmentActivity{
 
     private Toolbar toolbar;
     private static Button anterior;
@@ -108,6 +110,22 @@ public class PlayerActivity extends FragmentActivity {
     }
 
     @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        try{
+            if (hasFocus) {
+                jaMediaPLayerService.setDisplay(fragmentVideoPlayer.surfaceHolder);
+                //jaMediaPLayerService.setSurface(fragmentVideoPlayer.surfaceHolder.getSurface());
+            }
+            else {
+                jaMediaPLayerService.setDisplay(null);
+                //jaMediaPLayerService.setSurface(null);
+            }
+        }
+        catch(Exception e){}
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         if (serviceBound) {
@@ -141,7 +159,7 @@ public class PlayerActivity extends FragmentActivity {
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
 
-        VideoView v = (VideoView) findViewById(R.id.videoView);
+        SurfaceView v = (SurfaceView) findViewById(R.id.videoView);
         LayoutParams params = v.getLayoutParams();
 
         if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
@@ -173,7 +191,6 @@ public class PlayerActivity extends FragmentActivity {
     //< ********** Conexion y Desconexion del servidor **********
 
     public void playtrack(int index){
-        // Cuando se clickea un item en la lista.
         ListItem item = fragmentPlayerList.getListAdapter().getLista().get(index);
         viewPager.setCurrentItem(1);
         Intent broadcastIntent = new Intent(NEW_TRACK);
@@ -195,6 +212,8 @@ public class PlayerActivity extends FragmentActivity {
         public void onReceive(Context context, Intent intent) {
             play.setBackgroundResource(img_pausa);
             check_buttons();
+            jaMediaPLayerService.setDisplay(fragmentVideoPlayer.surfaceHolder);
+            //jaMediaPLayerService.setDisplay(null);
         }
     };
 

@@ -11,6 +11,9 @@ import android.os.Binder;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
+import android.view.Surface;
+import android.view.SurfaceHolder;
+
 import java.io.IOException;
 
 //https://developer.android.com/guide/components/bound-services.html
@@ -131,6 +134,14 @@ public class JAMediaPLayerService extends Service implements MediaPlayer.OnCompl
     public void onSeekComplete(MediaPlayer mp) {
     }
     //< ********* Interfaz de MediaPlayer *********
+
+    public void setDisplay(SurfaceHolder surfaceHolder) {
+        mediaPlayer.setDisplay(surfaceHolder);
+    }
+
+    public void setSurface (Surface surface){
+        mediaPlayer.setSurface (surface);
+    }
 
     private void initMediaPlayer() {
         if (mediaPlayer == null) {

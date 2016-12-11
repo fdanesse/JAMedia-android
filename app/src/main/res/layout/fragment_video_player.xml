@@ -6,7 +6,7 @@
     android:background="@drawable/reciclado_arrugado_azul"
     android:scaleType="centerCrop">
 
-    <VideoView
+    <SurfaceView
         android:id="@+id/videoView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
