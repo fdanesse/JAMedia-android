@@ -15,6 +15,7 @@ import android.view.Surface;
 import android.view.SurfaceHolder;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 //https://developer.android.com/guide/components/bound-services.html
 //https://www.sitepoint.com/a-step-by-step-guide-to-building-an-android-audio-player-app/
@@ -28,6 +29,8 @@ public class JAMediaPLayerService extends Service implements MediaPlayer.OnCompl
 
     private static MediaPlayer mediaPlayer = null;
     private static String mediaFile;
+
+    private static ArrayList<Integer> videosize;
     private final IBinder iBinder = new LocalBinder();
 
     public static final String END_TRACK = "END_TRACK";
@@ -121,8 +124,7 @@ public class JAMediaPLayerService extends Service implements MediaPlayer.OnCompl
     }
 
     @Override
-    public boolean onInfo(MediaPlayer mp, int what, int extra) {
-        return false;
+    public boolean onInfo(MediaPlayer mp, int what, int extra) {return false;
     }
 
     @Override
@@ -143,6 +145,14 @@ public class JAMediaPLayerService extends Service implements MediaPlayer.OnCompl
         mediaPlayer.setSurface (surface);
     }
 
+    public static ArrayList<Integer> getVideosize() {
+        return videosize;
+    }
+
+    public static MediaPlayer getMediaPlayer() {
+        return mediaPlayer;
+    }
+
     private void initMediaPlayer() {
         if (mediaPlayer == null) {
             mediaPlayer = new MediaPlayer();
@@ -154,7 +164,6 @@ public class JAMediaPLayerService extends Service implements MediaPlayer.OnCompl
             mediaPlayer.setOnInfoListener(this);
             mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
             mediaPlayer.setVolume(1.0f, 1.0f);
-            //mediaPlayer.setVideoScalingMode(1);
         }
 
         stopMedia();
@@ -174,6 +183,20 @@ public class JAMediaPLayerService extends Service implements MediaPlayer.OnCompl
         if (!mediaPlayer.isPlaying()) {
             mediaPlayer.seekTo(0);
             mediaPlayer.start();
+
+            Integer x = 0;
+            Integer y = 0;
+            MediaPlayer.TrackInfo[] i = mediaPlayer.getTrackInfo();
+            for (MediaPlayer.TrackInfo inf : i){
+                if (inf.getTrackType() == MediaPlayer.TrackInfo.MEDIA_TRACK_TYPE_VIDEO){
+                    x = mediaPlayer.getVideoWidth();
+                    y = mediaPlayer.getVideoHeight();
+                }
+            }
+            videosize = new ArrayList<Integer>();
+            videosize.add(x);
+            videosize.add(y);
+
             Intent broadcastIntent = new Intent(PLAY);
             sendBroadcast(broadcastIntent);
         }

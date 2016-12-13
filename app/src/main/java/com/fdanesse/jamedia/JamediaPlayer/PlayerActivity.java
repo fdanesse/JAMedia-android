@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.res.Configuration;
+import android.graphics.Point;
 import android.media.AudioManager;
 import android.os.IBinder;
 import android.support.design.widget.Snackbar;
@@ -16,9 +17,8 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.Display;
 import android.view.KeyEvent;
-import android.view.Surface;
-import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.widget.Button;
@@ -80,7 +80,7 @@ public class PlayerActivity extends FragmentActivity{
         ArrayList<Fragment> fragments = new ArrayList<Fragment>();
         fragmentVideoPlayer = new FragmentVideoPlayer();
         fragmentPlayerList = new FragmentPlayerList();
-        fragmentVideoPlayer.set_parent(this);
+        //fragmentVideoPlayer.set_parent(this);
         fragmentPlayerList.set_parent(this);
         fragments.add(fragmentPlayerList);
         fragments.add(fragmentVideoPlayer);
@@ -115,11 +115,10 @@ public class PlayerActivity extends FragmentActivity{
         try{
             if (hasFocus) {
                 jaMediaPLayerService.setDisplay(fragmentVideoPlayer.surfaceHolder);
-                //jaMediaPLayerService.setSurface(fragmentVideoPlayer.surfaceHolder.getSurface());
+                resize();
             }
             else {
                 jaMediaPLayerService.setDisplay(null);
-                //jaMediaPLayerService.setSurface(null);
             }
         }
         catch(Exception e){}
@@ -158,6 +157,7 @@ public class PlayerActivity extends FragmentActivity{
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
+        /* Cuando cambia la orientación de la pantalla */
 
         SurfaceView v = (SurfaceView) findViewById(R.id.videoView);
         LayoutParams params = v.getLayoutParams();
@@ -165,13 +165,14 @@ public class PlayerActivity extends FragmentActivity{
         if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             params.width = LayoutParams.WRAP_CONTENT;
             params.height = LayoutParams.MATCH_PARENT;
+            v.setLayoutParams(params);
         }
         else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT){
             params.width = LayoutParams.MATCH_PARENT;
             params.height = LayoutParams.WRAP_CONTENT;
+            v.setLayoutParams(params);
         }
-
-        v.setLayoutParams(params);
+        resize();
     }
 
     //> ********** Conexion y Desconexion del servidor **********
@@ -212,10 +213,35 @@ public class PlayerActivity extends FragmentActivity{
         public void onReceive(Context context, Intent intent) {
             play.setBackgroundResource(img_pausa);
             check_buttons();
+            resize();
             jaMediaPLayerService.setDisplay(fragmentVideoPlayer.surfaceHolder);
-            //jaMediaPLayerService.setDisplay(null);
         }
     };
+
+    private void resize(){
+        Point p = new Point();
+        Display display = getWindowManager().getDefaultDisplay();
+        display.getRealSize(p);
+
+        // VIDEO
+        ArrayList<Integer> l = jaMediaPLayerService.getVideosize();
+        float x = (float) l.get(0);
+        float y = (float) l.get(1);
+
+        // FACTOR de ESCALA
+        float factor = Math.min(p.x/x, (p.y-tabLayout.getHeight())/y);
+        int width = (int) (x*factor);
+        int height = (int) (y*factor);
+
+        // VIDEOVIEW
+        SurfaceView v = (SurfaceView) findViewById(R.id.videoView);
+        LayoutParams params = v.getLayoutParams();
+
+        // ESCALAR
+        params.width = width;
+        params.height = height;
+        v.setLayoutParams(params);
+    }
 
     // Reproductor está stop
     private BroadcastReceiver stoped_track = new BroadcastReceiver() {
