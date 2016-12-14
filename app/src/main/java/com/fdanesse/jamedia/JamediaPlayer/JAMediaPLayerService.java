@@ -5,17 +5,16 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Point;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Binder;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
-import android.view.Surface;
 import android.view.SurfaceHolder;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 //https://developer.android.com/guide/components/bound-services.html
 //https://www.sitepoint.com/a-step-by-step-guide-to-building-an-android-audio-player-app/
@@ -30,12 +29,13 @@ public class JAMediaPLayerService extends Service implements MediaPlayer.OnCompl
     private static MediaPlayer mediaPlayer = null;
     private static String mediaFile;
 
-    private static ArrayList<Integer> videosize;
+    private static Point videosize;
     private final IBinder iBinder = new LocalBinder();
 
     public static final String END_TRACK = "END_TRACK";
     public static final String PLAY = "PLAY";
     public static final String STOP = "STOP";
+
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -69,9 +69,6 @@ public class JAMediaPLayerService extends Service implements MediaPlayer.OnCompl
 
     //> ********* SEÑALES *********
     private BroadcastReceiver playNewTrack = new BroadcastReceiver() {
-        /*
-        Cuando se recibe la señal Broadcast_PLAY_NEW_AUDIO desde PlayerActivity
-        */
         @Override
         public void onReceive(Context context, Intent intent) {
             Bundle extras = intent.getExtras();
@@ -83,7 +80,9 @@ public class JAMediaPLayerService extends Service implements MediaPlayer.OnCompl
 
     //> ********* Interfaz de MediaPlayer *********
     @Override
-    public void onBufferingUpdate(MediaPlayer mp, int percent) {}
+    public void onBufferingUpdate(MediaPlayer mp, int percent) {
+        //FIXME: Bufferprogress?
+    }
 
     @Override
     public void onCompletion(MediaPlayer mp) {
@@ -119,13 +118,12 @@ public class JAMediaPLayerService extends Service implements MediaPlayer.OnCompl
         }
 
         Log.i("**** ERROR: ", " " + what + " " + extra);
-        stopMedia();
+        stopMedia(); //FIXME: Enviar error?
         return true;
     }
 
     @Override
-    public boolean onInfo(MediaPlayer mp, int what, int extra) {return false;
-    }
+    public boolean onInfo(MediaPlayer mp, int what, int extra) {return false;}
 
     @Override
     public void onPrepared(MediaPlayer mp) {
@@ -133,24 +131,26 @@ public class JAMediaPLayerService extends Service implements MediaPlayer.OnCompl
     }
 
     @Override
-    public void onSeekComplete(MediaPlayer mp) {
-    }
+    public void onSeekComplete(MediaPlayer mp) {}
     //< ********* Interfaz de MediaPlayer *********
 
     public void setDisplay(SurfaceHolder surfaceHolder) {
         mediaPlayer.setDisplay(surfaceHolder);
     }
 
-    public void setSurface (Surface surface){
-        mediaPlayer.setSurface (surface);
-    }
-
-    public static ArrayList<Integer> getVideosize() {
+    public Point getVideosize() {
         return videosize;
     }
 
-    public static MediaPlayer getMediaPlayer() {
-        return mediaPlayer;
+    public Point getDuration_Position(){
+        Point point = new Point();
+        point.x = mediaPlayer.getDuration();
+        point.y = mediaPlayer.getCurrentPosition();
+        return point;
+    }
+
+    public void set_pos(int pos){
+        mediaPlayer.seekTo(pos);
     }
 
     private void initMediaPlayer() {
@@ -176,6 +176,8 @@ public class JAMediaPLayerService extends Service implements MediaPlayer.OnCompl
             }
         catch (IOException e) {}
 
+        videosize = new Point();
+        videosize.x = 0; videosize.y = 0;
         mediaPlayer.prepareAsync();
     }
 
@@ -184,18 +186,15 @@ public class JAMediaPLayerService extends Service implements MediaPlayer.OnCompl
             mediaPlayer.seekTo(0);
             mediaPlayer.start();
 
-            Integer x = 0;
-            Integer y = 0;
+            videosize.x = 0;
+            videosize.y = 0;
             MediaPlayer.TrackInfo[] i = mediaPlayer.getTrackInfo();
             for (MediaPlayer.TrackInfo inf : i){
                 if (inf.getTrackType() == MediaPlayer.TrackInfo.MEDIA_TRACK_TYPE_VIDEO){
-                    x = mediaPlayer.getVideoWidth();
-                    y = mediaPlayer.getVideoHeight();
+                    videosize.x = mediaPlayer.getVideoWidth();
+                    videosize.y = mediaPlayer.getVideoHeight();
                 }
             }
-            videosize = new ArrayList<Integer>();
-            videosize.add(x);
-            videosize.add(y);
 
             Intent broadcastIntent = new Intent(PLAY);
             sendBroadcast(broadcastIntent);
@@ -212,12 +211,14 @@ public class JAMediaPLayerService extends Service implements MediaPlayer.OnCompl
         }
     }
 
-    /*
-    private void pauseMedia() {
+    public void pause_play() {
         if (mediaPlayer.isPlaying()) {
             mediaPlayer.pause();
-            resumePosition = mediaPlayer.getCurrentPosition();
+            //FIXME: Enviar pause o stop?
+        }
+        else{
+            mediaPlayer.start();
+            //FIXME: Enviar play?
         }
     }
-    */
 }

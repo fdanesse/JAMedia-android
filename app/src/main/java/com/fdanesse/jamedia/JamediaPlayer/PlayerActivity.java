@@ -9,7 +9,9 @@ import android.content.ServiceConnection;
 import android.content.res.Configuration;
 import android.graphics.Point;
 import android.media.AudioManager;
+import android.os.Handler;
 import android.os.IBinder;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -23,6 +25,7 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.widget.Button;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.SeekBar;
 
 import com.fdanesse.jamedia.MainActivity;
 import com.fdanesse.jamedia.PlayerList.FragmentPlayerList;
@@ -35,18 +38,20 @@ import java.util.ArrayList;
 
 public class PlayerActivity extends FragmentActivity{
 
+    private AppBarLayout appbar;
     private Toolbar toolbar;
-    private static Button anterior;
-    private static Button siguiente;
-    private static Button play;
-    private static Button creditos;  // FIXME: terminar
+    private Button anterior;
+    private Button siguiente;
+    private Button play;
+    private Button creditos;  // FIXME: terminar
 
-    private static int img_pausa = R.drawable.pausa;
-    private static int img_play = R.drawable.play;
-    private static int img_stop = R.drawable.stop;
+    private int img_pausa = R.drawable.pausa;
+    private int img_play = R.drawable.play;
+    private int img_stop = R.drawable.stop;
 
+    private SeekBar seekBar;
     private TabLayout tabLayout;
-    private static ViewPager viewPager;
+    private ViewPager viewPager;
 
     private FragmentVideoPlayer fragmentVideoPlayer;
     private FragmentPlayerList fragmentPlayerList;
@@ -54,16 +59,24 @@ public class PlayerActivity extends FragmentActivity{
     private JAMediaPLayerService jaMediaPLayerService;
     private boolean serviceBound = false;
 
+    private Point displaysize = new Point();
+
+    //http://www.androidhive.info/2012/03/android-building-audio-player-tutorial/
+    private Handler mHandler = new Handler();
+
     // SEÑALES
     public static final String NEW_TRACK = "NEW_TRACK";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_player);
 
+        appbar = (AppBarLayout) findViewById(R.id.appbar);
         toolbar = (Toolbar) findViewById(R.id.player_toolbar);
         tabLayout = (TabLayout) findViewById(R.id.lenguetas);
+        seekBar = (SeekBar) findViewById(R.id.seekbar);
         viewPager = (ViewPager) findViewById(R.id.viewPager);
 
         anterior = (Button) findViewById(R.id.anterior);
@@ -80,7 +93,6 @@ public class PlayerActivity extends FragmentActivity{
         ArrayList<Fragment> fragments = new ArrayList<Fragment>();
         fragmentVideoPlayer = new FragmentVideoPlayer();
         fragmentPlayerList = new FragmentPlayerList();
-        //fragmentVideoPlayer.set_parent(this);
         fragmentPlayerList.set_parent(this);
         fragments.add(fragmentPlayerList);
         fragments.add(fragmentVideoPlayer);
@@ -107,7 +119,40 @@ public class PlayerActivity extends FragmentActivity{
             registerReceiver(stoped_track, filter);
         }
         catch(Exception e){}
+
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {}
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                mHandler.removeCallbacks(mUpdateTimeTask);
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                mHandler.removeCallbacks(mUpdateTimeTask);
+                jaMediaPLayerService.set_pos(seekBar.getProgress());
+                updateProgressBar();
+            }
+        });
+
+        Display display = getWindowManager().getDefaultDisplay();
+        display.getRealSize(displaysize);
     }
+
+    public void updateProgressBar() {
+        mHandler.postDelayed(mUpdateTimeTask, 1000);
+    }
+
+    private Runnable mUpdateTimeTask = new Runnable() {
+        public void run() {
+            Point point = jaMediaPLayerService.getDuration_Position();
+            seekBar.setMax(point.x);
+            seekBar.setProgress(point.y);
+            mHandler.postDelayed(this, 1000);
+        }
+    };
 
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
@@ -140,6 +185,7 @@ public class PlayerActivity extends FragmentActivity{
         unregisterReceiver(end_track);
         unregisterReceiver(stoped_track);
         unregisterReceiver(playing_track);
+        mHandler.removeCallbacks(mUpdateTimeTask);
     }
 
     @Override
@@ -203,6 +249,7 @@ public class PlayerActivity extends FragmentActivity{
     private BroadcastReceiver end_track = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+            mHandler.removeCallbacks(mUpdateTimeTask);
             fragmentPlayerList.getListAdapter().next();
         }
     };
@@ -211,27 +258,35 @@ public class PlayerActivity extends FragmentActivity{
     private BroadcastReceiver playing_track = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            play.setBackgroundResource(img_pausa);
-            check_buttons();
             resize();
+            play.setBackgroundResource(img_pausa);
+            Utils.setActiveView(play);
+            play.setEnabled(true);
+            check_buttons();
             jaMediaPLayerService.setDisplay(fragmentVideoPlayer.surfaceHolder);
+            updateProgressBar();
+        }
+    };
+
+    // Reproductor está stop
+    private BroadcastReceiver stoped_track = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            play.setBackgroundResource(img_play);
+            //FIXME: Detener handler?
         }
     };
 
     private void resize(){
-        Point p = new Point();
-        Display display = getWindowManager().getDefaultDisplay();
-        display.getRealSize(p);
-
         // VIDEO
-        ArrayList<Integer> l = jaMediaPLayerService.getVideosize();
-        float x = (float) l.get(0);
-        float y = (float) l.get(1);
+        Point l = jaMediaPLayerService.getVideosize();
+        float x = (float) l.x;
+        float y = (float) l.y;
 
         // FACTOR de ESCALA
-        float factor = Math.min(p.x/x, (p.y-tabLayout.getHeight())/y);
-        int width = (int) (x*factor);
-        int height = (int) (y*factor);
+        float factor = Math.min(displaysize.x / x, (displaysize.y - appbar.getHeight()) / y);
+        int width = (int) (x * factor);
+        int height = (int) (y * factor);
 
         // VIDEOVIEW
         SurfaceView v = (SurfaceView) findViewById(R.id.videoView);
@@ -242,14 +297,6 @@ public class PlayerActivity extends FragmentActivity{
         params.height = height;
         v.setLayoutParams(params);
     }
-
-    // Reproductor está stop
-    private BroadcastReceiver stoped_track = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            play.setBackgroundResource(img_play);
-        }
-    };
 
     private void connect_buttons_actions(){
         siguiente.setOnClickListener(new View.OnClickListener() {
@@ -262,7 +309,7 @@ public class PlayerActivity extends FragmentActivity{
         play.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // FIXME: pausar o reanudar reproductor
+                jaMediaPLayerService.pause_play();
             }
         });
 
@@ -280,16 +327,12 @@ public class PlayerActivity extends FragmentActivity{
             siguiente.setEnabled(true);
             Utils.setActiveView(anterior);
             anterior.setEnabled(true);
-            Utils.setActiveView(play);
-            play.setEnabled(true);
         }
         else{
             Utils.setInactiveView(siguiente);
             siguiente.setEnabled(false);
             Utils.setInactiveView(anterior);
             anterior.setEnabled(false);
-            Utils.setInactiveView(play);
-            play.setEnabled(false);
         }
     }
 

@@ -8,9 +8,10 @@
     tools:context=".JamediaPlayer.PlayerActivity">
 
     <android.support.design.widget.AppBarLayout
+        android:id="@+id/appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#000000"
+        android:background="@color/jamediatoolbar15"
         >
 
         <include
@@ -19,11 +20,20 @@
             >
         </include>
 
+        <SeekBar
+            android:id="@+id/seekbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:max="100"
+            />
+
         <android.support.design.widget.TabLayout
             android:id="@+id/lenguetas"
             android:layout_width="match_parent"
             android:layout_height="10dp"
             >
+
         </android.support.design.widget.TabLayout>
 
     </android.support.design.widget.AppBarLayout>
