@@ -35,6 +35,8 @@ public class JAMediaPLayerService extends Service implements MediaPlayer.OnCompl
     public static final String END_TRACK = "END_TRACK";
     public static final String PLAY = "PLAY";
     public static final String STOP = "STOP";
+    public static final String BUFFER = "BUFFER";
+    public static final String ERROR = "ERROR";
 
 
     @Override
@@ -81,7 +83,9 @@ public class JAMediaPLayerService extends Service implements MediaPlayer.OnCompl
     //> ********* Interfaz de MediaPlayer *********
     @Override
     public void onBufferingUpdate(MediaPlayer mp, int percent) {
-        //FIXME: Bufferprogress?
+        Intent broadcastIntent = new Intent(BUFFER);
+        broadcastIntent.putExtra("buffer", percent);
+        sendBroadcast(broadcastIntent);
     }
 
     @Override
@@ -117,7 +121,10 @@ public class JAMediaPLayerService extends Service implements MediaPlayer.OnCompl
             }
         }
 
-        Log.i("**** ERROR: ", " " + what + " " + extra);
+        Intent broadcastIntent = new Intent(ERROR);
+        broadcastIntent.putExtra("what", what);
+        broadcastIntent.putExtra("extra", extra);
+        sendBroadcast(broadcastIntent);
         stopMedia(); //FIXME: Enviar error?
         return true;
     }

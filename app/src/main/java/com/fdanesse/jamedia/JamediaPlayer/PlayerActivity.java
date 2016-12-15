@@ -118,6 +118,10 @@ public class PlayerActivity extends FragmentActivity{
             registerReceiver(playing_track, filter);
             filter = new IntentFilter(JAMediaPLayerService.STOP);
             registerReceiver(stoped_track, filter);
+            filter = new IntentFilter(JAMediaPLayerService.BUFFER);
+            registerReceiver(buffer_update, filter);
+            filter = new IntentFilter(JAMediaPLayerService.ERROR);
+            registerReceiver(error_player, filter);
         }
         catch(Exception e){}
 
@@ -186,6 +190,8 @@ public class PlayerActivity extends FragmentActivity{
         unregisterReceiver(end_track);
         unregisterReceiver(stoped_track);
         unregisterReceiver(playing_track);
+        unregisterReceiver(buffer_update);
+        unregisterReceiver(error_player);
         mHandler.removeCallbacks(mUpdateTimeTask);
     }
 
@@ -278,16 +284,44 @@ public class PlayerActivity extends FragmentActivity{
         }
     };
 
+    // Cargando buffer desde un streaming
+    private BroadcastReceiver buffer_update = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            /*
+            Bundle extras = intent.getExtras();
+            Snackbar.make(toolbar, "Cargando: " + extras.getInt("buffer", 0) + " %",
+                    Snackbar.LENGTH_SHORT).show();
+            */
+            //FIXME: Implementar
+        }
+    };
+
+    // Error en el reproductor
+    private BroadcastReceiver error_player = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Bundle extras = intent.getExtras();
+            Snackbar.make(toolbar, "Error: " + extras.get("what") + " " + extras.get("extra"),
+                    Snackbar.LENGTH_LONG).show();
+        }
+    };
+
     private void resize(){
         // VIDEO
         Point l = jaMediaPLayerService.getVideosize();
         float x = (float) l.x;
         float y = (float) l.y;
 
-        // FACTOR de ESCALA
-        float factor = Math.min(displaysize.x / x, (displaysize.y - appbar.getHeight()) / y);
-        int width = (int) (x * factor);
-        int height = (int) (y * factor);
+        int width = LayoutParams.MATCH_PARENT;
+        int height = LayoutParams.MATCH_PARENT;
+
+        if (x > 0 && y > 0) {
+            // FACTOR de ESCALA
+            float factor = Math.min(displaysize.x / x, (displaysize.y - appbar.getHeight()) / y);
+            width = (int) (x * factor);
+            height = (int) (y * factor);
+        }
 
         // VIDEOVIEW
         SurfaceView v = (SurfaceView) findViewById(R.id.videoView);
