@@ -23,7 +23,7 @@ import android.view.Display;
 import android.view.KeyEvent;
 import android.view.SurfaceView;
 import android.view.View;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.SeekBar;
 
@@ -40,14 +40,14 @@ public class PlayerActivity extends FragmentActivity{
 
     private AppBarLayout appbar;
     private Toolbar toolbar;
-    private Button anterior;
-    private Button siguiente;
-    private Button play;
-    private Button creditos;  // FIXME: terminar
+    private ImageButton anterior;
+    private ImageButton siguiente;
+    private ImageButton play;
+    private ImageButton creditos;  // FIXME: terminar
+    private ImageButton cancel;
 
     private int img_pausa = R.drawable.pausa;
     private int img_play = R.drawable.play;
-    private int img_stop = R.drawable.stop;
 
     private SeekBar seekBar;
     private TabLayout tabLayout;
@@ -79,10 +79,11 @@ public class PlayerActivity extends FragmentActivity{
         seekBar = (SeekBar) findViewById(R.id.seekbar);
         viewPager = (ViewPager) findViewById(R.id.viewPager);
 
-        anterior = (Button) findViewById(R.id.anterior);
-        siguiente = (Button) findViewById(R.id.siguiente);
-        play = (Button) findViewById(R.id.play);
-        creditos = (Button) findViewById(R.id.creditos);
+        creditos = (ImageButton) findViewById(R.id.creditos);
+        anterior = (ImageButton) findViewById(R.id.anterior);
+        play = (ImageButton) findViewById(R.id.play);
+        siguiente = (ImageButton) findViewById(R.id.siguiente);
+        cancel = (ImageButton) findViewById(R.id.cancel);
 
         img_pausa = R.drawable.pausa;
         img_play = R.drawable.play;
@@ -159,8 +160,8 @@ public class PlayerActivity extends FragmentActivity{
         super.onWindowFocusChanged(hasFocus);
         try{
             if (hasFocus) {
-                jaMediaPLayerService.setDisplay(fragmentVideoPlayer.surfaceHolder);
                 resize();
+                jaMediaPLayerService.setDisplay(fragmentVideoPlayer.surfaceHolder);
             }
             else {
                 jaMediaPLayerService.setDisplay(null);
@@ -259,7 +260,7 @@ public class PlayerActivity extends FragmentActivity{
         @Override
         public void onReceive(Context context, Intent intent) {
             resize();
-            play.setBackgroundResource(img_pausa);
+            play.setImageResource(img_pausa);
             Utils.setActiveView(play);
             play.setEnabled(true);
             check_buttons();
@@ -272,7 +273,7 @@ public class PlayerActivity extends FragmentActivity{
     private BroadcastReceiver stoped_track = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            play.setBackgroundResource(img_play);
+            play.setImageResource(img_play);
             //FIXME: Detener handler?
         }
     };
@@ -319,6 +320,15 @@ public class PlayerActivity extends FragmentActivity{
                 fragmentPlayerList.getListAdapter().previous();
             }
         });
+
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(PlayerActivity.this, MainActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
     }
 
     private void check_buttons() {
@@ -343,12 +353,6 @@ public class PlayerActivity extends FragmentActivity{
         switch (keyCode) {
             case KeyEvent.KEYCODE_BACK:{
                 if (action == KeyEvent.ACTION_DOWN) {
-                    if (serviceBound){
-                        try{
-                            jaMediaPLayerService.stopSelf();
-                        }
-                        catch(Exception e){}
-                    }
                     Intent intent = new Intent(PlayerActivity.this, MainActivity.class);
                     startActivity(intent);
                     finish();

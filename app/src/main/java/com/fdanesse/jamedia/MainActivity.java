@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 
 import com.fdanesse.jamedia.Archivos.FileChooserActivity;
 import com.fdanesse.jamedia.Archivos.FileManager;
@@ -25,11 +26,13 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
+    private ImageButton cancel;
+    private Button youtube;
     private Button radio;
     private Button television;
     private Button archivos;
 
-    private NetworkChangeReceiver receiver;
+    private NetworkChangeReceiver network_receiver;
     private WifiManager.WifiLock wifiLock;
 
     @Override
@@ -37,6 +40,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        cancel = (ImageButton) findViewById(R.id.cancel);
+        youtube = (Button) findViewById(R.id.youtube);
         radio = (Button) findViewById(R.id.radio);
         television = (Button) findViewById(R.id.television);
         archivos = (Button) findViewById(R.id.archivos);
@@ -46,8 +51,8 @@ public class MainActivity extends AppCompatActivity {
         network_changed();
 
         IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
-        receiver = new NetworkChangeReceiver();
-        registerReceiver(receiver, filter);
+        network_receiver = new NetworkChangeReceiver();
+        registerReceiver(network_receiver, filter);
 
         AudioManager audioManager = (AudioManager) this.getSystemService(this.AUDIO_SERVICE);
         this.setVolumeControlStream(audioManager.STREAM_MUSIC);
@@ -76,6 +81,18 @@ public class MainActivity extends AppCompatActivity {
     */
 
     private void set_touch_listeners(){
+
+        cancel.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                button_clicked(view, motionEvent);
+                if (motionEvent.getAction() == MotionEvent.ACTION_UP){
+                    finishAffinity();
+                }
+                return true;
+            }
+        });
+
         radio.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -133,7 +150,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        unregisterReceiver(receiver);
+        unregisterReceiver(network_receiver);
         wifiLock.release();
     }
 
@@ -157,12 +174,12 @@ public class MainActivity extends AppCompatActivity {
         if (i == false){
             Utils.setInactiveView(radio);
             Utils.setInactiveView(television);
-            Snackbar.make(radio, "No tienes conexión a internet", Snackbar.LENGTH_INDEFINITE).show();
+            Snackbar.make(radio, "No tienes conexión a internet", Snackbar.LENGTH_LONG).show();
         }
         else{
             Utils.setActiveView(radio);
             Utils.setActiveView(television);
-            //Snackbar.make(radio, "Conectando a internet...", Snackbar.LENGTH_LONG).show();
+            Snackbar.make(radio, "Conectando a internet...", Snackbar.LENGTH_LONG).show();
         }
     }
 
@@ -183,4 +200,4 @@ public class MainActivity extends AppCompatActivity {
         }
 
     } //NetworkChangeReceiver
-} //MainActivity
+}     //MainActivity
