@@ -4,8 +4,6 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
-import com.fdanesse.jamedia.Archivos.FileChooserItemListAdapter;
-
 /**
  * Created by flavio on 07/10/16.
  */

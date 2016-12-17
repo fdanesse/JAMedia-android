@@ -125,7 +125,7 @@ public class JAMediaPLayerService extends Service implements MediaPlayer.OnCompl
         broadcastIntent.putExtra("what", what);
         broadcastIntent.putExtra("extra", extra);
         sendBroadcast(broadcastIntent);
-        stopMedia(); //FIXME: Enviar error?
+        stopMedia();
         return true;
     }
 

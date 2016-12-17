@@ -107,6 +107,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        /*
         television.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -120,6 +121,7 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
+        */
 
         archivos.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -169,16 +171,16 @@ public class MainActivity extends AppCompatActivity {
     private void network_changed(){
         boolean i = network_check();
         radio.setEnabled(i);
-        television.setEnabled(i);
+        //television.setEnabled(i);
 
         if (i == false){
             Utils.setInactiveView(radio);
-            Utils.setInactiveView(television);
+            //Utils.setInactiveView(television);
             Snackbar.make(radio, "No tienes conexión a internet", Snackbar.LENGTH_LONG).show();
         }
         else{
             Utils.setActiveView(radio);
-            Utils.setActiveView(television);
+            //Utils.setActiveView(television);
             Snackbar.make(radio, "Conectando a internet...", Snackbar.LENGTH_LONG).show();
         }
     }
@@ -190,7 +192,6 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onReceive(final Context context, final Intent intent) {
-            //Log.v(LOG_TAG, "Receieved notification about network status");
             isNetworkAvailable(context);
         }
 

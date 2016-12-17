@@ -141,10 +141,12 @@ public class FileManager {
         return lista;
     }
 
+    /*
     public static ArrayList<ListItem> get_tv() {
         ArrayList<ListItem> lista = new ArrayList<ListItem>();
         lista.add(new ListItem(R.drawable.jamedia, "Canal Rural 1 (Argentina)", "rtsp://streamrural.cmd.com.ar:554/liverural/crural/rural1"));
         lista.add(new ListItem(R.drawable.jamedia, "TN (Argentina)", "rtsp://stream.tn.com.ar/live/tnhd1"));
         return lista;
     }
+    */
 }
