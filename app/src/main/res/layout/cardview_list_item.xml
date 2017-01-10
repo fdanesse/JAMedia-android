@@ -8,7 +8,7 @@
     android:measureAllChildren="false"
     android:foregroundGravity="center_vertical"
     card_view:cardCornerRadius="8dp"
-    android:alpha="0.2"
+    android:alpha="0.5"
     >
 
     <LinearLayout

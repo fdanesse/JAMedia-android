@@ -56,11 +56,11 @@ public class FragmentPlayerList extends Fragment {
         for (ItemListAdapter.ItemListViewHolder i : items) {
             String trackpath = i.getText_view_url().getText().toString();
             if (trackpath == listAdapter.trackpath){
-                Utils.setActiveView(i.itemView);
+                Utils.setActiveView(i.itemView, "default");
             }
             else{
                 if (i.itemView.getAlpha() == 1.0f){
-                    Utils.setInactiveView(i.itemView);
+                    Utils.setInactiveView(i.itemView, "default");
                 }
             }
         }

@@ -268,7 +268,7 @@ public class PlayerActivity extends FragmentActivity{
             /* FIXME: Aca ver si hay video para hacer visible el area de video solo en este caso */
             resize();
             play.setImageResource(img_pausa);
-            Utils.setActiveView(play);
+            Utils.setActiveView(play, "default");
             play.setEnabled(true);
             check_buttons();
             jaMediaPLayerService.setDisplay(fragmentVideoPlayer.surfaceHolder);
@@ -370,15 +370,15 @@ public class PlayerActivity extends FragmentActivity{
 
     private void check_buttons() {
         if (fragmentPlayerList.getListAdapter().getItemCount() > 1){
-            Utils.setActiveView(siguiente);
+            Utils.setActiveView(siguiente, "default");
             siguiente.setEnabled(true);
-            Utils.setActiveView(anterior);
+            Utils.setActiveView(anterior, "default");
             anterior.setEnabled(true);
         }
         else{
-            Utils.setInactiveView(siguiente);
+            Utils.setInactiveView(siguiente, "default");
             siguiente.setEnabled(false);
-            Utils.setInactiveView(anterior);
+            Utils.setInactiveView(anterior, "default");
             anterior.setEnabled(false);
         }
     }

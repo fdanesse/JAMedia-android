@@ -73,9 +73,9 @@ public class FileChooserItemListAdapter extends RecyclerView.Adapter<FileChooser
         holder.text_view_tipo.setText(listItem.getTipo());
 
         if (filechooser.check_path(listItem.getFilepath())){
-            holder.itemView.setAlpha(1.0f);
+            holder.itemView.setAlpha(0.7f);
         }
-        else{holder.itemView.setAlpha(0.5f);}
+        else{holder.itemView.setAlpha(0.4f);}
     }
 
     @Override

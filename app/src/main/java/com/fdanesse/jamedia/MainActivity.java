@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
         archivos = (Button) findViewById(R.id.archivos);
 
         set_touch_listeners();
-        Utils.setActiveView2(archivos);
+        Utils.setActiveView(archivos, "default");
         network_changed();
 
         IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
@@ -107,11 +107,11 @@ public class MainActivity extends AppCompatActivity {
     private void button_clicked(View view, MotionEvent motionEvent){
         switch (motionEvent.getAction()){
             case MotionEvent.ACTION_DOWN:{
-                Utils.setInactiveView2(view);
+                Utils.setInactiveView(view, "default");
                 break;
             }
             case MotionEvent.ACTION_UP:{
-                Utils.setActiveView2(view);
+                Utils.setActiveView(view, "default");
                 break;
             }
         }
@@ -142,12 +142,12 @@ public class MainActivity extends AppCompatActivity {
         //television.setEnabled(i);
 
         if (i == false){
-            Utils.setInactiveView2(radio);
+            Utils.setInactiveView(radio, "default");
             //Utils.setInactiveView2(television);
             Snackbar.make(radio, "No tienes conexión a internet", Snackbar.LENGTH_LONG).show();
         }
         else{
-            Utils.setActiveView2(radio);
+            Utils.setActiveView(radio, "default");
             //Utils.setActiveView2(television);
             Snackbar.make(radio, "Conectando a internet...", Snackbar.LENGTH_LONG).show();
         }

@@ -117,7 +117,7 @@ public class FileChooserActivity extends AppCompatActivity {
                     ArrayList<FileChooserItemListAdapter.ItemListViewHolder> items = listAdapter.getHolders();
                     for (FileChooserItemListAdapter.ItemListViewHolder i : items){
                         if (tracks.contains(i.get_filepath())){
-                            Utils.setActiveView(i.itemView);
+                            Utils.setActiveView(i.itemView, "filechooser_items");
                         }
                     }
 
@@ -137,17 +137,17 @@ public class FileChooserActivity extends AppCompatActivity {
         Button boton = (Button) myactionbar.findViewById(R.id.anterior);
         if (file.getParentFile() != null) {
             if (file.getParentFile().canRead() && ! boton.isEnabled()) {
-                Utils.setActiveView(boton);
+                Utils.setActiveView(boton, "default");
                 boton.setEnabled(true);
                 boton.setTypeface(null, Typeface.BOLD);
             } else if (! file.getParentFile().canRead() && boton.isEnabled()) {
-                Utils.setInactiveView(boton);
+                Utils.setInactiveView(boton, "filechooser_toolbar_buttons");
                 boton.setEnabled(false);
                 boton.setTypeface(null, Typeface.NORMAL);
             }
         }
         else {
-            Utils.setInactiveView(boton);
+            Utils.setInactiveView(boton, "filechooser_toolbar_buttons");
             boton.setEnabled(false);
             boton.setTypeface(null, Typeface.NORMAL);
         }
@@ -159,11 +159,11 @@ public class FileChooserActivity extends AppCompatActivity {
          */
         Button boton = (Button) myactionbar.findViewById(R.id.play);
         if (tracks.size() > 0 && ! boton.isEnabled()){
-            Utils.setActiveView(boton);
+            Utils.setActiveView(boton, "default");
             boton.setEnabled(true);
         }
         else if (tracks.size() < 1 && boton.isEnabled()){
-            Utils.setInactiveView(boton);
+            Utils.setInactiveView(boton, "filechooser_toolbar_buttons");
             boton.setEnabled(false);
         }
     }
@@ -185,10 +185,10 @@ public class FileChooserActivity extends AppCompatActivity {
 
         Button boton = (Button) myactionbar.findViewById(R.id.todos);
         if (f){
-            Utils.setActiveView(boton);
+            Utils.setActiveView(boton, "default");
             boton.setEnabled(true);
         }else{
-            Utils.setInactiveView(boton);
+            Utils.setInactiveView(boton, "filechooser_toolbar_buttons");
             boton.setEnabled(false);
         }
     }
@@ -198,11 +198,11 @@ public class FileChooserActivity extends AppCompatActivity {
          * Cuando se hace click en un item de la lista
          */
         if (! tracks.contains(filepath)){
-            Utils.setActiveView(view);
+            Utils.setActiveView(view, "filechooser_items");
             tracks.add(filepath);
         }
         else if (tracks.contains(filepath)){
-            Utils.setInactiveView(view);
+            Utils.setInactiveView(view, "filechooser_items");
             tracks.remove(filepath);
         }
         check_button_play();
