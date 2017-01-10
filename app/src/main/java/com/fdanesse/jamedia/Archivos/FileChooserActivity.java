@@ -2,6 +2,7 @@ package com.fdanesse.jamedia.Archivos;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.media.AudioManager;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
@@ -43,7 +44,7 @@ public class FileChooserActivity extends AppCompatActivity {
         myactionbar = (Toolbar) findViewById(R.id.file_chooser_toolbar);
         setSupportActionBar(myactionbar);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         recyclerView = (RecyclerView) findViewById(R.id.file_chooser_reciclerview);
@@ -67,7 +68,6 @@ public class FileChooserActivity extends AppCompatActivity {
     }
 
     private void buttons_listen_clicks(){
-
         // Leer Directorio padre al actual
         Button boton = (Button) myactionbar.findViewById(R.id.anterior);
         boton.setOnTouchListener(new View.OnTouchListener() {
@@ -94,6 +94,7 @@ public class FileChooserActivity extends AppCompatActivity {
                     Intent intent = new Intent(FileChooserActivity.this, PlayerActivity.class);
                     intent.putExtra("tracks", listItems);
                     startActivity(intent);
+                    finish();
                 }
                 return true;
             }
@@ -138,14 +139,17 @@ public class FileChooserActivity extends AppCompatActivity {
             if (file.getParentFile().canRead() && ! boton.isEnabled()) {
                 Utils.setActiveView(boton);
                 boton.setEnabled(true);
+                boton.setTypeface(null, Typeface.BOLD);
             } else if (! file.getParentFile().canRead() && boton.isEnabled()) {
                 Utils.setInactiveView(boton);
                 boton.setEnabled(false);
+                boton.setTypeface(null, Typeface.NORMAL);
             }
         }
         else {
             Utils.setInactiveView(boton);
             boton.setEnabled(false);
+            boton.setTypeface(null, Typeface.NORMAL);
         }
     }
 

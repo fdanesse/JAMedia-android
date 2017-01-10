@@ -62,24 +62,6 @@ public class MainActivity extends AppCompatActivity {
         wifiLock.acquire();
     }
 
-    /*
-    @Override
-    public boolean dispatchKeyEvent(KeyEvent event) {
-        int action = event.getAction();
-        int keyCode = event.getKeyCode();
-        switch (keyCode) {
-            case KeyEvent.KEYCODE_BACK: {
-                if (action == KeyEvent.ACTION_DOWN) {
-                    finish();
-                }
-                return true;
-            }
-            default:
-                return super.dispatchKeyEvent(event);
-        }
-    }
-    */
-
     private void set_touch_listeners(){
 
         cancel.setOnTouchListener(new View.OnTouchListener() {
@@ -102,26 +84,11 @@ public class MainActivity extends AppCompatActivity {
                     Intent intent = new Intent(MainActivity.this, PlayerActivity.class);
                     intent.putExtra("tracks", radios);
                     startActivity(intent);
+                    finish();
                 }
                 return true;
             }
         });
-
-        /*
-        television.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                button_clicked(view, motionEvent);
-                if (motionEvent.getAction() == MotionEvent.ACTION_UP){
-                    ArrayList<ListItem> tv = FileManager.get_tv();
-                    Intent intent = new Intent(MainActivity.this, PlayerActivity.class);
-                    intent.putExtra("tracks", tv);
-                    startActivity(intent);
-                }
-                return true;
-            }
-        });
-        */
 
         archivos.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -130,6 +97,7 @@ public class MainActivity extends AppCompatActivity {
                 if (motionEvent.getAction() == MotionEvent.ACTION_UP){
                     Intent intent = new Intent(MainActivity.this, FileChooserActivity.class);
                     startActivity(intent);
+                    finish();
                 }
                 return true;
             }
@@ -153,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         unregisterReceiver(network_receiver);
-        wifiLock.release();
+        wifiLock.release(); //FIXME: Revisar esto
     }
 
     private boolean network_check(){
