@@ -151,8 +151,14 @@ public class JAMediaPLayerService extends Service implements MediaPlayer.OnCompl
 
     public Point getDuration_Position(){
         Point point = new Point();
-        point.x = mediaPlayer.getDuration();
-        point.y = mediaPlayer.getCurrentPosition();
+        point.x = 0;
+        point.y = 0;
+        if (mediaPlayer != null){
+            if (mediaPlayer.isPlaying()) {
+                point.x = mediaPlayer.getDuration();
+                point.y = mediaPlayer.getCurrentPosition();
+            }
+        }
         return point;
     }
 
