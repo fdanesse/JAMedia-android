@@ -265,6 +265,7 @@ public class PlayerActivity extends FragmentActivity{
     private BroadcastReceiver playing_track = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+            /* FIXME: Aca ver si hay video para hacer visible el area de video solo en este caso */
             resize();
             play.setImageResource(img_pausa);
             Utils.setActiveView(play);
@@ -288,7 +289,7 @@ public class PlayerActivity extends FragmentActivity{
     private BroadcastReceiver buffer_update = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            /*
+            /* FIXME: Solo son comentarios
             Bundle extras = intent.getExtras();
             Snackbar.make(toolbar, "Cargando: " + extras.getInt("buffer", 0) + " %",
                     Snackbar.LENGTH_SHORT).show();
@@ -301,9 +302,11 @@ public class PlayerActivity extends FragmentActivity{
     private BroadcastReceiver error_player = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+            /* FIXME: Solo son comentarios
             Bundle extras = intent.getExtras();
             Snackbar.make(toolbar, "Error: " + extras.get("what") + " " + extras.get("extra"),
                     Snackbar.LENGTH_LONG).show();
+            */
         }
     };
 

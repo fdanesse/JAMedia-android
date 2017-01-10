@@ -20,6 +20,20 @@ public class Utils {
         final Animation animAlpha = AnimationUtils.loadAnimation(
                 view.getContext(), R.anim.anim_alpha1);
         view.startAnimation(animAlpha);
+        view.setAlpha(0.2f);
+    }
+
+    public static void setActiveView2(View view){
+        final Animation animAlpha = AnimationUtils.loadAnimation(
+                view.getContext(), R.anim.anim_alpha4);
+        view.startAnimation(animAlpha);
+        view.setAlpha(1.0f);
+    }
+
+    public static void setInactiveView2(View view){
+        final Animation animAlpha = AnimationUtils.loadAnimation(
+                view.getContext(), R.anim.anim_alpha3);
+        view.startAnimation(animAlpha);
         view.setAlpha(0.5f);
     }
 }

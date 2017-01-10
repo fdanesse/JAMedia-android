@@ -11,8 +11,9 @@
         android:id="@+id/appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/background_list_item"
+        android:background="#000000"
         >
+        <!--android:background="@drawable/background_list_item"-->
 
         <include
             android:id="@+id/player_toolbar"

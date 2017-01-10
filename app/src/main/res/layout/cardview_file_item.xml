@@ -7,16 +7,17 @@
     android:layout_height="wrap_content"
     android:measureAllChildren="false"
     android:foregroundGravity="center_vertical"
-    card_view:cardCornerRadius="10dp"
-    android:alpha="0.5"
+    card_view:cardCornerRadius="8dp"
+    android:alpha="0.2"
     >
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:background="@drawable/background_list_item"
+        android:background="#000000"
         >
+        <!--android:background="@drawable/background_list_item"-->
 
         <ImageView
             android:id="@+id/imagen"

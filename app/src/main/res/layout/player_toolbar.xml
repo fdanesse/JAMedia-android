@@ -4,9 +4,11 @@
     android:id="@+id/player_toolbar"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/background_list_item"
+    android:background="#000000"
     >
-    <!--android:theme="@style/ThemeOverlay.AppCompat.ActionBar"-->
+    <!--
+    android:background="@drawable/background_list_item"
+    android:theme="@style/ThemeOverlay.AppCompat.ActionBar"-->
 
     <ImageButton
         android:id="@+id/creditos"
@@ -61,8 +63,8 @@
 
     <ImageButton
         android:id="@+id/cancel"
-        android:layout_width="28dp"
-        android:layout_height="28dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:src="@drawable/cancel"
         android:background="@android:color/transparent"
         android:scaleType="centerCrop"

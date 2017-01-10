@@ -157,7 +157,11 @@ public class JAMediaPLayerService extends Service implements MediaPlayer.OnCompl
     }
 
     public void set_pos(int pos){
-        mediaPlayer.seekTo(pos);
+        if (mediaPlayer != null){
+            if (mediaPlayer.isPlaying()){
+                mediaPlayer.seekTo(pos);
+            }
+        }
     }
 
     private void initMediaPlayer() {
