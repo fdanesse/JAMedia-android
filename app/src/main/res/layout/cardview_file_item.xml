@@ -5,7 +5,7 @@
     android:id="@+id/cardview_file_item"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:measureAllChildren="false"
+    android:measureAllChildren="true"
     android:foregroundGravity="center_vertical"
     card_view:cardCornerRadius="8dp"
     android:alpha="0.4"
@@ -16,15 +16,16 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:background="#000000"
+        android:padding="5dp"
         >
         <!--android:background="@drawable/background_list_item"-->
 
         <ImageView
             android:id="@+id/imagen"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
+            android:layout_width="32dp"
+            android:layout_height="20dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
             android:scaleType="center"
             />
 
