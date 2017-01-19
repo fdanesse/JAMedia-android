@@ -140,7 +140,6 @@ public class PlayerActivity extends FragmentActivity{
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                mHandler.removeCallbacks(mUpdateTimeTask);
                 jaMediaPLayerService.set_pos(seekBar.getProgress());
                 updateProgressBar();
             }
@@ -148,6 +147,8 @@ public class PlayerActivity extends FragmentActivity{
 
         Display display = getWindowManager().getDefaultDisplay();
         display.getRealSize(displaysize);
+
+        tabLayout.setVisibility(View.GONE);
     }
 
     public void updateProgressBar() {
@@ -245,7 +246,6 @@ public class PlayerActivity extends FragmentActivity{
 
     public void playtrack(int index){
         ListItem item = fragmentPlayerList.getListAdapter().getLista().get(index);
-        viewPager.setCurrentItem(1);
         Intent broadcastIntent = new Intent(NEW_TRACK);
         broadcastIntent.putExtra("media", item.getUrl());
         sendBroadcast(broadcastIntent);
@@ -338,12 +338,16 @@ public class PlayerActivity extends FragmentActivity{
                 params.height = height;
                 v.setLayoutParams(params);
 
+                tabLayout.setVisibility(View.VISIBLE);
+                //FIXME: fragment add o visible
                 jaMediaPLayerService.setDisplay(fragmentVideoPlayer.surfaceHolder);
-                // FIXME: Mostrar el tab y cambiar el foco a él
+                viewPager.setCurrentItem(1);
             }
             else{
                 jaMediaPLayerService.setDisplay(null);
-                // FIXME: Ocultar Tab
+                //FIXME: fragment remove o invisible
+                tabLayout.setVisibility(View.GONE);
+                viewPager.setCurrentItem(0);
             }
         }
         else{
