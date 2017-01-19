@@ -34,10 +34,12 @@ public class JAMediaPLayerService extends Service implements MediaPlayer.OnCompl
 
     public static final String END_TRACK = "END_TRACK";
     public static final String PLAY = "PLAY";
+    public static final String PAUSE = "PAUSE";
     public static final String STOP = "STOP";
+    /*
     public static final String BUFFER = "BUFFER";
     public static final String ERROR = "ERROR";
-
+    */
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -83,9 +85,11 @@ public class JAMediaPLayerService extends Service implements MediaPlayer.OnCompl
     //> ********* Interfaz de MediaPlayer *********
     @Override
     public void onBufferingUpdate(MediaPlayer mp, int percent) {
+        /*
         Intent broadcastIntent = new Intent(BUFFER);
         broadcastIntent.putExtra("buffer", percent);
         sendBroadcast(broadcastIntent);
+        */
     }
 
     @Override
@@ -121,10 +125,12 @@ public class JAMediaPLayerService extends Service implements MediaPlayer.OnCompl
             }
         }
 
+        /*
         Intent broadcastIntent = new Intent(ERROR);
         broadcastIntent.putExtra("what", what);
         broadcastIntent.putExtra("extra", extra);
         sendBroadcast(broadcastIntent);
+        */
         stopMedia();
         return true;
     }
@@ -213,8 +219,7 @@ public class JAMediaPLayerService extends Service implements MediaPlayer.OnCompl
                 }
             }
 
-            Intent broadcastIntent = new Intent(PLAY);
-            sendBroadcast(broadcastIntent);
+            send_play();
         }
     }
 
@@ -231,11 +236,17 @@ public class JAMediaPLayerService extends Service implements MediaPlayer.OnCompl
     public void pause_play() {
         if (mediaPlayer.isPlaying()) {
             mediaPlayer.pause();
-            //FIXME: Enviar pause o stop?
+            Intent broadcastIntent = new Intent(PAUSE);
+            sendBroadcast(broadcastIntent);
         }
         else{
             mediaPlayer.start();
-            //FIXME: Enviar play?
+            send_play();
         }
+    }
+
+    private void send_play(){
+        Intent broadcastIntent = new Intent(PLAY);
+        sendBroadcast(broadcastIntent);
     }
 }

@@ -116,12 +116,16 @@ public class PlayerActivity extends FragmentActivity{
             registerReceiver(end_track, filter);
             filter = new IntentFilter(JAMediaPLayerService.PLAY);
             registerReceiver(playing_track, filter);
+            filter = new IntentFilter(JAMediaPLayerService.PAUSE);
+            registerReceiver(paused_track, filter);
             filter = new IntentFilter(JAMediaPLayerService.STOP);
             registerReceiver(stoped_track, filter);
+            /*
             filter = new IntentFilter(JAMediaPLayerService.BUFFER);
             registerReceiver(buffer_update, filter);
             filter = new IntentFilter(JAMediaPLayerService.ERROR);
             registerReceiver(error_player, filter);
+            */
         }
         catch(Exception e){}
 
@@ -190,8 +194,11 @@ public class PlayerActivity extends FragmentActivity{
         unregisterReceiver(end_track);
         unregisterReceiver(stoped_track);
         unregisterReceiver(playing_track);
+        unregisterReceiver(paused_track);
+        /*
         unregisterReceiver(buffer_update);
         unregisterReceiver(error_player);
+        */
         mHandler.removeCallbacks(mUpdateTimeTask);
     }
 
@@ -278,6 +285,15 @@ public class PlayerActivity extends FragmentActivity{
 
     // Reproductor está stop
     private BroadcastReceiver stoped_track = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            play.setImageResource(img_play);
+            //FIXME: Detener handler?
+        }
+    };
+
+    // Reproductor está pausa
+    private BroadcastReceiver paused_track = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             play.setImageResource(img_play);

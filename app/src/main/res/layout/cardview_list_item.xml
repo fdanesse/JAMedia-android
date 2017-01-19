@@ -11,11 +11,11 @@
     android:alpha="0.5"
     card_view:cardCornerRadius="8dp"
 
-    android:layout_margin="0.02dp"
-    card_view:contentPadding="0.02dp"
+    android:layout_margin="0.1dp"
+    card_view:contentPadding="0.1dp"
 
-    card_view:cardElevation="0.02dp"
-    card_view:cardMaxElevation="0.02dp">
+    card_view:cardElevation="0.1dp"
+    card_view:cardMaxElevation="0.1dp">
 
     <!--
     card_view:cardElevation="2dp"
@@ -29,7 +29,6 @@
         android:orientation="horizontal"
         android:background="#000000"
         android:padding="5dp"
-        card_view:cardCornerRadius="8dp"
         >
         <!--android:background="@drawable/background_list_item"-->
 
