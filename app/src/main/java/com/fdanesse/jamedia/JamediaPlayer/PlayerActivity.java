@@ -166,15 +166,7 @@ public class PlayerActivity extends FragmentActivity{
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
-        try{
-            if (hasFocus) {
-                resize();
-                jaMediaPLayerService.setDisplay(fragmentVideoPlayer.surfaceHolder);
-            }
-            else {
-                jaMediaPLayerService.setDisplay(null);
-            }
-        }
+        try{resize();}
         catch(Exception e){}
     }
 
@@ -272,13 +264,11 @@ public class PlayerActivity extends FragmentActivity{
     private BroadcastReceiver playing_track = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            /* FIXME: Aca ver si hay video para hacer visible el area de video solo en este caso */
             resize();
             play.setImageResource(img_pausa);
             Utils.setActiveView(play, "default");
             play.setEnabled(true);
             check_buttons();
-            jaMediaPLayerService.setDisplay(fragmentVideoPlayer.surfaceHolder);
             updateProgressBar();
         }
     };
@@ -327,29 +317,38 @@ public class PlayerActivity extends FragmentActivity{
     };
 
     private void resize(){
-        // VIDEO
-        Point l = jaMediaPLayerService.getVideosize();
-        float x = (float) l.x;
-        float y = (float) l.y;
+        if (hasWindowFocus()){
+            if (jaMediaPLayerService.get_hasvideo()){
+                int width = LayoutParams.MATCH_PARENT;
+                int height = LayoutParams.MATCH_PARENT;
 
-        int width = LayoutParams.MATCH_PARENT;
-        int height = LayoutParams.MATCH_PARENT;
+                Point l = jaMediaPLayerService.getVideosize();
+                float x = (float) l.x;
+                float y = (float) l.y;
 
-        if (x > 0 && y > 0) {
-            // FACTOR de ESCALA
-            float factor = Math.min(displaysize.x / x, (displaysize.y - appbar.getHeight()) / y);
-            width = (int) (x * factor);
-            height = (int) (y * factor);
+                float factor = Math.min(displaysize.x / x, (displaysize.y - appbar.getHeight()) / y);
+                width = (int) (x * factor);
+                height = (int) (y * factor);
+
+                SurfaceView v = (SurfaceView) findViewById(R.id.videoView);
+                LayoutParams params = v.getLayoutParams();
+
+                // ESCALAR
+                params.width = width;
+                params.height = height;
+                v.setLayoutParams(params);
+
+                jaMediaPLayerService.setDisplay(fragmentVideoPlayer.surfaceHolder);
+                // FIXME: Mostrar el tab y cambiar el foco a él
+            }
+            else{
+                jaMediaPLayerService.setDisplay(null);
+                // FIXME: Ocultar Tab
+            }
         }
-
-        // VIDEOVIEW
-        SurfaceView v = (SurfaceView) findViewById(R.id.videoView);
-        LayoutParams params = v.getLayoutParams();
-
-        // ESCALAR
-        params.width = width;
-        params.height = height;
-        v.setLayoutParams(params);
+        else{
+            jaMediaPLayerService.setDisplay(null);
+        }
     }
 
     private void connect_buttons_actions(){

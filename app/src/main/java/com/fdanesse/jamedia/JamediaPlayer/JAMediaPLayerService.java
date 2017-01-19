@@ -31,6 +31,7 @@ public class JAMediaPLayerService extends Service implements MediaPlayer.OnCompl
 
     private static Point videosize;
     private final IBinder iBinder = new LocalBinder();
+    private static boolean hasvideo = false;
 
     public static final String END_TRACK = "END_TRACK";
     public static final String PLAY = "PLAY";
@@ -155,6 +156,10 @@ public class JAMediaPLayerService extends Service implements MediaPlayer.OnCompl
         return videosize;
     }
 
+    public boolean get_hasvideo(){
+        return hasvideo;
+    }
+
     public Point getDuration_Position(){
         Point point = new Point();
         point.x = 0;
@@ -216,6 +221,7 @@ public class JAMediaPLayerService extends Service implements MediaPlayer.OnCompl
                 if (inf.getTrackType() == MediaPlayer.TrackInfo.MEDIA_TRACK_TYPE_VIDEO){
                     videosize.x = mediaPlayer.getVideoWidth();
                     videosize.y = mediaPlayer.getVideoHeight();
+                    hasvideo = true;
                 }
             }
 
@@ -230,6 +236,7 @@ public class JAMediaPLayerService extends Service implements MediaPlayer.OnCompl
             mediaPlayer.reset();
             Intent broadcastIntent = new Intent(STOP);
             sendBroadcast(broadcastIntent);
+            hasvideo = false;
         }
     }
 
