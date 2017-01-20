@@ -9,6 +9,9 @@ import android.content.ServiceConnection;
 import android.content.res.Configuration;
 import android.graphics.Point;
 import android.media.AudioManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.net.wifi.WifiManager;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.design.widget.AppBarLayout;
@@ -65,6 +68,8 @@ public class PlayerActivity extends FragmentActivity{
     //http://www.androidhive.info/2012/03/android-building-audio-player-tutorial/
     private Handler mHandler = new Handler();
 
+    private WifiManager.WifiLock wifiLock;
+
     // SEÑALES
     public static final String NEW_TRACK = "NEW_TRACK";
 
@@ -107,12 +112,23 @@ public class PlayerActivity extends FragmentActivity{
         Bundle extras = getIntent().getExtras();
         fragmentPlayerList.setArguments(extras);
 
+        //Si se carga la radio, se necesita la red activa siempre
+        if (extras.getBoolean("network", false)){
+            network_changed();
+            IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+            registerReceiver(networkStateReceiver, filter);
+            //FIXME: Arreglar para 3g
+            wifiLock = ((WifiManager) getSystemService(Context.WIFI_SERVICE))
+                    .createWifiLock(WifiManager.WIFI_MODE_FULL, "mylock");
+            wifiLock.acquire();
+        }
+
         Intent intent = new Intent(getApplicationContext(), JAMediaPLayerService.class);
         getApplicationContext().startService(intent);
         bindService(intent, mConnection, getApplicationContext().BIND_AUTO_CREATE);
 
         try {
-            // Registro de señales del server
+            // Registro de señales de JAMediaPlayerService
             IntentFilter filter = new IntentFilter(JAMediaPLayerService.END_TRACK);
             registerReceiver(end_track, filter);
             filter = new IntentFilter(JAMediaPLayerService.PLAY);
@@ -127,13 +143,14 @@ public class PlayerActivity extends FragmentActivity{
             filter = new IntentFilter(JAMediaPLayerService.ERROR);
             registerReceiver(error_player, filter);
             */
-
-            filter = new IntentFilter(FragmentVideoPlayer.TOUCH);
-            registerReceiver(touch_in_fragment_video, filter);
-            filter = new IntentFilter(FragmentVideoPlayer.FULLSCREEN);
-            registerReceiver(setfullscreen, filter);
         }
         catch(Exception e){}
+
+        //Señales de FragmentVideoPlayer
+        IntentFilter filter = new IntentFilter(FragmentVideoPlayer.TOUCH);
+        registerReceiver(touch_in_fragment_video, filter);
+        filter = new IntentFilter(FragmentVideoPlayer.FULLSCREEN);
+        registerReceiver(setfullscreen, filter);
 
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -157,6 +174,48 @@ public class PlayerActivity extends FragmentActivity{
         viewPager.setCurrentItem(0);
         viewPager.setEnabled(false);
     }
+
+    // NETWORK
+    private BroadcastReceiver networkStateReceiver = new BroadcastReceiver() {
+        /*
+        http://www.mysamplecode.com/2013/04/android-automatically-detect-internet-connection.html
+        http://stackoverflow.com/questions/38271365/connection-changed-broadcast-doesnt-work-when-mobile-data-is-enabled-in-marshma
+         */
+        @Override
+        public void onReceive(final Context context, final Intent intent) {
+            isNetworkAvailable(context);
+        }
+        private boolean isNetworkAvailable(Context context) {
+            network_changed();
+            return true;
+        }
+    };
+
+    private boolean network_check(){
+        /**
+         * https://developer.android.com/training/monitoring-device-state/connectivity-monitoring.html?hl=es
+         */
+        ConnectivityManager cm = (ConnectivityManager)
+                getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        if (activeNetwork != null){
+            //FIXME: Arreglar para 3g
+            return (activeNetwork.getType() == ConnectivityManager.TYPE_WIFI && activeNetwork.isConnectedOrConnecting());
+        }
+        return false;
+    }
+
+    private void network_changed(){
+        boolean i = network_check();
+        //radio.setEnabled(i);
+        if (i == false){
+            Snackbar.make(viewPager, "No tienes conexión a internet", Snackbar.LENGTH_INDEFINITE).show();
+        }
+        else{
+            //Snackbar.make(viewPager, "Conectando a internet...", Snackbar.LENGTH_LONG).show();
+        }
+    }
+    //NETWORK
 
     public void updateProgressBar() {
         mHandler.postDelayed(mUpdateTimeTask, 1000);
@@ -201,6 +260,11 @@ public class PlayerActivity extends FragmentActivity{
         */
         unregisterReceiver(touch_in_fragment_video);
         unregisterReceiver(setfullscreen);
+
+        try {
+            unregisterReceiver(networkStateReceiver);
+            wifiLock.release();}
+        catch (Exception e){}
 
         mHandler.removeCallbacks(mUpdateTimeTask);
     }

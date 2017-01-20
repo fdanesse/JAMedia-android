@@ -96,6 +96,7 @@ public class MainActivity extends AppCompatActivity {
                     ArrayList<ListItem> radios = FileManager.get_radios();
                     Intent intent = new Intent(MainActivity.this, PlayerActivity.class);
                     intent.putExtra("tracks", radios);
+                    intent.putExtra("network", true);
                     startActivity(intent);
                     finish();
                 }
