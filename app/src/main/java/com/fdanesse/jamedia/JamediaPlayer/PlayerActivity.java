@@ -274,11 +274,11 @@ public class PlayerActivity extends FragmentActivity{
     private BroadcastReceiver playing_track = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            resize(); //FIXME: no funciona cuando cambia solo de video a audio si se esta viendo el video
             play.setImageResource(img_pausa);
             Utils.setActiveView(play, "default");
             play.setEnabled(true);
             check_buttons();
+            resize();
             updateProgressBar();
         }
     };
@@ -330,8 +330,18 @@ public class PlayerActivity extends FragmentActivity{
         if (hasWindowFocus()){
             if (jaMediaPLayerService.get_hasvideo()){
 
-                if (fullscreen){appbar.setVisibility(View.GONE);}
-                else{appbar.setVisibility(View.VISIBLE);}
+                if (fullscreen){
+                    toolbar.setVisibility(View.GONE);
+                    seekBar.setVisibility(View.GONE);
+                    appbar.setVisibility(View.GONE);
+                    getWindow().addFlags(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+                }
+                else{
+                    getWindow().clearFlags(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+                    toolbar.setVisibility(View.VISIBLE);
+                    seekBar.setVisibility(View.VISIBLE);
+                    appbar.setVisibility(View.VISIBLE);
+                }
 
                 int width = LayoutParams.MATCH_PARENT;
                 int height = LayoutParams.MATCH_PARENT;
@@ -362,6 +372,9 @@ public class PlayerActivity extends FragmentActivity{
                 jaMediaPLayerService.setDisplay(null);
                 viewPager.setCurrentItem(0);
                 viewPager.setEnabled(false);
+                getWindow().clearFlags(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+                toolbar.setVisibility(View.VISIBLE);
+                seekBar.setVisibility(View.VISIBLE);
                 appbar.setVisibility(View.VISIBLE);
             }
         }

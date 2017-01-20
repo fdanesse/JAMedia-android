@@ -11,6 +11,7 @@ import android.media.MediaPlayer;
 import android.os.Binder;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.SurfaceHolder;
 
@@ -206,11 +207,13 @@ public class JAMediaPLayerService extends Service implements MediaPlayer.OnCompl
 
         videosize = new Point();
         videosize.x = 0; videosize.y = 0;
+        hasvideo = false;
         mediaPlayer.prepareAsync();
     }
 
     private void playMedia() {
         if (!mediaPlayer.isPlaying()) {
+            hasvideo = false;
             mediaPlayer.seekTo(0);
             mediaPlayer.start();
 
@@ -236,7 +239,6 @@ public class JAMediaPLayerService extends Service implements MediaPlayer.OnCompl
             mediaPlayer.reset();
             Intent broadcastIntent = new Intent(STOP);
             sendBroadcast(broadcastIntent);
-            hasvideo = false;
         }
     }
 
