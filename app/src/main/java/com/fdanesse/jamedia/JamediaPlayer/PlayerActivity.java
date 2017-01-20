@@ -23,6 +23,8 @@ import android.view.Display;
 import android.view.KeyEvent;
 import android.view.SurfaceView;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.SeekBar;
@@ -126,6 +128,9 @@ public class PlayerActivity extends FragmentActivity{
             filter = new IntentFilter(JAMediaPLayerService.ERROR);
             registerReceiver(error_player, filter);
             */
+
+            filter = new IntentFilter(FragmentVideoPlayer.TOUCH);
+            registerReceiver(touch_in_fragment_video, filter);
         }
         catch(Exception e){}
 
@@ -193,6 +198,8 @@ public class PlayerActivity extends FragmentActivity{
         unregisterReceiver(buffer_update);
         unregisterReceiver(error_player);
         */
+        unregisterReceiver(touch_in_fragment_video);
+
         mHandler.removeCallbacks(mUpdateTimeTask);
     }
 
@@ -401,6 +408,14 @@ public class PlayerActivity extends FragmentActivity{
             anterior.setEnabled(false);
         }
     }
+
+    // Tocar zona de reproduccion de video
+    private BroadcastReceiver touch_in_fragment_video = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            jaMediaPLayerService.pause_play();
+        }
+    };
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
