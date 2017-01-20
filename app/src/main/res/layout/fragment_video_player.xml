@@ -12,8 +12,19 @@
         android:id="@+id/videoView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_margin="0dp"
+        android:padding="0dp"
         android:layout_gravity="center"
         />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fullscreen"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="1dp"
+        android:alpha="0.2"
+        android:src="@drawable/fullscreen_128"/>
 
 </FrameLayout>
 

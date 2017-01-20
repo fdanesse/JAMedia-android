@@ -2,6 +2,7 @@ package com.fdanesse.jamedia.JamediaPlayer;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -19,6 +20,7 @@ public class FragmentVideoPlayer extends Fragment{
     public SurfaceHolder surfaceHolder;
 
     public static final String TOUCH = "TOUCH";
+    public static final String FULLSCREEN = "FULLSCREEN";
 
     public FragmentVideoPlayer() {}
 
@@ -34,6 +36,15 @@ public class FragmentVideoPlayer extends Fragment{
                 Intent broadcastIntent = new Intent(TOUCH);
                 getContext().sendBroadcast(broadcastIntent);
                 return false;
+            }
+        });
+
+        FloatingActionButton fullscreen = (FloatingActionButton) layout.findViewById(R.id.fullscreen);
+        fullscreen.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent broadcastIntent = new Intent(FULLSCREEN);
+                getContext().sendBroadcast(broadcastIntent);
             }
         });
 

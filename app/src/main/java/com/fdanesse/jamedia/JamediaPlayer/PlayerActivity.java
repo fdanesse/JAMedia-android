@@ -23,8 +23,6 @@ import android.view.Display;
 import android.view.KeyEvent;
 import android.view.SurfaceView;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.SeekBar;
@@ -62,6 +60,7 @@ public class PlayerActivity extends FragmentActivity{
     private boolean serviceBound = false;
 
     private Point displaysize = new Point();
+    private boolean fullscreen = false;
 
     //http://www.androidhive.info/2012/03/android-building-audio-player-tutorial/
     private Handler mHandler = new Handler();
@@ -131,6 +130,8 @@ public class PlayerActivity extends FragmentActivity{
 
             filter = new IntentFilter(FragmentVideoPlayer.TOUCH);
             registerReceiver(touch_in_fragment_video, filter);
+            filter = new IntentFilter(FragmentVideoPlayer.FULLSCREEN);
+            registerReceiver(setfullscreen, filter);
         }
         catch(Exception e){}
 
@@ -199,6 +200,7 @@ public class PlayerActivity extends FragmentActivity{
         unregisterReceiver(error_player);
         */
         unregisterReceiver(touch_in_fragment_video);
+        unregisterReceiver(setfullscreen);
 
         mHandler.removeCallbacks(mUpdateTimeTask);
     }
@@ -272,7 +274,7 @@ public class PlayerActivity extends FragmentActivity{
     private BroadcastReceiver playing_track = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            resize();
+            resize(); //FIXME: no funciona cuando cambia solo de video a audio si se esta viendo el video
             play.setImageResource(img_pausa);
             Utils.setActiveView(play, "default");
             play.setEnabled(true);
@@ -327,6 +329,10 @@ public class PlayerActivity extends FragmentActivity{
     private void resize(){
         if (hasWindowFocus()){
             if (jaMediaPLayerService.get_hasvideo()){
+
+                if (fullscreen){appbar.setVisibility(View.GONE);}
+                else{appbar.setVisibility(View.VISIBLE);}
+
                 int width = LayoutParams.MATCH_PARENT;
                 int height = LayoutParams.MATCH_PARENT;
 
@@ -334,15 +340,16 @@ public class PlayerActivity extends FragmentActivity{
                 float x = (float) l.x;
                 float y = (float) l.y;
 
-                float factor = Math.min(displaysize.x / x,
-                        (displaysize.y - appbar.getHeight()) / y);
-                width = (int) (x * factor);
-                height = (int) (y * factor);
-
                 SurfaceView v = (SurfaceView) findViewById(R.id.videoView);
                 LayoutParams params = v.getLayoutParams();
 
-                // ESCALAR
+                if (!fullscreen){
+                    float factor = Math.min(displaysize.x / x,
+                            (displaysize.y - appbar.getHeight()) / y);
+                    width = (int) (x * factor);
+                    height = (int) (y * factor);
+                }
+
                 params.width = width;
                 params.height = height;
                 v.setLayoutParams(params);
@@ -355,6 +362,7 @@ public class PlayerActivity extends FragmentActivity{
                 jaMediaPLayerService.setDisplay(null);
                 viewPager.setCurrentItem(0);
                 viewPager.setEnabled(false);
+                appbar.setVisibility(View.VISIBLE);
             }
         }
         else{
@@ -414,6 +422,20 @@ public class PlayerActivity extends FragmentActivity{
         @Override
         public void onReceive(Context context, Intent intent) {
             jaMediaPLayerService.pause_play();
+        }
+    };
+
+    private BroadcastReceiver setfullscreen = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (fullscreen){
+                fullscreen = false;
+                resize();
+            }
+            else{
+                fullscreen = true;
+                resize();
+            }
         }
     };
 
