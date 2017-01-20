@@ -32,7 +32,6 @@ public class MainActivity extends AppCompatActivity {
     private Button television;
     private Button archivos;
 
-    private NetworkChangeReceiver network_receiver;
     private WifiManager.WifiLock wifiLock;
 
     @Override
@@ -48,19 +47,33 @@ public class MainActivity extends AppCompatActivity {
 
         set_touch_listeners();
         Utils.setActiveView(archivos, "default");
+
         network_changed();
-
         IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
-        network_receiver = new NetworkChangeReceiver();
-        registerReceiver(network_receiver, filter);
-
-        AudioManager audioManager = (AudioManager) this.getSystemService(this.AUDIO_SERVICE);
-        this.setVolumeControlStream(audioManager.STREAM_MUSIC);
-
+        registerReceiver(networkStateReceiver, filter);
+        //FIXME: Arreglar para 3g
         wifiLock = ((WifiManager) getSystemService(Context.WIFI_SERVICE))
                 .createWifiLock(WifiManager.WIFI_MODE_FULL, "mylock");
         wifiLock.acquire();
+
+        AudioManager audioManager = (AudioManager) this.getSystemService(this.AUDIO_SERVICE);
+        this.setVolumeControlStream(audioManager.STREAM_MUSIC);
     }
+
+    private BroadcastReceiver networkStateReceiver = new BroadcastReceiver() {
+        /*
+        http://www.mysamplecode.com/2013/04/android-automatically-detect-internet-connection.html
+        http://stackoverflow.com/questions/38271365/connection-changed-broadcast-doesnt-work-when-mobile-data-is-enabled-in-marshma
+         */
+        @Override
+        public void onReceive(final Context context, final Intent intent) {
+            isNetworkAvailable(context);
+        }
+        private boolean isNetworkAvailable(Context context) {
+            network_changed();
+            return true;
+        }
+    };
 
     private void set_touch_listeners(){
 
@@ -120,17 +133,19 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        unregisterReceiver(network_receiver);
-        wifiLock.release(); //FIXME: Revisar esto
+        unregisterReceiver(networkStateReceiver);
+        wifiLock.release();
     }
 
     private boolean network_check(){
         /**
          * https://developer.android.com/training/monitoring-device-state/connectivity-monitoring.html?hl=es
          */
-        ConnectivityManager cm = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        ConnectivityManager cm = (ConnectivityManager)
+                getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
         if (activeNetwork != null){
+            //FIXME: Arreglar para 3g
             return (activeNetwork.getType() == ConnectivityManager.TYPE_WIFI && activeNetwork.isConnectedOrConnecting());
         }
         return false;
@@ -149,24 +164,8 @@ public class MainActivity extends AppCompatActivity {
         else{
             Utils.setActiveView(radio, "default");
             //Utils.setActiveView2(television);
-            Snackbar.make(radio, "Conectando a internet...", Snackbar.LENGTH_LONG).show();
+            //Snackbar.make(radio, "Conectando a internet...", Snackbar.LENGTH_LONG).show();
         }
     }
 
-    public class NetworkChangeReceiver extends BroadcastReceiver {
-        /**
-         * http://www.mysamplecode.com/2013/04/android-automatically-detect-internet-connection.html
-         */
-
-        @Override
-        public void onReceive(final Context context, final Intent intent) {
-            isNetworkAvailable(context);
-        }
-
-        private boolean isNetworkAvailable(Context context) {
-            network_changed();
-            return true;
-        }
-
-    } //NetworkChangeReceiver
-}     //MainActivity
+}
