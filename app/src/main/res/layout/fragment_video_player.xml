@@ -5,7 +5,8 @@
     android:layout_height="match_parent"
     tools:context="com.fdanesse.jamedia.JamediaPlayer.FragmentVideoPlayer"
     android:background="@drawable/reciclado_arrugado_azul"
-    android:scaleType="centerCrop">
+    android:scaleType="centerCrop"
+    >
 
     <SurfaceView
         android:id="@+id/videoView"

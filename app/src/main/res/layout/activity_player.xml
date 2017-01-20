@@ -33,17 +33,27 @@
             android:id="@+id/lenguetas"
             android:layout_width="match_parent"
             android:layout_height="10dp"
+            android:visibility="gone"
             >
 
         </android.support.design.widget.TabLayout>
 
     </android.support.design.widget.AppBarLayout>
 
+    <com.fdanesse.jamedia.JamediaPlayer.DeactivatableViewPager
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+    </com.fdanesse.jamedia.JamediaPlayer.DeactivatableViewPager>
+
+    <!--
     <android.support.v4.view.ViewPager
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
     </android.support.v4.view.ViewPager>
+    -->
 
 </android.support.design.widget.CoordinatorLayout>

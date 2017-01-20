@@ -148,7 +148,8 @@ public class PlayerActivity extends FragmentActivity{
         Display display = getWindowManager().getDefaultDisplay();
         display.getRealSize(displaysize);
 
-        tabLayout.setVisibility(View.GONE);
+        viewPager.setCurrentItem(0);
+        viewPager.setEnabled(false);
     }
 
     public void updateProgressBar() {
@@ -326,7 +327,8 @@ public class PlayerActivity extends FragmentActivity{
                 float x = (float) l.x;
                 float y = (float) l.y;
 
-                float factor = Math.min(displaysize.x / x, (displaysize.y - appbar.getHeight()) / y);
+                float factor = Math.min(displaysize.x / x,
+                        (displaysize.y - appbar.getHeight()) / y);
                 width = (int) (x * factor);
                 height = (int) (y * factor);
 
@@ -338,16 +340,14 @@ public class PlayerActivity extends FragmentActivity{
                 params.height = height;
                 v.setLayoutParams(params);
 
-                tabLayout.setVisibility(View.VISIBLE);
-                //FIXME: fragment add o visible
                 jaMediaPLayerService.setDisplay(fragmentVideoPlayer.surfaceHolder);
                 viewPager.setCurrentItem(1);
+                viewPager.setEnabled(true);
             }
             else{
                 jaMediaPLayerService.setDisplay(null);
-                //FIXME: fragment remove o invisible
-                tabLayout.setVisibility(View.GONE);
                 viewPager.setCurrentItem(0);
+                viewPager.setEnabled(false);
             }
         }
         else{
