@@ -69,6 +69,7 @@ public class PlayerActivity extends FragmentActivity{
     private Handler mHandler = new Handler();
 
     private WifiManager.WifiLock wifiLock;
+    private boolean network = false;
 
     // SEÑALES
     public static final String NEW_TRACK = "NEW_TRACK";
@@ -113,15 +114,17 @@ public class PlayerActivity extends FragmentActivity{
         fragmentPlayerList.setArguments(extras);
 
         //Si se carga la radio, se necesita la red activa siempre
-        if (extras.getBoolean("network", false)){
+        network = extras.getBoolean("network", false);
+        if (network){
+            seekBar.setVisibility(View.GONE);
             network_changed();
             IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
             registerReceiver(networkStateReceiver, filter);
             //FIXME: Arreglar para 3g
             wifiLock = ((WifiManager) getSystemService(Context.WIFI_SERVICE))
                     .createWifiLock(WifiManager.WIFI_MODE_FULL, "mylock");
-            wifiLock.acquire();
-        }
+            wifiLock.acquire();}
+        else{seekBar.setEnabled(false);}
 
         Intent intent = new Intent(getApplicationContext(), JAMediaPLayerService.class);
         getApplicationContext().startService(intent);
@@ -218,7 +221,7 @@ public class PlayerActivity extends FragmentActivity{
     //NETWORK
 
     public void updateProgressBar() {
-        mHandler.postDelayed(mUpdateTimeTask, 1000);
+        if (!network) {mHandler.postDelayed(mUpdateTimeTask, 1000);}
     }
 
     private Runnable mUpdateTimeTask = new Runnable() {
@@ -266,7 +269,8 @@ public class PlayerActivity extends FragmentActivity{
             wifiLock.release();}
         catch (Exception e){}
 
-        mHandler.removeCallbacks(mUpdateTimeTask);
+        try{mHandler.removeCallbacks(mUpdateTimeTask);}
+        catch (Exception e) {}
     }
 
     @Override
@@ -329,8 +333,12 @@ public class PlayerActivity extends FragmentActivity{
     private BroadcastReceiver end_track = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            mHandler.removeCallbacks(mUpdateTimeTask);
             fragmentPlayerList.getListAdapter().next();
+            if (!network){
+                try{mHandler.removeCallbacks(mUpdateTimeTask);}
+                catch (Exception e) {}
+                seekBar.setEnabled(false);
+            }
         }
     };
 
@@ -343,7 +351,10 @@ public class PlayerActivity extends FragmentActivity{
             play.setEnabled(true);
             check_buttons();
             resize();
-            updateProgressBar();
+            if (!network) {
+                updateProgressBar();
+                seekBar.setEnabled(true);
+            }
         }
     };
 
@@ -352,7 +363,11 @@ public class PlayerActivity extends FragmentActivity{
         @Override
         public void onReceive(Context context, Intent intent) {
             play.setImageResource(img_play);
-            //FIXME: Detener handler?
+            if (!network){
+                try{mHandler.removeCallbacks(mUpdateTimeTask);}
+                catch (Exception e) {}
+                seekBar.setEnabled(false);
+            }
         }
     };
 
@@ -361,7 +376,11 @@ public class PlayerActivity extends FragmentActivity{
         @Override
         public void onReceive(Context context, Intent intent) {
             play.setImageResource(img_play);
-            //FIXME: Detener handler?
+            if (!network) {
+                try {mHandler.removeCallbacks(mUpdateTimeTask);}
+                catch (Exception e) {}
+                seekBar.setEnabled(false);
+            }
         }
     };
 
@@ -403,7 +422,7 @@ public class PlayerActivity extends FragmentActivity{
                 else{
                     getWindow().clearFlags(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
                     toolbar.setVisibility(View.VISIBLE);
-                    seekBar.setVisibility(View.VISIBLE);
+                    if (!network){seekBar.setVisibility(View.VISIBLE);}
                     appbar.setVisibility(View.VISIBLE);
                 }
 
@@ -438,7 +457,7 @@ public class PlayerActivity extends FragmentActivity{
                 viewPager.setEnabled(false);
                 getWindow().clearFlags(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
                 toolbar.setVisibility(View.VISIBLE);
-                seekBar.setVisibility(View.VISIBLE);
+                if (!network){seekBar.setVisibility(View.VISIBLE);}
                 appbar.setVisibility(View.VISIBLE);
             }
         }
@@ -507,12 +526,10 @@ public class PlayerActivity extends FragmentActivity{
         public void onReceive(Context context, Intent intent) {
             if (fullscreen){
                 fullscreen = false;
-                resize();
-            }
+                resize();}
             else{
                 fullscreen = true;
-                resize();
-            }
+                resize();}
         }
     };
 

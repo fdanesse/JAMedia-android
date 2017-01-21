@@ -1,6 +1,4 @@
 <resources>
     <string name="app_name">JAMedia</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="version">Versión 3.0\nFlavio Danesse - Uruguay\nfdanesse@gmail.com</string>
 </resources>
