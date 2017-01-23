@@ -4,10 +4,13 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.database.Cursor;
 import android.media.AudioManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.net.wifi.WifiManager;
+import android.provider.MediaStore;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -21,6 +24,7 @@ import com.fdanesse.jamedia.Archivos.FileManager;
 import com.fdanesse.jamedia.JamediaPlayer.PlayerActivity;
 import com.fdanesse.jamedia.PlayerList.ListItem;
 
+import java.io.File;
 import java.util.ArrayList;
 
 
@@ -58,8 +62,45 @@ public class MainActivity extends AppCompatActivity {
 
         AudioManager audioManager = (AudioManager) this.getSystemService(this.AUDIO_SERVICE);
         this.setVolumeControlStream(audioManager.STREAM_MUSIC);
+
+        Intent intent = getIntent();
+        if (Intent.ACTION_VIEW.equals(intent.getAction())) {
+            if (intent != null) {
+                Uri uri = intent.getData();
+                String path = get_real_path_from_URI(uri);
+                File file = new File(path);
+                String name = file.getName();
+                if (name.length() > 20) {
+                    name = file.getName().substring(0, 20) + "...";
+                }
+
+                ListItem item = new ListItem(R.drawable.audio, name, path);
+                ArrayList<ListItem> listItems = new ArrayList<>();
+                listItems.add(item);
+
+                intent = new Intent(MainActivity.this, PlayerActivity.class);
+                intent.putExtra("tracks", listItems);
+                startActivity(intent);
+                finish();
+            }
+        }
     }
 
+    public String get_real_path_from_URI(Uri uri) {
+        Cursor cursor = null;
+        try {
+            Context context = getApplicationContext();
+            String[] proj = { MediaStore.Audio.Media.DATA };
+            cursor = context.getContentResolver().query(uri,  proj, null, null, null);
+            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            cursor.moveToFirst();
+            return cursor.getString(column_index);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+    }
     private BroadcastReceiver networkStateReceiver = new BroadcastReceiver() {
         /*
         http://www.mysamplecode.com/2013/04/android-automatically-detect-internet-connection.html
