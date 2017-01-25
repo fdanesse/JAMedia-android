@@ -46,7 +46,6 @@ public class FileManager {
                 if (f.canRead()) {
                     //FIXME: completar comprobación de tipo de archivos
                     String mime = "Undetermined";
-                    // URLConnection.guessContentTypeFromName(f.getPath());
 
                     try {
                         final URL url = new URL("file://" + f.getPath());
@@ -76,34 +75,35 @@ public class FileManager {
 
 
     public static ArrayList<ListItem> get_ListItems(ArrayList<String> tracks) {
-
         ArrayList<ListItem> lista = new ArrayList<ListItem>();
         for (String path: tracks){
             File file = new File(path);
-            String mime = "Undetermined";
-            //FIXME: completar comprobación de tipo de archivos
-
-            try {
-                final URL url = new URL("file://" + file.getPath());
-                final URLConnection connection = url.openConnection();
-                mime = connection.getContentType();
-            }
-            catch (MalformedURLException badUrlEx) {continue;}
-            catch (IOException ioEx) {continue;}
-
-            String filename = file.getName();
-            if (file.getName().length() > 15){
-                filename = file.getName().substring(0, 15) + "...";
-            }
-
-            if (mime.contains("audio")){
-                lista.add(new ListItem(R.drawable.audio, filename, file.getPath()));
-            }
-            else if(mime.contains("video")) {
-                lista.add(new ListItem(R.drawable.video, filename, file.getPath()));
-            }
+            ListItem item = getNewItem(file);
+            if (item.getUrl() != ""){lista.add(item);}
         }
         return lista;
+    }
+
+    public static ListItem getNewItem(File file){
+        ListItem item = new ListItem(R.drawable.audio, "", "");
+        String filename = file.getName();
+        String mime = "Undetermined"; //FIXME: completar comprobación de tipo de archivos
+
+        try {
+            final URL url = new URL("file://" + file.getPath());
+            final URLConnection connection = url.openConnection(); //FIXME: URLConnection.guessContentTypeFromName(f.getPath());
+            mime = connection.getContentType();
+        }
+        catch (MalformedURLException badUrlEx) {return item;}
+        catch (IOException ioEx) {return item;}
+
+        if (mime.contains("audio")){
+            item = new ListItem(R.drawable.audio, filename, file.getPath());
+        }
+        else if(mime.contains("video")) {
+            item = new ListItem(R.drawable.video, filename, file.getPath());
+        }
+        return item;
     }
 
     public static ArrayList<ListItem> get_radios(){
@@ -146,13 +146,4 @@ public class FileManager {
 
         return lista;
     }
-
-    /*
-    public static ArrayList<ListItem> get_tv() {
-        ArrayList<ListItem> lista = new ArrayList<ListItem>();
-        lista.add(new ListItem(R.drawable.jamedia, "Canal Rural 1 (Argentina)", "rtsp://streamrural.cmd.com.ar:554/liverural/crural/rural1"));
-        lista.add(new ListItem(R.drawable.jamedia, "TN (Argentina)", "rtsp://stream.tn.com.ar/live/tnhd1"));
-        return lista;
-    }
-    */
 }

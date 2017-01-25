@@ -7,6 +7,7 @@ import android.content.IntentFilter;
 import android.media.AudioManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -21,7 +22,10 @@ import com.fdanesse.jamedia.Archivos.FileManager;
 import com.fdanesse.jamedia.JamediaPlayer.PlayerActivity;
 import com.fdanesse.jamedia.PlayerList.ListItem;
 
+import java.io.File;
 import java.util.ArrayList;
+
+import static com.fdanesse.jamedia.Archivos.FileManager.getNewItem;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -58,6 +62,25 @@ public class MainActivity extends AppCompatActivity {
 
         AudioManager audioManager = (AudioManager) this.getSystemService(this.AUDIO_SERVICE);
         this.setVolumeControlStream(audioManager.STREAM_MUSIC);
+
+        // Cuando se carga un archivo desde fuera de la aplicación
+        Intent intent = getIntent();
+        if (Intent.ACTION_VIEW.equals(intent.getAction())) {
+            if (intent != null) {
+                Uri uri = intent.getData();
+                String path = uri.getPath();
+                File file = new File(path);
+                ArrayList<ListItem> lista = new ArrayList<>();
+                ListItem item = getNewItem(file);
+                if (item.getUrl() != ""){lista.add(item);}
+                if (lista.size() > 0) {
+                    intent = new Intent(MainActivity.this, PlayerActivity.class);
+                    intent.putExtra("tracks", lista);
+                    startActivity(intent);
+                    finish();
+                }
+            }
+        }
     }
 
     private BroadcastReceiver networkStateReceiver = new BroadcastReceiver() {
