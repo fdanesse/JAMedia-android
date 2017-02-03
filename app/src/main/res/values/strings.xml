@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">JAMedia</string>
     <string name="version">Versión 3.0\nFlavio Danesse - Uruguay\nfdanesse@gmail.com</string>
+
+    <!-- FIXME: AdMob
+    <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
+    -->
 </resources>

@@ -38,6 +38,12 @@ import com.fdanesse.jamedia.Utils;
 
 import java.util.ArrayList;
 
+/*
+FIXME: AdMob
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+*/
+
 
 public class PlayerActivity extends FragmentActivity{
 
@@ -70,6 +76,12 @@ public class PlayerActivity extends FragmentActivity{
 
     private WifiManager.WifiLock wifiLock;
     private boolean network = false;
+
+    //Publicidad:
+    /*
+    FIXME: AdMob
+    private AdView mAdView;
+    */
 
     // SEÑALES
     public static final String NEW_TRACK = "NEW_TRACK";
@@ -176,6 +188,13 @@ public class PlayerActivity extends FragmentActivity{
 
         viewPager.setCurrentItem(0);
         viewPager.setEnabled(false);
+
+        /*
+        FIXME: AdMob
+        mAdView = (AdView) findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
+        */
     }
 
     // NETWORK
@@ -417,6 +436,7 @@ public class PlayerActivity extends FragmentActivity{
                     toolbar.setVisibility(View.GONE);
                     seekBar.setVisibility(View.GONE);
                     appbar.setVisibility(View.GONE);
+                    /* FIXME: AdMob mAdView.setVisibility(View.GONE);*/
                     getWindow().addFlags(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
                 }
                 else{
@@ -424,6 +444,7 @@ public class PlayerActivity extends FragmentActivity{
                     toolbar.setVisibility(View.VISIBLE);
                     if (!network){seekBar.setVisibility(View.VISIBLE);}
                     appbar.setVisibility(View.VISIBLE);
+                    /* FIXME: AdMob mAdView.setVisibility(View.VISIBLE);*/
                 }
 
                 int width = LayoutParams.MATCH_PARENT;
@@ -459,6 +480,7 @@ public class PlayerActivity extends FragmentActivity{
                 toolbar.setVisibility(View.VISIBLE);
                 if (!network){seekBar.setVisibility(View.VISIBLE);}
                 appbar.setVisibility(View.VISIBLE);
+                /* FIXME: AdMob mAdView.setVisibility(View.VISIBLE);*/
             }
         }
         else{
