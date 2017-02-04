@@ -2,7 +2,6 @@ package com.fdanesse.jamedia.Youtube;
 
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -69,15 +68,11 @@ public class YoutubeActivity extends AppCompatActivity {
     }
 
 
-
-
-    public class MyTask extends AsyncTask<String, Integer, String> {
+    public class MyTask extends AsyncTask<String, Integer, SearchListResponse> {
 
         private static final String apiKey = "";
         private static final long NUMBER_OF_VIDEOS_RETURNED = 1;
         private YouTube youtube;
-
-        String TAG = getClass().getSimpleName();
 
         @Override
         protected void onPreExecute() {
@@ -85,9 +80,9 @@ public class YoutubeActivity extends AppCompatActivity {
         }
 
         @Override
-        protected String doInBackground(String... strings) {
+        protected SearchListResponse doInBackground(String... strings) {
             String queryTerm = strings[0];
-            String ret = "";
+            SearchListResponse searchResponse;
 
             youtube = new YouTube.Builder(new NetHttpTransport(), new JacksonFactory(), new HttpRequestInitializer() {
                 public void initialize(HttpRequest request) throws IOException {}
@@ -99,37 +94,18 @@ public class YoutubeActivity extends AppCompatActivity {
                 search.setQ(queryTerm);
                 search.setType("video");
 
-                search.setFields("items(id/kind,id/videoId,snippet/title,snippet/thumbnails/default/url)");
+                //search.setFields("items(id/videoId,snippet/title,snippet/description,snippet/thumbnails/default/url)");
+                search.setFields("items(id/videoId,snippet/title,snippet/thumbnails/default/url)");
                 search.setMaxResults(NUMBER_OF_VIDEOS_RETURNED);
 
-                SearchListResponse searchResponse = search.execute();
-                List<SearchResult> searchResultList = searchResponse.getItems();
-
-                if (searchResultList != null) {
-                    Iterator<SearchResult> iteratorSearchResults = searchResultList.iterator();
-
-                    while (iteratorSearchResults.hasNext()) {
-                        SearchResult singleVideo = iteratorSearchResults.next(); //GenericJson
-
-                        ResourceId rId = singleVideo.getId();
-                        if (rId.getKind().equals("youtube#video")) {
-                            Thumbnail thumbnail = singleVideo.getSnippet().getThumbnails().getDefault();
-
-                            ret += "Video id: " + rId.getVideoId();
-                            ret += "Title: " + singleVideo.getSnippet().getTitle();
-                            ret += "Thumbnail: " + thumbnail.getUrl();
-                        }
-
-                        //Log.i("*****", ret);
-                    }
-
-                }
+                searchResponse = search.execute();
             }
             catch (Exception e){
-                return e.toString();
+                Log.i("*****", e.toString());
+                return new SearchListResponse();
             }
 
-            return ret;
+            return searchResponse;
         }
 
         @Override
@@ -138,8 +114,27 @@ public class YoutubeActivity extends AppCompatActivity {
         }
 
         @Override
-        protected void onPostExecute(String s) {
-            Log.i(TAG + " onPostExecute", " " + s);
+        protected void onPostExecute(SearchListResponse s) {
+
+            List<SearchResult> searchResultList = s.getItems();
+            if (searchResultList != null) {
+                Iterator<SearchResult> iteratorSearchResults = searchResultList.iterator();
+
+                String ret = "";
+                while (iteratorSearchResults.hasNext()) {
+                    SearchResult singleVideo = iteratorSearchResults.next(); //GenericJson
+                    ResourceId rId = singleVideo.getId();
+                    Thumbnail thumbnail = singleVideo.getSnippet().getThumbnails().getDefault();
+                    ret += "Video id: " + rId.getVideoId();
+                    ret += "Title: " + singleVideo.getSnippet().getTitle();
+                    ret += "Description: " + singleVideo.getSnippet().getDescription();
+                    ret += "Thumbnail: " + thumbnail.getUrl();
+
+                    Log.i("*****", singleVideo.toString());
+                    result.setText(ret);
+                }
+            }
+
             super.onPostExecute(s);
         }
     }
