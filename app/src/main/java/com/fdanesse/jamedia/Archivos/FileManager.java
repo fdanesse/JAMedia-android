@@ -122,6 +122,7 @@ public class FileManager {
         lista.add(new ListItem(R.drawable.uruguay, "Del Hum 89.3 FM (Soriano)", "http://usa15.ciudaddigital.com.uy:8102/DelHumFM"));
         lista.add(new ListItem(R.drawable.uruguay, "Difusora Soriano 1210 AM (Soriano)", "http://usa15.ciudaddigital.com.uy:8094/DifusoraSoriano"));
 
+        lista.add(new ListItem(R.drawable.uruguay, "Emisora del Sol 99.5 FM (Montevideo)", "http://radio.dl.uy:9950/radio"));
         lista.add(new ListItem(R.drawable.uruguay, "Oceano FM 93.9 (Montevideo)", "http://radio4.oceanofm.com:8010/"));
         lista.add(new ListItem(R.drawable.uruguay, "Espectador 810 AM (Montevideo)", "http://streaming.espectador.com/envivo"));
         lista.add(new ListItem(R.drawable.uruguay, "Radio Centenario 1250 AM (Montevideo)", "http://rfm.radio.netgate.com.uy:8000/centenario"));

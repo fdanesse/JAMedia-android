@@ -51,7 +51,6 @@
             android:layout_alignTop="@+id/imagen"
             android:layout_toLeftOf="@+id/cancel"
             android:layout_toStartOf="@+id/cancel"
-            android:visibility="invisible"
             />
 
         <Button

@@ -21,6 +21,7 @@ import com.fdanesse.jamedia.Archivos.FileChooserActivity;
 import com.fdanesse.jamedia.Archivos.FileManager;
 import com.fdanesse.jamedia.JamediaPlayer.PlayerActivity;
 import com.fdanesse.jamedia.PlayerList.ListItem;
+import com.fdanesse.jamedia.Youtube.YoutubeActivity;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -111,6 +112,19 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        youtube.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                button_clicked(view, motionEvent);
+                if (motionEvent.getAction() == MotionEvent.ACTION_UP){
+                    Intent intent = new Intent(MainActivity.this, YoutubeActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+                return true;
+            }
+        });
+
         radio.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -181,11 +195,13 @@ public class MainActivity extends AppCompatActivity {
         //television.setEnabled(i);
 
         if (i == false){
+            Utils.setInactiveView(youtube, "default");
             Utils.setInactiveView(radio, "default");
             //Utils.setInactiveView2(television);
             Snackbar.make(radio, "No tienes conexión a internet", Snackbar.LENGTH_LONG).show();
         }
         else{
+            Utils.setActiveView(youtube, "default");
             Utils.setActiveView(radio, "default");
             //Utils.setActiveView2(television);
             //Snackbar.make(radio, "Conectando a internet...", Snackbar.LENGTH_LONG).show();

@@ -40,6 +40,8 @@ dependencies {
     */
 
     compile 'com.android.support:multidex:1.0.0'
+
+    compile 'com.google.apis:google-api-services-youtube:v3-rev181-1.22.0'
 }
 
 /* FIXME: AdMob apply plugin: 'com.google.gms.google-services'*/
