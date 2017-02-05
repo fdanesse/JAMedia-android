@@ -10,9 +10,16 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.fdanesse.jamedia.JamediaPlayer.PlayerActivity;
 import com.fdanesse.jamedia.MainActivity;
+import com.fdanesse.jamedia.PlayerList.ListItem;
 import com.fdanesse.jamedia.R;
+import com.google.android.youtube.player.YouTubeBaseActivity;
+import com.google.android.youtube.player.YouTubeInitializationResult;
+import com.google.android.youtube.player.YouTubePlayer;
+import com.google.android.youtube.player.YouTubePlayerView;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.javanet.NetHttpTransport;
@@ -24,14 +31,20 @@ import com.google.api.services.youtube.model.SearchResult;
 import com.google.api.services.youtube.model.Thumbnail;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class YoutubeActivity extends AppCompatActivity {
+
+public class YoutubeActivity extends YouTubeBaseActivity implements YouTubePlayer.OnInitializedListener {
+
+    private static final String apiKey = "";
 
     private EditText busquedas;
     private Button boton_buscar;
-    private TextView result;
+    //private TextView result;
+
+    private YouTubePlayerView youtube_view;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +53,10 @@ public class YoutubeActivity extends AppCompatActivity {
 
         busquedas = (EditText) findViewById(R.id.busquedas);
         boton_buscar = (Button) findViewById(R.id.boton_buscar);
-        result = (TextView) findViewById(R.id.result);
+        //result = (TextView) findViewById(R.id.result);
+
+        youtube_view = (YouTubePlayerView) findViewById(R.id.youtube_view);
+        youtube_view.initialize(apiKey, this);
 
         boton_buscar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,9 +84,42 @@ public class YoutubeActivity extends AppCompatActivity {
     }
 
 
+
+
+    @Override
+    public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer player, boolean wasRestored) {
+        if (!wasRestored) {
+            player.cueVideo("fhWaJi1Hsfo"); // Plays https://www.youtube.com/watch?v=fhWaJi1Hsfo
+        }
+    }
+
+    @Override
+    public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult errorReason) {
+        if (errorReason.isUserRecoverableError()) {
+            errorReason.getErrorDialog(this, 1).show();
+        } else {
+            String error = String.format("ERROR Inicialización", errorReason.toString());
+            Toast.makeText(this, error, Toast.LENGTH_LONG).show();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 1) {
+            // Retry initialization if user performed a recovery action
+            getYouTubePlayerProvider().initialize(apiKey, this);
+        }
+    }
+
+    protected YouTubePlayer.Provider getYouTubePlayerProvider() {
+        return youtube_view;
+    }
+
+    /*
+    Busquedas
+     */
     public class MyTask extends AsyncTask<String, Integer, SearchListResponse> {
 
-        private static final String apiKey = "";
         private static final long NUMBER_OF_VIDEOS_RETURNED = 1;
         private YouTube youtube;
 
@@ -116,24 +165,29 @@ public class YoutubeActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(SearchListResponse s) {
 
+            ArrayList<ListItem> lista = new ArrayList<ListItem>();
+
             List<SearchResult> searchResultList = s.getItems();
             if (searchResultList != null) {
                 Iterator<SearchResult> iteratorSearchResults = searchResultList.iterator();
 
-                String ret = "";
                 while (iteratorSearchResults.hasNext()) {
                     SearchResult singleVideo = iteratorSearchResults.next(); //GenericJson
                     ResourceId rId = singleVideo.getId();
                     Thumbnail thumbnail = singleVideo.getSnippet().getThumbnails().getDefault();
-                    ret += "Video id: " + rId.getVideoId();
-                    ret += "Title: " + singleVideo.getSnippet().getTitle();
-                    ret += "Description: " + singleVideo.getSnippet().getDescription();
-                    ret += "Thumbnail: " + thumbnail.getUrl();
 
-                    Log.i("*****", singleVideo.toString());
-                    result.setText(ret);
+                    //String url = "http://www.youtube.com/v/" + rId.getVideoId();
+                    String url = "http://youtu.be/" + rId;
+
+                    String title = singleVideo.getSnippet().getTitle();
+                    lista.add(new ListItem(R.drawable.video, title, url));
                 }
             }
+
+            Intent intent = new Intent(YoutubeActivity.this, PlayerActivity.class);
+            intent.putExtra("tracks", lista);
+            startActivity(intent);
+            finish();
 
             super.onPostExecute(s);
         }
