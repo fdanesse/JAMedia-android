@@ -2,14 +2,11 @@ package com.fdanesse.jamedia.Youtube;
 
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.fdanesse.jamedia.JamediaPlayer.PlayerActivity;
@@ -39,11 +36,9 @@ import java.util.List;
 public class YoutubeActivity extends YouTubeBaseActivity implements YouTubePlayer.OnInitializedListener {
 
     private static final String apiKey = "";
+    private static String video = "";
 
-    private EditText busquedas;
-    private Button boton_buscar;
-    //private TextView result;
-
+    private SearchView busquedas;
     private YouTubePlayerView youtube_view;
 
     @Override
@@ -51,17 +46,21 @@ public class YoutubeActivity extends YouTubeBaseActivity implements YouTubePlaye
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_youtube);
 
-        busquedas = (EditText) findViewById(R.id.busquedas);
-        boton_buscar = (Button) findViewById(R.id.boton_buscar);
-        //result = (TextView) findViewById(R.id.result);
-
+        busquedas = (SearchView) findViewById(R.id.busquedas);
         youtube_view = (YouTubePlayerView) findViewById(R.id.youtube_view);
-        youtube_view.initialize(apiKey, this);
+        //youtube_view.initialize(apiKey, this);
 
-        boton_buscar.setOnClickListener(new View.OnClickListener() {
+        busquedas.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
-            public void onClick(View view) {
-                new MyTask().execute(busquedas.getText().toString());
+            public boolean onQueryTextSubmit(String query) {
+                //Snackbar.make(busquedas, busquedas.getQuery(), Snackbar.LENGTH_INDEFINITE).show();
+                new MyTask().execute(busquedas.getQuery().toString());
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
             }
         });
     }
@@ -83,13 +82,19 @@ public class YoutubeActivity extends YouTubeBaseActivity implements YouTubePlaye
         return super.dispatchKeyEvent(event);
     }
 
+    private void load(String video_url){
+        video = video_url;
+        Snackbar.make(busquedas, video.toString(), Snackbar.LENGTH_INDEFINITE).show();
+        youtube_view.initialize(apiKey, this);
+    }
+
 
 
 
     @Override
     public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer player, boolean wasRestored) {
         if (!wasRestored) {
-            player.cueVideo("fhWaJi1Hsfo"); // Plays https://www.youtube.com/watch?v=fhWaJi1Hsfo
+            player.cueVideo(video);
         }
     }
 
@@ -176,18 +181,21 @@ public class YoutubeActivity extends YouTubeBaseActivity implements YouTubePlaye
                     ResourceId rId = singleVideo.getId();
                     Thumbnail thumbnail = singleVideo.getSnippet().getThumbnails().getDefault();
 
-                    //String url = "http://www.youtube.com/v/" + rId.getVideoId();
-                    String url = "http://youtu.be/" + rId;
+                    String url = rId.getVideoId();
 
                     String title = singleVideo.getSnippet().getTitle();
                     lista.add(new ListItem(R.drawable.video, title, url));
                 }
             }
 
+            /*
             Intent intent = new Intent(YoutubeActivity.this, PlayerActivity.class);
             intent.putExtra("tracks", lista);
             startActivity(intent);
             finish();
+            */
+
+            load(lista.get(0).getUrl());
 
             super.onPostExecute(s);
         }

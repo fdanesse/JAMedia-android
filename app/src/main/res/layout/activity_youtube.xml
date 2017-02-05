@@ -16,26 +16,20 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
         
-        <EditText
+        <android.support.v7.widget.SearchView
             android:id="@+id/busquedas"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="shakira"
+            android:clickable="true"
             />
-            
+
+        <!--
         <Button
             android:id="@+id/boton_buscar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Buscar"
             android:layout_gravity="center"/>
-
-        <!--
-        <TextView
-            android:id="@+id/result"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="Busquedas..."/>
         -->
 
         <com.google.android.youtube.player.YouTubePlayerView
