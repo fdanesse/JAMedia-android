@@ -1,14 +1,27 @@
 package com.fdanesse.jamedia.Youtube;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
+import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Display;
 import android.view.KeyEvent;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.fdanesse.jamedia.JamediaPlayer.Notebook;
 import com.fdanesse.jamedia.JamediaPlayer.PlayerActivity;
 import com.fdanesse.jamedia.MainActivity;
 import com.fdanesse.jamedia.PlayerList.ListItem;
@@ -33,10 +46,29 @@ import java.util.Iterator;
 import java.util.List;
 
 
-public class YoutubeActivity extends YouTubeBaseActivity implements YouTubePlayer.OnInitializedListener {
+public class YoutubeActivity extends AppCompatActivity{
+
+    private AppBarLayout appbar;
+    private Toolbar toolbar;
+    private ImageButton anterior;
+    private ImageButton siguiente;
+    private ImageButton play;
+    private ImageButton creditos;  // FIXME: terminar
+    private ImageButton cancel;
+
+    private int img_pausa = R.drawable.pausa;
+    private int img_play = R.drawable.play;
+
+    private TabLayout tabLayout;
+    private ViewPager viewPager;
+
+    //private FragmentVideoPlayer fragmentVideoPlayer;
+    private FragmentYoutubePlayerList fragmentPlayerList;
+
+
 
     private static final String apiKey = "";
-    private static String video = "";
+    //private static String video = "";
 
     private SearchView busquedas;
     private YouTubePlayerView youtube_view;
@@ -46,9 +78,42 @@ public class YoutubeActivity extends YouTubeBaseActivity implements YouTubePlaye
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_youtube);
 
+        appbar = (AppBarLayout) findViewById(R.id.appbar);
+        toolbar = (Toolbar) findViewById(R.id.player_toolbar);
+        tabLayout = (TabLayout) findViewById(R.id.lenguetas);
+        viewPager = (ViewPager) findViewById(R.id.viewPager);
+
+        creditos = (ImageButton) findViewById(R.id.creditos);
+        anterior = (ImageButton) findViewById(R.id.anterior);
+        play = (ImageButton) findViewById(R.id.play);
+        siguiente = (ImageButton) findViewById(R.id.siguiente);
+        cancel = (ImageButton) findViewById(R.id.cancel);
+
+        img_pausa = R.drawable.pausa;
+        img_play = R.drawable.play;
+
+        ArrayList<Fragment> fragments = new ArrayList<Fragment>();
+
+        //fragmentVideoPlayer = new FragmentVideoPlayer();
+        fragmentPlayerList = new FragmentYoutubePlayerList();
+        fragmentPlayerList.set_parent(this);
+        fragments.add(fragmentPlayerList);
+        //fragments.add(fragmentVideoPlayer);
+
+
+        viewPager.setAdapter(new Notebook(getSupportFragmentManager(), fragments));
+        tabLayout.setupWithViewPager(viewPager);
+
+        //connect_buttons_actions();
+
+        viewPager.setCurrentItem(0);
+        viewPager.setEnabled(false);
+
+
+
+
         busquedas = (SearchView) findViewById(R.id.busquedas);
-        youtube_view = (YouTubePlayerView) findViewById(R.id.youtube_view);
-        //youtube_view.initialize(apiKey, this);
+        //youtube_view = (YouTubePlayerView) findViewById(R.id.youtube_view);
 
         busquedas.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -82,15 +147,27 @@ public class YoutubeActivity extends YouTubeBaseActivity implements YouTubePlaye
         return super.dispatchKeyEvent(event);
     }
 
+
+    public void playtrack(int index){
+        ListItem item = fragmentPlayerList.getListAdapter().getLista().get(index);
+        /*
+        Intent broadcastIntent = new Intent(NEW_TRACK);
+        broadcastIntent.putExtra("media", item.getUrl());
+        sendBroadcast(broadcastIntent);
+        */
+        Snackbar.make(busquedas, item.getUrl(), Snackbar.LENGTH_INDEFINITE).show();
+        //youtube_view.initialize(apiKey, this);
+    }
+    /*
     private void load(String video_url){
         video = video_url;
         Snackbar.make(busquedas, video.toString(), Snackbar.LENGTH_INDEFINITE).show();
         youtube_view.initialize(apiKey, this);
     }
+    */
 
 
-
-
+    /*
     @Override
     public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer player, boolean wasRestored) {
         if (!wasRestored) {
@@ -119,13 +196,15 @@ public class YoutubeActivity extends YouTubeBaseActivity implements YouTubePlaye
     protected YouTubePlayer.Provider getYouTubePlayerProvider() {
         return youtube_view;
     }
+    */
+
 
     /*
     Busquedas
      */
     public class MyTask extends AsyncTask<String, Integer, SearchListResponse> {
 
-        private static final long NUMBER_OF_VIDEOS_RETURNED = 1;
+        private static final long NUMBER_OF_VIDEOS_RETURNED = 50;
         private YouTube youtube;
 
         @Override
@@ -188,14 +267,9 @@ public class YoutubeActivity extends YouTubeBaseActivity implements YouTubePlaye
                 }
             }
 
-            /*
-            Intent intent = new Intent(YoutubeActivity.this, PlayerActivity.class);
-            intent.putExtra("tracks", lista);
-            startActivity(intent);
-            finish();
-            */
+            //load(lista.get(0).getUrl());
 
-            load(lista.get(0).getUrl());
+            fragmentPlayerList.load_list(lista);
 
             super.onPostExecute(s);
         }

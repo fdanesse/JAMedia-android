@@ -1,16 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/activity_youtube"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.fdanesse.jamedia.Youtube.YoutubeActivity">
 
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#000000">
+
+        <include
+            android:id="@+id/player_toolbar"
+            layout="@layout/player_toolbar">
+        </include>
+
+        <android.support.v7.widget.SearchView
+            android:id="@+id/busquedas"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:clickable="true"
+            android:background="#ffffff"
+            />
+
+        <!-- FIXME: AdMob
+        <com.google.android.gms.ads.AdView
+            android:id="@+id/adView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            ads:adSize="BANNER"
+            ads:adUnitId="@string/banner_ad_unit_id">
+        </com.google.android.gms.ads.AdView>
+        -->
+
+        <android.support.design.widget.TabLayout
+            android:id="@+id/lenguetas"
+            android:layout_width="match_parent"
+            android:layout_height="10dp"
+            android:visibility="gone"
+            >
+        </android.support.design.widget.TabLayout>
+
+    </android.support.design.widget.AppBarLayout>
+
+    <com.fdanesse.jamedia.JamediaPlayer.DeactivatableViewPager
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+    </com.fdanesse.jamedia.JamediaPlayer.DeactivatableViewPager>
+
+    <!--
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -23,20 +68,12 @@
             android:clickable="true"
             />
 
-        <!--
-        <Button
-            android:id="@+id/boton_buscar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Buscar"
-            android:layout_gravity="center"/>
-        -->
-
         <com.google.android.youtube.player.YouTubePlayerView
             android:id="@+id/youtube_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
     </LinearLayout>
-    
+    -->
+
 </android.support.design.widget.CoordinatorLayout>
