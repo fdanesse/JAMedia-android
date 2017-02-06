@@ -19,14 +19,14 @@ import java.util.ArrayList;
 public class YoutubeItemListAdapter extends RecyclerView.Adapter<YoutubeItemListAdapter.ItemListViewHolder>{
 
     private ArrayList<ListItem> lista;
-    private FragmentYoutubePlayerList fragmentPlayerList;
+    private FragmentYoutubeList fragmentPlayerList;
     private ArrayList<ItemListViewHolder> holders = null;
 
     private int trackselected = -1;                         //Pista en reproducción
     public String trackpath = "";                           //Pista en reproducción
 
 
-    public YoutubeItemListAdapter(ArrayList<ListItem> lista, FragmentYoutubePlayerList fragmentPlayerList){
+    public YoutubeItemListAdapter(ArrayList<ListItem> lista, FragmentYoutubeList fragmentPlayerList){
         this.lista = lista;
         this.fragmentPlayerList = fragmentPlayerList;
         this.holders = new ArrayList<ItemListViewHolder>();

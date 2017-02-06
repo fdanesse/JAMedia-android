@@ -15,13 +15,13 @@ import com.fdanesse.jamedia.Utils;
 import java.util.ArrayList;
 
 
-public class FragmentYoutubePlayerList extends Fragment {
+public class FragmentYoutubeList extends Fragment {
 
     private YoutubeActivity playerActivity;
     private RecyclerView recyclerView;
     private YoutubeItemListAdapter listAdapter;
 
-    public FragmentYoutubePlayerList(){}
+    public FragmentYoutubeList(){}
 
     public void set_parent(YoutubeActivity playerActivity) {
         this.playerActivity = playerActivity;
@@ -30,13 +30,16 @@ public class FragmentYoutubePlayerList extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View layout = inflater.inflate(R.layout.fragment_player_list, container, false);
+        View layout = inflater.inflate(R.layout.fragment_youtube_list, container, false);
         recyclerView = (RecyclerView) layout.findViewById(R.id.reciclerview);
 
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
         recyclerView.setHasFixedSize(true);
+
+        listAdapter = new YoutubeItemListAdapter(new ArrayList<ListItem>(), this);
+        recyclerView.setAdapter(listAdapter);
 
         return layout;
     }

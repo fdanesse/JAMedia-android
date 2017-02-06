@@ -1,14 +1,10 @@
 package com.fdanesse.jamedia.Youtube;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.net.ConnectivityManager;
-import android.net.wifi.WifiManager;
+import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -16,20 +12,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Display;
 import android.view.KeyEvent;
 import android.widget.ImageButton;
-import android.widget.Toast;
 
-import com.fdanesse.jamedia.JamediaPlayer.Notebook;
-import com.fdanesse.jamedia.JamediaPlayer.PlayerActivity;
 import com.fdanesse.jamedia.MainActivity;
 import com.fdanesse.jamedia.PlayerList.ListItem;
 import com.fdanesse.jamedia.R;
-import com.google.android.youtube.player.YouTubeBaseActivity;
-import com.google.android.youtube.player.YouTubeInitializationResult;
-import com.google.android.youtube.player.YouTubePlayer;
-import com.google.android.youtube.player.YouTubePlayerView;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.javanet.NetHttpTransport;
@@ -46,7 +34,7 @@ import java.util.Iterator;
 import java.util.List;
 
 
-public class YoutubeActivity extends AppCompatActivity{
+public class YoutubeActivity extends AppCompatActivity {
 
     private AppBarLayout appbar;
     private Toolbar toolbar;
@@ -62,16 +50,13 @@ public class YoutubeActivity extends AppCompatActivity{
     private TabLayout tabLayout;
     private ViewPager viewPager;
 
-    //private FragmentVideoPlayer fragmentVideoPlayer;
-    private FragmentYoutubePlayerList fragmentPlayerList;
-
-
+    private FragmentYoutubePlayer fragmentYoutubePlayer;
+    private FragmentYoutubeList fragmentPlayerList;
 
     private static final String apiKey = "";
-    //private static String video = "";
 
     private SearchView busquedas;
-    private YouTubePlayerView youtube_view;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,32 +78,29 @@ public class YoutubeActivity extends AppCompatActivity{
         img_play = R.drawable.play;
 
         ArrayList<Fragment> fragments = new ArrayList<Fragment>();
-
-        //fragmentVideoPlayer = new FragmentVideoPlayer();
-        fragmentPlayerList = new FragmentYoutubePlayerList();
+        fragmentYoutubePlayer = new FragmentYoutubePlayer();
+        fragmentPlayerList = new FragmentYoutubeList();
         fragmentPlayerList.set_parent(this);
         fragments.add(fragmentPlayerList);
-        //fragments.add(fragmentVideoPlayer);
+        fragments.add(fragmentYoutubePlayer);
 
-
-        viewPager.setAdapter(new Notebook(getSupportFragmentManager(), fragments));
+        viewPager.setAdapter(new Notebook2(getSupportFragmentManager(), fragments));
         tabLayout.setupWithViewPager(viewPager);
+
+        Bundle extra = new Bundle();
+        extra.putString("apiKey", apiKey);
+        fragmentYoutubePlayer.setArguments(extra);
 
         //connect_buttons_actions();
 
         viewPager.setCurrentItem(0);
-        viewPager.setEnabled(false);
-
-
-
+        //viewPager.setEnabled(false);
 
         busquedas = (SearchView) findViewById(R.id.busquedas);
-        //youtube_view = (YouTubePlayerView) findViewById(R.id.youtube_view);
 
         busquedas.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                //Snackbar.make(busquedas, busquedas.getQuery(), Snackbar.LENGTH_INDEFINITE).show();
                 new MyTask().execute(busquedas.getQuery().toString());
                 return false;
             }
@@ -128,6 +110,11 @@ public class YoutubeActivity extends AppCompatActivity{
                 return false;
             }
         });
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
     }
 
     @Override
@@ -147,61 +134,13 @@ public class YoutubeActivity extends AppCompatActivity{
         return super.dispatchKeyEvent(event);
     }
 
-
     public void playtrack(int index){
         ListItem item = fragmentPlayerList.getListAdapter().getLista().get(index);
-        /*
-        Intent broadcastIntent = new Intent(NEW_TRACK);
-        broadcastIntent.putExtra("media", item.getUrl());
-        sendBroadcast(broadcastIntent);
-        */
-        Snackbar.make(busquedas, item.getUrl(), Snackbar.LENGTH_INDEFINITE).show();
-        //youtube_view.initialize(apiKey, this);
-    }
-    /*
-    private void load(String video_url){
-        video = video_url;
-        Snackbar.make(busquedas, video.toString(), Snackbar.LENGTH_INDEFINITE).show();
-        youtube_view.initialize(apiKey, this);
-    }
-    */
-
-
-    /*
-    @Override
-    public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer player, boolean wasRestored) {
-        if (!wasRestored) {
-            player.cueVideo(video);
-        }
+        fragmentYoutubePlayer.load(item.getUrl());
     }
 
-    @Override
-    public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult errorReason) {
-        if (errorReason.isUserRecoverableError()) {
-            errorReason.getErrorDialog(this, 1).show();
-        } else {
-            String error = String.format("ERROR Inicialización", errorReason.toString());
-            Toast.makeText(this, error, Toast.LENGTH_LONG).show();
-        }
-    }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == 1) {
-            // Retry initialization if user performed a recovery action
-            getYouTubePlayerProvider().initialize(apiKey, this);
-        }
-    }
-
-    protected YouTubePlayer.Provider getYouTubePlayerProvider() {
-        return youtube_view;
-    }
-    */
-
-
-    /*
-    Busquedas
-     */
+    // AsyncTask Search
     public class MyTask extends AsyncTask<String, Integer, SearchListResponse> {
 
         private static final long NUMBER_OF_VIDEOS_RETURNED = 50;
@@ -267,10 +206,7 @@ public class YoutubeActivity extends AppCompatActivity{
                 }
             }
 
-            //load(lista.get(0).getUrl());
-
             fragmentPlayerList.load_list(lista);
-
             super.onPostExecute(s);
         }
     }
