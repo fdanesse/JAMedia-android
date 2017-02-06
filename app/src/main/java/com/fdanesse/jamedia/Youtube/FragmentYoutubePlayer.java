@@ -1,5 +1,6 @@
 package com.fdanesse.jamedia.Youtube;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -21,6 +22,11 @@ public class FragmentYoutubePlayer extends Fragment {
     private YouTubePlayer youTubePlayer = null;
     private YouTubePlayerSupportFragment youTubePlayerFragment;
     private static String apiKey;
+
+    public static final String END_TRACK = "END_TRACK";
+    public static final String PLAY = "PLAY";
+    public static final String PAUSE = "PAUSE";
+    public static final String STOP = "STOP";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -48,12 +54,11 @@ public class FragmentYoutubePlayer extends Fragment {
             @Override
             public void onInitializationSuccess(Provider provider, YouTubePlayer player, boolean wasRestored) {
                 if (!wasRestored) {
-                    Log.i("*****", "PLAY: " + videoid);
                     youTubePlayer = player;
+                    ListenEvent();
                     //youTubePlayer.setFullscreen(true);
                     youTubePlayer.loadVideo(videoid);
                     youTubePlayer.play();
-                    Log.i("*****", "PLAY OK");
                 }
             }
 
@@ -68,5 +73,83 @@ public class FragmentYoutubePlayer extends Fragment {
                 }
             }
         });
+    }
+
+    private void ListenEvent(){
+        youTubePlayer.setPlaybackEventListener(new YouTubePlayer.PlaybackEventListener() {
+            @Override
+            public void onPlaying() {
+                Intent broadcastIntent = new Intent(PLAY);
+                getContext().sendBroadcast(broadcastIntent);
+            }
+
+            @Override
+            public void onPaused() {
+                Intent broadcastIntent = new Intent(PAUSE);
+                getContext().sendBroadcast(broadcastIntent);
+            }
+
+            @Override
+            public void onStopped() {
+                Intent broadcastIntent = new Intent(STOP);
+                getContext().sendBroadcast(broadcastIntent);
+            }
+
+            @Override
+            public void onBuffering(boolean b) {
+
+            }
+
+            @Override
+            public void onSeekTo(int i) {
+
+            }
+        });
+
+        youTubePlayer.setPlayerStateChangeListener(new YouTubePlayer.PlayerStateChangeListener() {
+            @Override
+            public void onLoading() {
+
+            }
+
+            @Override
+            public void onLoaded(String s) {
+
+            }
+
+            @Override
+            public void onAdStarted() {
+
+            }
+
+            @Override
+            public void onVideoStarted() {
+
+            }
+
+            @Override
+            public void onVideoEnded() {
+                Intent broadcastIntent = new Intent(END_TRACK);
+                getContext().sendBroadcast(broadcastIntent);
+            }
+
+            @Override
+            public void onError(YouTubePlayer.ErrorReason errorReason) {
+
+            }
+        });
+    }
+
+    public void pause_play() {
+        if (youTubePlayer.isPlaying()) {
+            youTubePlayer.pause();
+            Intent broadcastIntent = new Intent(PAUSE);
+            getContext().sendBroadcast(broadcastIntent);
+        }
+        else{
+            youTubePlayer.play();
+            Intent broadcastIntent = new Intent(PLAY);
+            getContext().sendBroadcast(broadcastIntent);
+        }
     }
 }

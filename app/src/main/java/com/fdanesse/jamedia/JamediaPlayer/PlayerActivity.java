@@ -229,7 +229,6 @@ public class PlayerActivity extends AppCompatActivity {
 
     private void network_changed(){
         boolean i = network_check();
-        //radio.setEnabled(i);
         if (i == false){
             Snackbar.make(viewPager, "No tienes conexión a internet", Snackbar.LENGTH_INDEFINITE).show();
         }

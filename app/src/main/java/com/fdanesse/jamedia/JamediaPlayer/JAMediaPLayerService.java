@@ -11,8 +11,6 @@ import android.media.MediaPlayer;
 import android.os.Binder;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.support.design.widget.Snackbar;
-import android.util.Log;
 import android.view.SurfaceHolder;
 
 import java.io.IOException;

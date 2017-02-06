@@ -1,10 +1,18 @@
 package com.fdanesse.jamedia.Youtube;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.Configuration;
+import android.media.AudioManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -13,11 +21,13 @@ import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.View;
 import android.widget.ImageButton;
 
 import com.fdanesse.jamedia.MainActivity;
 import com.fdanesse.jamedia.PlayerList.ListItem;
 import com.fdanesse.jamedia.R;
+import com.fdanesse.jamedia.Utils;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.javanet.NetHttpTransport;
@@ -56,7 +66,7 @@ public class YoutubeActivity extends AppCompatActivity {
     private static final String apiKey = "";
 
     private SearchView busquedas;
-
+    private WifiManager.WifiLock wifiLock;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +87,9 @@ public class YoutubeActivity extends AppCompatActivity {
         img_pausa = R.drawable.pausa;
         img_play = R.drawable.play;
 
+        AudioManager audioManager = (AudioManager) this.getSystemService(this.AUDIO_SERVICE);
+        this.setVolumeControlStream(audioManager.STREAM_MUSIC);
+
         ArrayList<Fragment> fragments = new ArrayList<Fragment>();
         fragmentYoutubePlayer = new FragmentYoutubePlayer();
         fragmentPlayerList = new FragmentYoutubeList();
@@ -91,23 +104,213 @@ public class YoutubeActivity extends AppCompatActivity {
         extra.putString("apiKey", apiKey);
         fragmentYoutubePlayer.setArguments(extra);
 
-        //connect_buttons_actions();
+        try {
+            IntentFilter filter = new IntentFilter(fragmentYoutubePlayer.END_TRACK);
+            registerReceiver(end_track, filter);
+            filter = new IntentFilter(fragmentYoutubePlayer.PLAY);
+            registerReceiver(playing_track, filter);
+            filter = new IntentFilter(fragmentYoutubePlayer.PAUSE);
+            registerReceiver(paused_track, filter);
+            filter = new IntentFilter(fragmentYoutubePlayer.STOP);
+            registerReceiver(stoped_track, filter);
+        }
+        catch (Exception e){}
+
+        connect_buttons_actions();
+
+        network_changed();
+        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(networkStateReceiver, filter);
+        //FIXME: Arreglar para 3g
+        wifiLock = ((WifiManager) getSystemService(Context.WIFI_SERVICE))
+                .createWifiLock(WifiManager.WIFI_MODE_FULL, "mylock");
+        wifiLock.acquire();
 
         viewPager.setCurrentItem(0);
-        //viewPager.setEnabled(false);
+        viewPager.setEnabled(false);
 
         busquedas = (SearchView) findViewById(R.id.busquedas);
 
         busquedas.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                new MyTask().execute(busquedas.getQuery().toString());
+                String text = busquedas.getQuery().toString();
+                busquedas.setQuery("", false);
+                new MyTask().execute(text);
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
                 return false;
+            }
+        });
+
+        /*
+        FIXME: AdMob
+        mAdView = (AdView) findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
+        */
+
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                if(position == 0){
+                    busquedas.setVisibility(View.VISIBLE);
+                }
+                else {
+                    busquedas.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+    }
+
+    // NETWORK
+    private BroadcastReceiver networkStateReceiver = new BroadcastReceiver() {
+        /*
+        http://www.mysamplecode.com/2013/04/android-automatically-detect-internet-connection.html
+        http://stackoverflow.com/questions/38271365/connection-changed-broadcast-doesnt-work-when-mobile-data-is-enabled-in-marshma
+         */
+        @Override
+        public void onReceive(final Context context, final Intent intent) {
+            isNetworkAvailable(context);
+        }
+        private boolean isNetworkAvailable(Context context) {
+            network_changed();
+            return true;
+        }
+    };
+
+    private boolean network_check(){
+        /**
+         * https://developer.android.com/training/monitoring-device-state/connectivity-monitoring.html?hl=es
+         */
+        ConnectivityManager cm = (ConnectivityManager)
+                getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        if (activeNetwork != null){
+            //FIXME: Arreglar para 3g
+            return (activeNetwork.getType() == ConnectivityManager.TYPE_WIFI && activeNetwork.isConnectedOrConnecting());
+        }
+        return false;
+    }
+
+    private void network_changed(){
+        boolean i = network_check();
+        if (i == false){
+            Snackbar.make(viewPager, "No tienes conexión a internet", Snackbar.LENGTH_INDEFINITE).show();
+        }
+        else{
+            //Snackbar.make(viewPager, "Conectando a internet...", Snackbar.LENGTH_LONG).show();
+        }
+    }
+    //NETWORK
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(end_track);
+        unregisterReceiver(stoped_track);
+        unregisterReceiver(playing_track);
+        unregisterReceiver(paused_track);
+        try {
+            unregisterReceiver(networkStateReceiver);
+            wifiLock.release();}
+        catch (Exception e){}
+    }
+
+    // Reproductor pide Cambio de pista
+    private BroadcastReceiver end_track = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            fragmentPlayerList.getListAdapter().next();
+        }
+    };
+
+    // Reproductor está play
+    private BroadcastReceiver playing_track = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            play.setImageResource(img_pausa);
+            Utils.setActiveView(play, "default");
+            play.setEnabled(true);
+            check_buttons();
+            //resize();
+            viewPager.setCurrentItem(1);
+            viewPager.setEnabled(true);
+        }
+    };
+
+    // Reproductor está stop
+    private BroadcastReceiver stoped_track = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            play.setImageResource(img_play);
+        }
+    };
+
+    // Reproductor está pausa
+    private BroadcastReceiver paused_track = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            play.setImageResource(img_play);
+        }
+    };
+
+    private void check_buttons() {
+        if (fragmentPlayerList.getListAdapter().getItemCount() > 1){
+            Utils.setActiveView(siguiente, "default");
+            siguiente.setEnabled(true);
+            Utils.setActiveView(anterior, "default");
+            anterior.setEnabled(true);
+        }
+        else{
+            Utils.setInactiveView(siguiente, "default");
+            siguiente.setEnabled(false);
+            Utils.setInactiveView(anterior, "default");
+            anterior.setEnabled(false);
+        }
+    }
+
+    private void connect_buttons_actions(){
+        siguiente.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                fragmentPlayerList.getListAdapter().next();
+            }
+        });
+
+        play.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                fragmentYoutubePlayer.pause_play();
+            }
+        });
+
+        anterior.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                fragmentPlayerList.getListAdapter().previous();
+            }
+        });
+
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(YoutubeActivity.this, MainActivity.class);
+                startActivity(intent);
+                finish();
             }
         });
     }
