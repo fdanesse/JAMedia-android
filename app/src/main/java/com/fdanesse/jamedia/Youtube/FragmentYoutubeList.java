@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.fdanesse.jamedia.PlayerList.ListItem;
 import com.fdanesse.jamedia.R;
 import com.fdanesse.jamedia.Utils;
 
@@ -38,13 +37,13 @@ public class FragmentYoutubeList extends Fragment {
         recyclerView.setLayoutManager(llm);
         recyclerView.setHasFixedSize(true);
 
-        listAdapter = new YoutubeItemListAdapter(new ArrayList<ListItem>(), this);
+        listAdapter = new YoutubeItemListAdapter(new ArrayList<YoutubeListItem>(), this);
         recyclerView.setAdapter(listAdapter);
 
         return layout;
     }
 
-    public void load_list(ArrayList<ListItem> lista){
+    public void load_list(ArrayList<YoutubeListItem> lista){
         listAdapter = new YoutubeItemListAdapter(lista, this);
         recyclerView.setAdapter(listAdapter);
     }

@@ -7,8 +7,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.fdanesse.jamedia.PlayerList.FragmentPlayerList;
-import com.fdanesse.jamedia.PlayerList.ListItem;
 import com.fdanesse.jamedia.R;
 
 import java.util.ArrayList;
@@ -18,7 +16,7 @@ import java.util.ArrayList;
  */
 public class YoutubeItemListAdapter extends RecyclerView.Adapter<YoutubeItemListAdapter.ItemListViewHolder>{
 
-    private ArrayList<ListItem> lista;
+    private ArrayList<YoutubeListItem> lista;
     private FragmentYoutubeList fragmentPlayerList;
     private ArrayList<ItemListViewHolder> holders = null;
 
@@ -26,7 +24,7 @@ public class YoutubeItemListAdapter extends RecyclerView.Adapter<YoutubeItemList
     public String trackpath = "";                           //Pista en reproducción
 
 
-    public YoutubeItemListAdapter(ArrayList<ListItem> lista, FragmentYoutubeList fragmentPlayerList){
+    public YoutubeItemListAdapter(ArrayList<YoutubeListItem> lista, FragmentYoutubeList fragmentPlayerList){
         this.lista = lista;
         this.fragmentPlayerList = fragmentPlayerList;
         this.holders = new ArrayList<ItemListViewHolder>();
@@ -36,7 +34,7 @@ public class YoutubeItemListAdapter extends RecyclerView.Adapter<YoutubeItemList
         return trackselected;
     }
 
-    public ArrayList<ListItem> getLista() {
+    public ArrayList<YoutubeListItem> getLista() {
         return lista;
     }
 
@@ -52,7 +50,7 @@ public class YoutubeItemListAdapter extends RecyclerView.Adapter<YoutubeItemList
         else{
             trackselected = x - 1;
         }
-        ListItem i = lista.get(trackselected);
+        YoutubeListItem i = lista.get(trackselected);
         trackpath = i.getUrl();
         fragmentPlayerList.playtrack(trackselected);
     }
@@ -65,7 +63,7 @@ public class YoutubeItemListAdapter extends RecyclerView.Adapter<YoutubeItemList
         else{
             trackselected = 0;
         }
-        ListItem i = lista.get(trackselected);
+        YoutubeListItem i = lista.get(trackselected);
         trackpath = i.getUrl();
         fragmentPlayerList.playtrack(trackselected);
     }
@@ -73,7 +71,7 @@ public class YoutubeItemListAdapter extends RecyclerView.Adapter<YoutubeItemList
     @Override
     public ItemListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(
-                R.layout.cardview_list_item, parent, false);
+                R.layout.cardview_youtube_list_item, parent, false);
         ItemListViewHolder view = new ItemListViewHolder(v);
         holders.add(view);
         return view;
@@ -81,7 +79,7 @@ public class YoutubeItemListAdapter extends RecyclerView.Adapter<YoutubeItemList
 
     @Override
     public void onBindViewHolder(ItemListViewHolder holder, int position) {
-        ListItem listItem = lista.get(position);
+        YoutubeListItem listItem = lista.get(position);
         holder.imagen_view.setImageResource(listItem.getImagen());
         holder.text_view_nombre.setText(listItem.getNombre());
         holder.text_view_url.setText(listItem.getUrl());

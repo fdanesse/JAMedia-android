@@ -65,11 +65,12 @@ public class FragmentYoutubePlayer extends Fragment {
             @Override
             public void onInitializationFailure(Provider provider, YouTubeInitializationResult errorReason) {
                 if (errorReason.isUserRecoverableError()) {
-                    //errorReason.getErrorDialog(this, 1).show();
                     Log.i("*****", "ERROR is User Recoverable Error");
+                    errorReason.getErrorDialog(getActivity(), 1).show();
                 } else {
                     String error = String.format("ERROR Inicialización", errorReason.toString());
                     Log.i("*****", "ERROR: " + error);
+                    errorReason.getErrorDialog(getActivity(), 0).show();
                 }
             }
         });

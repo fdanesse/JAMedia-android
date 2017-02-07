@@ -25,7 +25,6 @@ import android.view.View;
 import android.widget.ImageButton;
 
 import com.fdanesse.jamedia.MainActivity;
-import com.fdanesse.jamedia.PlayerList.ListItem;
 import com.fdanesse.jamedia.R;
 import com.fdanesse.jamedia.Utils;
 import com.google.api.client.http.HttpRequest;
@@ -338,7 +337,7 @@ public class YoutubeActivity extends AppCompatActivity {
     }
 
     public void playtrack(int index){
-        ListItem item = fragmentPlayerList.getListAdapter().getLista().get(index);
+        YoutubeListItem item = fragmentPlayerList.getListAdapter().getLista().get(index);
         fragmentYoutubePlayer.load(item.getUrl());
     }
 
@@ -391,7 +390,7 @@ public class YoutubeActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(SearchListResponse s) {
 
-            ArrayList<ListItem> lista = new ArrayList<ListItem>();
+            ArrayList<YoutubeListItem> lista = new ArrayList<YoutubeListItem>();
 
             List<SearchResult> searchResultList = s.getItems();
             if (searchResultList != null) {
@@ -405,7 +404,7 @@ public class YoutubeActivity extends AppCompatActivity {
                     String url = rId.getVideoId();
 
                     String title = singleVideo.getSnippet().getTitle();
-                    lista.add(new ListItem(R.drawable.video, title, url));
+                    lista.add(new YoutubeListItem(R.drawable.video, title, url));
                 }
             }
 
