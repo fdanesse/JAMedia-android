@@ -22,7 +22,7 @@ public class FragmentYoutubePlayer extends Fragment {
     private YouTubePlayer youTubePlayer = null;
     private YouTubePlayerSupportFragment youTubePlayerFragment;
     private static String apiKey;
-
+    
     public static final String END_TRACK = "END_TRACK";
     public static final String PLAY = "PLAY";
     public static final String PAUSE = "PAUSE";

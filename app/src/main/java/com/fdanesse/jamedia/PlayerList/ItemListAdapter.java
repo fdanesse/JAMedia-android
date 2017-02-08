@@ -30,10 +30,6 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemLi
         this.holders = new ArrayList<ItemListViewHolder>();
     }
 
-    public int getTrackselected() {
-        return trackselected;
-    }
-
     public ArrayList<ListItem> getLista() {
         return lista;
     }
@@ -83,7 +79,6 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemLi
         holder.imagen_view.setImageResource(listItem.getImagen());
         holder.text_view_nombre.setText(listItem.getNombre());
         holder.text_view_url.setText(listItem.getUrl());
-
         if (position == trackselected){
             holder.itemView.setAlpha(1.0f);
         }
@@ -96,7 +91,6 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemLi
     public int getItemCount() {return lista.size();}
 
 
-    //Clase interna
     public class ItemListViewHolder extends RecyclerView.ViewHolder {
 
         private ImageView imagen_view;

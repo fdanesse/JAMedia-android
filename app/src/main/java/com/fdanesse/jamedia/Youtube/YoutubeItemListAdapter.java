@@ -1,13 +1,17 @@
 package com.fdanesse.jamedia.Youtube;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.fdanesse.jamedia.R;
+
+import com.google.android.youtube.player.YouTubeInitializationResult;
+import com.google.android.youtube.player.YouTubeThumbnailLoader;
+import com.google.android.youtube.player.YouTubeThumbnailView;
 
 import java.util.ArrayList;
 
@@ -30,10 +34,6 @@ public class YoutubeItemListAdapter extends RecyclerView.Adapter<YoutubeItemList
         this.holders = new ArrayList<ItemListViewHolder>();
     }
 
-    public int getTrackselected() {
-        return trackselected;
-    }
-
     public ArrayList<YoutubeListItem> getLista() {
         return lista;
     }
@@ -51,7 +51,7 @@ public class YoutubeItemListAdapter extends RecyclerView.Adapter<YoutubeItemList
             trackselected = x - 1;
         }
         YoutubeListItem i = lista.get(trackselected);
-        trackpath = i.getUrl();
+        trackpath = i.getId();
         fragmentPlayerList.playtrack(trackselected);
     }
 
@@ -64,7 +64,7 @@ public class YoutubeItemListAdapter extends RecyclerView.Adapter<YoutubeItemList
             trackselected = 0;
         }
         YoutubeListItem i = lista.get(trackselected);
-        trackpath = i.getUrl();
+        trackpath = i.getId();
         fragmentPlayerList.playtrack(trackselected);
     }
 
@@ -79,10 +79,43 @@ public class YoutubeItemListAdapter extends RecyclerView.Adapter<YoutubeItemList
 
     @Override
     public void onBindViewHolder(ItemListViewHolder holder, int position) {
+
         YoutubeListItem listItem = lista.get(position);
-        holder.imagen_view.setImageResource(listItem.getImagen());
+
+        holder.imagen_view.setTag(listItem.getId());
         holder.text_view_nombre.setText(listItem.getNombre());
+        holder.text_view_id.setText(listItem.getId());
         holder.text_view_url.setText(listItem.getUrl());
+
+        final String id = listItem.getId();
+        final YoutubeListItem li = listItem;
+
+        /* FIXME: No funciona con un recyclerview
+        holder.imagen_view.initialize(Keys.apikey, new YouTubeThumbnailView.OnInitializedListener() {
+            @Override
+            public void onInitializationSuccess(YouTubeThumbnailView youTubeThumbnailView,
+                                                YouTubeThumbnailLoader youTubeThumbnailLoader) {
+                    final YouTubeThumbnailLoader ytl = youTubeThumbnailLoader;
+                    ytl.setVideo(id);
+                    ytl.setOnThumbnailLoadedListener(new YouTubeThumbnailLoader.OnThumbnailLoadedListener() {
+                        @Override
+                        public void onThumbnailLoaded(YouTubeThumbnailView youTubeThumbnailView, String s) {
+                            ytl.release();
+                        }
+
+                        @Override
+                        public void onThumbnailError(YouTubeThumbnailView youTubeThumbnailView,
+                                                     YouTubeThumbnailLoader.ErrorReason errorReason) {
+                        }
+                    });
+            }
+
+            @Override
+            public void onInitializationFailure(YouTubeThumbnailView youTubeThumbnailView,
+                                                YouTubeInitializationResult youTubeInitializationResult) {
+            }
+        });
+        */
 
         if (position == trackselected){
             holder.itemView.setAlpha(1.0f);
@@ -96,18 +129,19 @@ public class YoutubeItemListAdapter extends RecyclerView.Adapter<YoutubeItemList
     public int getItemCount() {return lista.size();}
 
 
-    //Clase interna
     public class ItemListViewHolder extends RecyclerView.ViewHolder {
 
-        private ImageView imagen_view;
+        private YouTubeThumbnailView imagen_view;
         private TextView text_view_nombre;
+        private TextView text_view_id;
         private TextView text_view_url;
 
         public ItemListViewHolder(View itemView) {
             super(itemView);
-            imagen_view = (ImageView) itemView.findViewById(R.id.imagen);
+            imagen_view = (YouTubeThumbnailView) itemView.findViewById(R.id.imagen);
             text_view_nombre = (TextView) itemView.findViewById(R.id.nombre);
-            text_view_url = (TextView) itemView.findViewById(R.id.url);
+            text_view_id = (TextView) itemView.findViewById(R.id.id);
+            text_view_url = (TextView) itemView.findViewById(R.id.video_url);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -123,7 +157,7 @@ public class YoutubeItemListAdapter extends RecyclerView.Adapter<YoutubeItemList
         }
 
         public TextView getText_view_url() {
-            return text_view_url;
+            return text_view_id;
         }
     }
 }

@@ -31,39 +31,55 @@
         >
         <!--android:background="@drawable/background_list_item"-->
 
-        <ImageView
+        <com.google.android.youtube.player.YouTubeThumbnailView
             android:id="@+id/imagen"
-            android:layout_width="32dp"
-            android:layout_height="20dp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:paddingLeft="5dp"
             android:paddingRight="5dp"
-            android:scaleType="centerInside"
+            android:scaleType="fitCenter"
             />
         <!--android:src="@drawable/uruguay"-->
 
-        <TextView
-            android:id="@+id/nombre"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:text="Nombre"
             android:gravity="center_vertical"
             android:textAlignment="gravity"
-            android:elegantTextHeight="false"
-            android:textColor="#ffffffff" />
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/nombre"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:text="Nombre"
+                android:elegantTextHeight="false"
+                android:textColor="#ffffffff" />
+
+            <TextView
+                android:id="@+id/video_url"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:text="Url"
+                android:elegantTextHeight="false"
+                android:textColor="#ffffffff" />
+
+        </LinearLayout>
 
         <TextView
-            android:id="@+id/url"
+            android:id="@+id/id"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:text="Url"
             android:textAlignment="gravity"
             android:gravity="center_vertical"
             android:textColor="#ffffffff"
-            android:visibility="invisible"
+            android:visibility="gone"
             />
 
     </LinearLayout>

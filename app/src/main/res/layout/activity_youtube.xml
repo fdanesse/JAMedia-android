@@ -23,8 +23,11 @@
             android:id="@+id/busquedas"
             android:layout_width="match_parent"
             android:layout_height="35dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="5dp"
             android:clickable="true"
-            android:background="#cccc"
+            android:background="#503300"
             />
 
         <!-- FIXME: AdMob

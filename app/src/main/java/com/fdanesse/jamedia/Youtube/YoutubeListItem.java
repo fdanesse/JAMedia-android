@@ -5,22 +5,22 @@ package com.fdanesse.jamedia.Youtube;
  */
 public class YoutubeListItem{
 
-    private int imagen;
     private String nombre;
+    private String id;
     private String url;
 
-    public YoutubeListItem(int imagen, String nombre, String url){
-        this.imagen = imagen;
+    public YoutubeListItem(String nombre, String id, String url){
         this.nombre = nombre;
+        this.id = id;
         this.url = url;
-    }
-
-    public int getImagen() {
-        return imagen;
     }
 
     public String getNombre() {
         return nombre;
+    }
+
+    public String getId() {
+        return id;
     }
 
     public String getUrl() {

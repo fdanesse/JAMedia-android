@@ -63,19 +63,16 @@ public class FileChooserItemListAdapter extends RecyclerView.Adapter<FileChooser
 
     @Override
     public void onBindViewHolder(ItemListViewHolder holder, int position) {
-        /**
-         * Actualiza la información en un item al ser reciclado en la vista.
-         */
         ItemFileChooser listItem = lista.get(position);
         holder.imagen_view.setImageResource(listItem.getImagen());
         holder.text_view_filename.setText(listItem.getFilename());
         holder.text_view_filepath.setText(listItem.getFilepath());
         holder.text_view_tipo.setText(listItem.getTipo());
-
-        if (filechooser.check_path(listItem.getFilepath())){
+        if (filechooser.check_path(holder.get_filepath())){
             holder.itemView.setAlpha(0.7f);
-        }
-        else{holder.itemView.setAlpha(0.4f);}
+            }
+        else{
+            holder.itemView.setAlpha(0.4f);}
     }
 
     @Override
@@ -85,7 +82,6 @@ public class FileChooserItemListAdapter extends RecyclerView.Adapter<FileChooser
 
 
     public static class ItemListViewHolder extends RecyclerView.ViewHolder {
-
         private ImageView imagen_view;
         private TextView text_view_filename;
         private TextView text_view_filepath;
@@ -101,14 +97,6 @@ public class FileChooserItemListAdapter extends RecyclerView.Adapter<FileChooser
 
         public String get_filepath() {
             return text_view_filepath.getText().toString();
-        }
-
-        public String get_filename() {
-            return text_view_filename.getText().toString();
-        }
-
-        public String get_tipo() {
-            return text_view_tipo.getText().toString();
         }
     }
 }

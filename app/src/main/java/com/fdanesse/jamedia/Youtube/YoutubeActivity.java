@@ -35,7 +35,6 @@ import com.google.api.services.youtube.YouTube;
 import com.google.api.services.youtube.model.ResourceId;
 import com.google.api.services.youtube.model.SearchListResponse;
 import com.google.api.services.youtube.model.SearchResult;
-import com.google.api.services.youtube.model.Thumbnail;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -61,8 +60,6 @@ public class YoutubeActivity extends AppCompatActivity {
 
     private FragmentYoutubePlayer fragmentYoutubePlayer;
     private FragmentYoutubeList fragmentPlayerList;
-
-    private static final String apiKey = "";
 
     private SearchView busquedas;
     private WifiManager.WifiLock wifiLock;
@@ -100,7 +97,7 @@ public class YoutubeActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(viewPager);
 
         Bundle extra = new Bundle();
-        extra.putString("apiKey", apiKey);
+        extra.putString("apiKey", Keys.apikey);
         fragmentYoutubePlayer.setArguments(extra);
 
         try {
@@ -338,7 +335,7 @@ public class YoutubeActivity extends AppCompatActivity {
 
     public void playtrack(int index){
         YoutubeListItem item = fragmentPlayerList.getListAdapter().getLista().get(index);
-        fragmentYoutubePlayer.load(item.getUrl());
+        fragmentYoutubePlayer.load(item.getId());
     }
 
 
@@ -364,7 +361,7 @@ public class YoutubeActivity extends AppCompatActivity {
 
             try {
                 YouTube.Search.List search = youtube.search().list("id,snippet");
-                search.setKey(apiKey);
+                search.setKey(Keys.apikey);
                 search.setQ(queryTerm);
                 search.setType("video");
 
@@ -399,12 +396,11 @@ public class YoutubeActivity extends AppCompatActivity {
                 while (iteratorSearchResults.hasNext()) {
                     SearchResult singleVideo = iteratorSearchResults.next(); //GenericJson
                     ResourceId rId = singleVideo.getId();
-                    Thumbnail thumbnail = singleVideo.getSnippet().getThumbnails().getDefault();
-
-                    String url = rId.getVideoId();
-
+                    //Thumbnail thumbnail = singleVideo.getSnippet().getThumbnails().getDefault();
+                    String id = rId.getVideoId();
+                    String url = "https://www.youtube.com/watch?v=" + id;
                     String title = singleVideo.getSnippet().getTitle();
-                    lista.add(new YoutubeListItem(R.drawable.video, title, url));
+                    lista.add(new YoutubeListItem(title, id, url));
                 }
             }
 
@@ -413,3 +409,4 @@ public class YoutubeActivity extends AppCompatActivity {
         }
     }
 }
+
