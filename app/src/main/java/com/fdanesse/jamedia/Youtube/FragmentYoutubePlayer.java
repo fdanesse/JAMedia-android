@@ -21,8 +21,7 @@ public class FragmentYoutubePlayer extends Fragment {
 
     private YouTubePlayer youTubePlayer = null;
     private YouTubePlayerSupportFragment youTubePlayerFragment;
-    private static String apiKey;
-    
+
     public static final String END_TRACK = "END_TRACK";
     public static final String PLAY = "PLAY";
     public static final String PAUSE = "PAUSE";
@@ -37,9 +36,6 @@ public class FragmentYoutubePlayer extends Fragment {
         FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
         transaction.add(R.id.youtube_fragment, youTubePlayerFragment).commit();
 
-        Bundle bundle = getArguments();
-        apiKey = bundle.getString("apiKey", "");
-
         return rootView;
     }
 
@@ -47,14 +43,19 @@ public class FragmentYoutubePlayer extends Fragment {
         final String videoid = v;
         if(youTubePlayer != null){
             youTubePlayer.release();
+            Log.i("*****", "Release");
         }
 
-        youTubePlayerFragment.initialize(apiKey, new OnInitializedListener() {
+        Log.i("*****", "Load: " + videoid + " " + youTubePlayerFragment);
+
+        youTubePlayerFragment.initialize(Keys.apikey, new OnInitializedListener() {
 
             @Override
             public void onInitializationSuccess(Provider provider, YouTubePlayer player, boolean wasRestored) {
                 if (!wasRestored) {
                     youTubePlayer = player;
+                    //youTubePlayer.addFullscreenControlFlag(YouTubePlayer.FULLSCREEN_FLAG_CUSTOM_LAYOUT);
+                    //youTubePlayer.setOnFullscreenListener((YoutubeActivity) getActivity());
                     ListenEvent();
                     //youTubePlayer.setFullscreen(true);
                     youTubePlayer.loadVideo(videoid);
@@ -64,16 +65,19 @@ public class FragmentYoutubePlayer extends Fragment {
 
             @Override
             public void onInitializationFailure(Provider provider, YouTubeInitializationResult errorReason) {
+                //youTubePlayer = null;
                 if (errorReason.isUserRecoverableError()) {
                     Log.i("*****", "ERROR is User Recoverable Error");
                     errorReason.getErrorDialog(getActivity(), 1).show();
-                } else {
+                }
+                else {
                     String error = String.format("ERROR Inicialización", errorReason.toString());
                     Log.i("*****", "ERROR: " + error);
                     errorReason.getErrorDialog(getActivity(), 0).show();
                 }
             }
         });
+
     }
 
     private void ListenEvent(){

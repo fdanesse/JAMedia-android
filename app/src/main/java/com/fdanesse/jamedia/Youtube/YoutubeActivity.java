@@ -96,10 +96,6 @@ public class YoutubeActivity extends AppCompatActivity {
         viewPager.setAdapter(new Notebook2(getSupportFragmentManager(), fragments));
         tabLayout.setupWithViewPager(viewPager);
 
-        Bundle extra = new Bundle();
-        extra.putString("apiKey", Keys.apikey);
-        fragmentYoutubePlayer.setArguments(extra);
-
         try {
             IntentFilter filter = new IntentFilter(fragmentYoutubePlayer.END_TRACK);
             registerReceiver(end_track, filter);
@@ -224,6 +220,7 @@ public class YoutubeActivity extends AppCompatActivity {
             unregisterReceiver(networkStateReceiver);
             wifiLock.release();}
         catch (Exception e){}
+        fragmentPlayerList.listAdapter.releaseLoaders();
     }
 
     // Reproductor pide Cambio de pista
@@ -334,6 +331,8 @@ public class YoutubeActivity extends AppCompatActivity {
     }
 
     public void playtrack(int index){
+        viewPager.setCurrentItem(1);
+        viewPager.setEnabled(true);
         YoutubeListItem item = fragmentPlayerList.getListAdapter().getLista().get(index);
         fragmentYoutubePlayer.load(item.getId());
     }
@@ -355,6 +354,17 @@ public class YoutubeActivity extends AppCompatActivity {
             String queryTerm = strings[0];
             SearchListResponse searchResponse;
 
+            /*
+            Ver ademas: http://stackoverflow.com/questions/33969507/how-to-retrieve-details-of-single-video-from-youtube-using-videoid-through-data/39478514#39478514
+            http://stackoverflow.com/questions/20462815/youtube-data-api-v3-java-search-with-pagination-issue
+            var results = YouTube.Search.list('id,snippet', {
+                q: 'dogs',
+                maxResults: 25,
+                videoDuration: 'long',
+                type: 'video'
+              });
+             */
+
             youtube = new YouTube.Builder(new NetHttpTransport(), new JacksonFactory(), new HttpRequestInitializer() {
                 public void initialize(HttpRequest request) throws IOException {}
             }).setApplicationName("JAMedia").build();
@@ -364,9 +374,84 @@ public class YoutubeActivity extends AppCompatActivity {
                 search.setKey(Keys.apikey);
                 search.setQ(queryTerm);
                 search.setType("video");
+                search.setVideoSyndicated("any");
+                search.setVideoEmbeddable("any");
+                search.setOrder("viewCount");
+                search.setSafeSearch("strict");
+                //search.setVideoDimension("2d");
+                //search.setVideoDuration("medium");
+                //search.setVideoLicense("creativeCommon");
+                //search.setVideoType("any");
+
+                //search.setVideoDefinition("any");
+                //search.setQ(queryTerm + ", official channel");
+                /*
+                    (shakira+(oficial|official))
+                    "shakira"+"official"-"cover"-"parody"-"parodia"
+                */
+
+                //search.setVideoCategoryId("10");
+                /* https://gist.github.com/dgp/1b24bf2961521bd75d6c
+                    2 - Autos & Vehicles
+                    1 -  Film & Animation
+                    10 - Music
+                    15 - Pets & Animals
+                    17 - Sports
+                    18 - Short Movies
+                    19 - Travel & Events
+                    20 - Gaming
+                    21 - Videoblogging
+                    22 - People & Blogs
+                    23 - Comedy
+                    24 - Entertainment
+                    25 - News & Politics
+                    26 - Howto & Style
+                    27 - Education
+                    28 - Science & Technology
+                    29 - Nonprofits & Activism
+                    30 - Movies
+                    31 - Anime/Animation
+                    32 - Action/Adventure
+                    33 - Classics
+                    34 - Comedy
+                    35 - Documentary
+                    36 - Drama
+                    37 - Family
+                    38 - Foreign
+                    39 - Horror
+                    40 - Sci-Fi/Fantasy
+                    41 - Thriller
+                    42 - Shorts
+                    43 - Shows
+                    44 - Trailers
+                */
+                            /*
+                videoCaption
+                topicId  https://developers.google.com/youtube/v3/guides/searching_by_topic?hl=es-419
+                relevanceLanguage
+                relatedToVideoId
+                regionCode
+                publishedBefore
+                publishedAfter
+                pageToken
+                onBehalfOfContentOwner
+                locationRadius
+                location
+                forMine
+                forDeveloper
+                forContentOwner
+                eventType
+                channelType
+                channelId
+                 */
+
+                //search.getHttpContent();
+                //search.getJsonContent();
+                //search.getUnknownKeys();
 
                 //search.setFields("items(id/videoId,snippet/title,snippet/description,snippet/thumbnails/default/url)");
                 search.setFields("items(id/videoId,snippet/title,snippet/thumbnails/default/url)");
+                //etag,items(etag,id(kind,videoId),snippet(description,thumbnails/default,title)),nextPageToken,pageInfo,prevPageToken,tokenPagination
                 search.setMaxResults(NUMBER_OF_VIDEOS_RETURNED);
 
                 searchResponse = search.execute();

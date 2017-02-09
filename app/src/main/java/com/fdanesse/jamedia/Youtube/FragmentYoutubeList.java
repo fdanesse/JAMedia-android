@@ -18,7 +18,7 @@ public class FragmentYoutubeList extends Fragment {
 
     private YoutubeActivity playerActivity;
     private RecyclerView recyclerView;
-    private YoutubeItemListAdapter listAdapter;
+    public YoutubeItemListAdapter listAdapter;
 
     public FragmentYoutubeList(){}
 
@@ -44,6 +44,7 @@ public class FragmentYoutubeList extends Fragment {
     }
 
     public void load_list(ArrayList<YoutubeListItem> lista){
+        listAdapter.releaseLoaders();
         listAdapter = new YoutubeItemListAdapter(lista, this);
         recyclerView.setAdapter(listAdapter);
     }

@@ -14,6 +14,8 @@ import com.google.android.youtube.player.YouTubeThumbnailLoader;
 import com.google.android.youtube.player.YouTubeThumbnailView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by flavio on 27/09/16.
@@ -26,6 +28,9 @@ public class YoutubeItemListAdapter extends RecyclerView.Adapter<YoutubeItemList
 
     private int trackselected = -1;                         //Pista en reproducción
     public String trackpath = "";                           //Pista en reproducción
+
+    private final Map<YouTubeThumbnailView, YouTubeThumbnailLoader> thumbnailViewToLoaderMap = new HashMap<YouTubeThumbnailView, YouTubeThumbnailLoader>();
+    //private final ThumbnailListener thumbnailListener = new ThumbnailListener();
 
 
     public YoutubeItemListAdapter(ArrayList<YoutubeListItem> lista, FragmentYoutubeList fragmentPlayerList){
@@ -74,6 +79,12 @@ public class YoutubeItemListAdapter extends RecyclerView.Adapter<YoutubeItemList
                 R.layout.cardview_youtube_list_item, parent, false);
         ItemListViewHolder view = new ItemListViewHolder(v);
         holders.add(view);
+
+        int position = holders.indexOf(view);
+        YoutubeListItem listItem = lista.get(position);
+        view.imagen_view.setTag(listItem.getId());
+        view.imagen_view.initialize(Keys.apikey, new ThumbnailListener());
+
         return view;
     }
 
@@ -90,38 +101,25 @@ public class YoutubeItemListAdapter extends RecyclerView.Adapter<YoutubeItemList
         final String id = listItem.getId();
         final YoutubeListItem li = listItem;
 
-        /* FIXME: No funciona con un recyclerview
-        holder.imagen_view.initialize(Keys.apikey, new YouTubeThumbnailView.OnInitializedListener() {
-            @Override
-            public void onInitializationSuccess(YouTubeThumbnailView youTubeThumbnailView,
-                                                YouTubeThumbnailLoader youTubeThumbnailLoader) {
-                    final YouTubeThumbnailLoader ytl = youTubeThumbnailLoader;
-                    ytl.setVideo(id);
-                    ytl.setOnThumbnailLoadedListener(new YouTubeThumbnailLoader.OnThumbnailLoadedListener() {
-                        @Override
-                        public void onThumbnailLoaded(YouTubeThumbnailView youTubeThumbnailView, String s) {
-                            ytl.release();
-                        }
-
-                        @Override
-                        public void onThumbnailError(YouTubeThumbnailView youTubeThumbnailView,
-                                                     YouTubeThumbnailLoader.ErrorReason errorReason) {
-                        }
-                    });
-            }
-
-            @Override
-            public void onInitializationFailure(YouTubeThumbnailView youTubeThumbnailView,
-                                                YouTubeInitializationResult youTubeInitializationResult) {
-            }
-        });
-        */
+        YouTubeThumbnailLoader loader = thumbnailViewToLoaderMap.get(holder.imagen_view);
+        if (loader == null) {
+            holder.imagen_view.setTag(listItem.getId());
+        } else {
+            //holder.imagen_view.setImageResource(R.drawable.loading_thumbnail);
+            loader.setVideo(listItem.getId());
+        }
 
         if (position == trackselected){
             holder.itemView.setAlpha(1.0f);
         }
         else{
             holder.itemView.setAlpha(0.5f);
+        }
+    }
+
+    public void releaseLoaders() {
+        for (YouTubeThumbnailLoader loader : thumbnailViewToLoaderMap.values()) {
+            loader.release();
         }
     }
 
@@ -158,6 +156,36 @@ public class YoutubeItemListAdapter extends RecyclerView.Adapter<YoutubeItemList
 
         public TextView getText_view_url() {
             return text_view_id;
+        }
+    }
+
+
+    private final class ThumbnailListener implements
+            YouTubeThumbnailView.OnInitializedListener,
+            YouTubeThumbnailLoader.OnThumbnailLoadedListener{
+
+        @Override
+        public void onThumbnailLoaded(YouTubeThumbnailView youTubeThumbnailView, String s) {
+
+        }
+
+        @Override
+        public void onThumbnailError(YouTubeThumbnailView youTubeThumbnailView, YouTubeThumbnailLoader.ErrorReason errorReason) {
+            //view.setImageResource(R.drawable.no_thumbnail);
+        }
+
+        @Override
+        public void onInitializationSuccess(YouTubeThumbnailView view, YouTubeThumbnailLoader loader) {
+            loader.setOnThumbnailLoadedListener(this);
+            thumbnailViewToLoaderMap.put(view, loader);
+            //view.setImageResource(R.drawable.loading_thumbnail);
+            String videoId = (String) view.getTag();
+            loader.setVideo(videoId);
+        }
+
+        @Override
+        public void onInitializationFailure(YouTubeThumbnailView youTubeThumbnailView, YouTubeInitializationResult youTubeInitializationResult) {
+            //view.setImageResource(R.drawable.no_thumbnail);
         }
     }
 }
