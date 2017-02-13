@@ -42,6 +42,7 @@ public class FragmentYoutubePlayer extends Fragment {
     public void load(String v){
         final String videoid = v;
         if(youTubePlayer != null){
+            youTubePlayer.setFullscreen(false);
             youTubePlayer.release();
             Log.i("*****", "Release");
         }
@@ -57,7 +58,6 @@ public class FragmentYoutubePlayer extends Fragment {
                     //youTubePlayer.addFullscreenControlFlag(YouTubePlayer.FULLSCREEN_FLAG_CUSTOM_LAYOUT);
                     //youTubePlayer.setOnFullscreenListener((YoutubeActivity) getActivity());
                     ListenEvent();
-                    //youTubePlayer.setFullscreen(true);
                     youTubePlayer.loadVideo(videoid);
                     youTubePlayer.play();
                 }
@@ -134,6 +134,7 @@ public class FragmentYoutubePlayer extends Fragment {
 
             @Override
             public void onVideoEnded() {
+                youTubePlayer.setFullscreen(false);
                 Intent broadcastIntent = new Intent(END_TRACK);
                 getContext().sendBroadcast(broadcastIntent);
             }
