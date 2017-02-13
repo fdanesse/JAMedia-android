@@ -488,24 +488,31 @@ public class PlayerActivity extends AppCompatActivity {
     }
 
     private void connect_buttons_actions(){
+
         siguiente.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                fragmentPlayerList.getListAdapter().next();
+                String trackpath = fragmentPlayerList.getListAdapter().trackpath;
+                boolean has_path = trackpath != "";
+                if(has_path){fragmentPlayerList.getListAdapter().next();}
             }
         });
 
         play.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                jaMediaPLayerService.pause_play();
+                String trackpath = fragmentPlayerList.getListAdapter().trackpath;
+                boolean has_path = trackpath != "";
+                if(has_path){jaMediaPLayerService.pause_play();}
             }
         });
 
         anterior.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                fragmentPlayerList.getListAdapter().previous();
+                String trackpath = fragmentPlayerList.getListAdapter().trackpath;
+                boolean has_path = trackpath != "";
+                if(has_path){fragmentPlayerList.getListAdapter().previous();}
             }
         });
 

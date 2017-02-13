@@ -280,21 +280,27 @@ public class YoutubeActivity extends AppCompatActivity {
         siguiente.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                fragmentPlayerList.getListAdapter().next();
+                String trackpath = fragmentPlayerList.getListAdapter().trackpath;
+                boolean has_path = trackpath != "";
+                if(has_path){fragmentPlayerList.getListAdapter().next();}
             }
         });
 
         play.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                fragmentYoutubePlayer.pause_play();
+                String trackpath = fragmentPlayerList.getListAdapter().trackpath;
+                boolean has_path = trackpath != "";
+                if(has_path){fragmentYoutubePlayer.pause_play();}
             }
         });
 
         anterior.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                fragmentPlayerList.getListAdapter().previous();
+                String trackpath = fragmentPlayerList.getListAdapter().trackpath;
+                boolean has_path = trackpath != "";
+                if(has_path){fragmentPlayerList.getListAdapter().previous();}
             }
         });
 
