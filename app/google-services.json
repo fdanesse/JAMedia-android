@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "1054054815136",
+    "firebase_url": "https://jamedia-e5780.firebaseio.com",
+    "project_id": "jamedia-e5780",
+    "storage_bucket": "jamedia-e5780.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1054054815136:android:a11d72f53496b998",
+        "android_client_info": {
+          "package_name": "com.fdanesse.jamedia"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1054054815136-0s0jossm1f30gfch5q8smest415i8vs7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBdrsIMTMBng6LKNnJhSv2Gp6dITfZjrAs"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

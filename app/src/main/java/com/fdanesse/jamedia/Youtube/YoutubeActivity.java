@@ -41,6 +41,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+//FIXME: AdMob
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+
 
 public class YoutubeActivity extends AppCompatActivity {
 
@@ -63,6 +67,10 @@ public class YoutubeActivity extends AppCompatActivity {
 
     private SearchView busquedas;
     private WifiManager.WifiLock wifiLock;
+
+    //Publicidad:
+    //FIXME: AdMob
+    private AdView mAdView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -138,12 +146,10 @@ public class YoutubeActivity extends AppCompatActivity {
             }
         });
 
-        /*
-        FIXME: AdMob
+        //FIXME: AdMob
         mAdView = (AdView) findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
-        */
 
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override

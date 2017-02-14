@@ -8,8 +8,8 @@ android {
         applicationId "com.fdanesse.jamedia"
         minSdkVersion 15
         targetSdkVersion 24
-        versionCode 5
-        versionName "5.0"
+        versionCode 1
+        versionName "1.0"
         multiDexEnabled true
     }
     buildTypes {
@@ -34,10 +34,9 @@ dependencies {
     compile 'com.android.support:support-media-compat:24.2.1'
     compile 'com.android.support:support-v4:24.2.1'
 
-    /* FIXME: AdMob
+    // FIXME: AdMob
     compile 'com.google.firebase:firebase-core:10.0.1'
     compile 'com.google.firebase:firebase-ads:10.0.1'
-    */
 
     compile 'com.android.support:multidex:1.0.0'
 
@@ -46,4 +45,5 @@ dependencies {
     compile files('libs/YouTubeAndroidPlayerApi.jar')
 }
 
-/* FIXME: AdMob apply plugin: 'com.google.gms.google-services'*/
+// FIXME: AdMob
+apply plugin: 'com.google.gms.google-services'
